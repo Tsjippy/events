@@ -1,0 +1,60 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+ @use '../../../../../css/scss/global' as *;
+
+ aside{
+    >h4{
+        font-size: larger;
+    }
+
+    .eventlist .event-article{
+        margin-bottom: 10px;
+    }
+
+    .event-wrapper{
+        display:            flex;
+    }
+
+    .event-date{
+        color:              #e0d0d0;
+        margin-right:       24px;
+        background-image:   linear-gradient($primary_color, $secundary_color);
+        width:              fit-content;
+        float:              left;
+        padding:            6px 4px 3px;
+        text-align:         center;
+        text-transform:     uppercase;
+        border-radius:      3px;
+        max-height:         40px;
+        line-height:        1;
+
+        span{
+            font-size: 12px;
+            display: block;
+            font-weight: 700;
+            text-align: center;
+        }
+    }
+
+    .event-title{
+        margin: 0px;
+        a{
+            color: #292929;
+        }
+    }
+
+    .no-events{
+        text-align:         center;
+    }
+
+    .calendar.button{
+        display: block;
+        width: fit-content;
+        margin: 10px auto 0px;
+    }
+}

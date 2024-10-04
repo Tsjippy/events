@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "sim/schedules",
+	"version": "0.1.0",
+	"title": "Orientation Schedules",
+	"category": "widgets",
+	"description": "Schedules for orientation and meals",
+	"textdomain": "sim",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

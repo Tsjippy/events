@@ -1,0 +1,45 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+ .flex{
+    display:flex; 
+    flex-direction:row;
+}
+
+.center{
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+}
+
+.components-datetime div.components-datetime__buttons, .components-datetime div.components-datetime__date{
+    //display: none;
+}
+
+.week-selector, .month-selector{
+    .components-checkbox-control__label{
+        margin-right: 10px;
+    }
+}
+
+.components-datetime__time > fieldset:nth-child(1){
+    display:none;
+}
+
+.components-datetime__time > fieldset:nth-child(2){
+    border: none;
+    margin: 0px 30px 0px 0px;
+    padding: 0px;
+
+    .components-datetime__time-wrapper{
+        padding-left: 30px;
+    }
+}
+
+.time-pickers {
+    .components-checkbox-control{
+        margin-top: 20px;
+    }
+}

@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "sim/eventmeta",
+	"version": "0.1.0",
+	"title": "Events meta data",
+	"category": "widgets",
+	"description": "All event details",
+	"textdomain": "sim",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"lock": {
+			"type": "object",
+			"default": {
+				"move": true,
+				"remove": true
+			}
+		},
+		"eventdetails": {
+			"type": "array",
+			"default": ""
+		}
+	}
+}

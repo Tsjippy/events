@@ -1,0 +1,29 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "sim/upcomingevents",
+	"version": "0.1.0",
+	"title": "Upcoming Events",
+	"category": "widgets",
+	"description": "Upcoming 10 events",
+	"textdomain": "sim-events",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"attributes": {
+		"items": {
+		  "type": "integer"
+		},
+		"months": {
+			"type": "integer"
+		},
+		"categories": {
+			"type": "object",
+			"default": "{}"
+		},
+		"title": {
+			"type": "string",
+			"default": "Upcoming Events"
+		}
+	}
+}

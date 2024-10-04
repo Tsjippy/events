@@ -1,0 +1,18 @@
+{
+  "name": "events",
+  "version": "1.0.0",
+  "description": "Events",
+  "main": "./events.js",
+  "scripts": {
+    "events": "webpack --watch --entry ./events.js --output-path . --output-filename events.min.js --progress --mode=production --devtool source-map",
+    "mobile": "webpack --watch --entry ./schedules/mobile.js --output-path . --output-filename mobile-schedule.min.js --progress --mode=production --devtool source-map",
+    "desktop": "webpack --watch --entry ./schedules/desktop.js --output-path . --output-filename desktop-schedule.min.js --progress --mode=production --devtool source-map",
+    "frontend": "webpack --watch --entry ./frontEndContent.js --output-path . --output-filename frontend-event.min.js --progress --mode=production --devtool source-map"
+  },
+  "author": "Ewald Harmsen",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
+  }
+}

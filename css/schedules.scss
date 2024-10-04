@@ -1,0 +1,41 @@
+@use '../../../css/scss/global' as *;
+
+/*
+* === Schedule settings ===
+*/
+.ui-selecting{
+	background-color: antiquewhite;
+}
+
+.ui-selected, .selected{
+	background-color: #f9efef;
+}
+
+.keyword, .timeslot{
+	font-size: 12px;
+	display: block;
+	margin-top: 5px;
+}
+
+table.schedule td, table.schedule th{
+	word-wrap: break-word;
+	white-space: pre-wrap; /* CSS3 */    
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */    
+    white-space: -o-pre-wrap; /* Opera 7 */    
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+
+	&.admin, &.available, .keyword{
+		cursor: pointer;
+	}
+}
+
+@media screen and (min-width: $mobilewidth){
+	table.schedule td, table.schedule th{
+		max-width: 150px;
+	}
+}
+
+.select-wrapper label.date{
+	line-height: 30px;
+}
