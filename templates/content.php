@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php
 function displayEventCategories(){
-	$baseUrl	= plugins_url('pictures', __DIR__);
+	$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures', __DIR__);
 
 	$categories = wp_get_post_terms(
 		get_the_ID(),
@@ -106,7 +106,7 @@ function displayEventMeta(){
 			$meta	= [];
 		}
 	}
-	$baseUrl	= plugins_url('pictures', __DIR__);
+	$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
 
 	?>
 	<div class='event metas' style='margin-top:10px;'>

@@ -53,7 +53,7 @@ add_action( 'wp_enqueue_scripts', function(){
         return;
     }
 
-    wp_register_script('sim_frontend_events_script', plugins_url('js/frontend-event.min.js', __DIR__), [], MODULE_VERSION, true);
+    wp_register_script('sim_frontend_events_script', SIM\pathToUrl(MODULE_PATH.'js/frontend-event.min.js'), [], MODULE_VERSION, true);
     add_filter('sim-frontend-content-js', function($dependables){
         $dependables[]  = 'sim_frontend_events_script';
 
@@ -61,16 +61,16 @@ add_action( 'wp_enqueue_scripts', function(){
     });
 
     //css
-    wp_register_style('sim_schedules_css', plugins_url('css/schedules.min.css', __DIR__), array(), MODULE_VERSION);
-    wp_register_style('sim_events_css', plugins_url('css/events.min.css', __DIR__), array(), MODULE_VERSION);
+    wp_register_style('sim_schedules_css', SIM\pathToUrl(MODULE_PATH.'css/schedules.min.css'), array(), MODULE_VERSION);
+    wp_register_style('sim_events_css', SIM\pathToUrl(MODULE_PATH.'css/events.min.css'), array(), MODULE_VERSION);
         
     //js
-    wp_register_script('sim_event_script', plugins_url('js/events.min.js', __DIR__), array('sim_formsubmit_script'), MODULE_VERSION,true);
+    wp_register_script('sim_event_script', SIM\pathToUrl(MODULE_PATH.'js/events.min.js'), array('sim_formsubmit_script'), MODULE_VERSION,true);
 
     if(wp_is_mobile()){
-        wp_register_script('sim_schedules_script', plugins_url('js/mobile-schedule.min.js', __DIR__), array('sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/mobile-schedule.min.js'), array('sim_formsubmit_script'), MODULE_VERSION, true);
     }else{
-        wp_register_script('sim_schedules_script', plugins_url('js/desktop-schedule.min.js', __DIR__), array('sim_table_script','selectable','sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), MODULE_VERSION, true);
     }
 
     $schedulePages         = (array)SIM\getModuleOption(MODULE_SLUG, 'schedule_pages');

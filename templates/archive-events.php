@@ -78,7 +78,7 @@ function showCalendar(){
 			<div class="date-selector">
 				<div class="date-search">
 					<?php
-					$baseUrl	= plugins_url('pictures', __DIR__);
+					$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
 					echo "<img src='{$baseUrl}/date.png' alt='time' loading='lazy' class='event_icon'>";
 					?>
 					<select class='month_selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">

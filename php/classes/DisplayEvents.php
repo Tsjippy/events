@@ -164,9 +164,9 @@ class DisplayEvents extends Events{
 			$endDateStr		= date('d M', strtotime(($event->enddate)));
 
 			$userId = get_post_meta($event->post_id,'user',true);
-			if(is_numeric($userId) && function_exists('SIM\USERPAGE\getUserPageLink')){
+			if(is_numeric($userId) && function_exists('SIM\USERPAGES\getUserPageLink')){
 				//Get the user page of this user
-				$eventUrl	= SIM\USERPAGE\getUserPageLink($userId);
+				$eventUrl	= SIM\USERPAGES\getUserPageLink($userId);
 			}else{
 				$eventUrl	= get_permalink($event->post_id);
 			}
@@ -454,7 +454,7 @@ class DisplayEvents extends Events{
 		$calendarRows	= '';
 		$detailHtml		= '';
 
-		$baseUrl	= plugins_url('../pictures', __DIR__);
+		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'../pictures');
 
 		//loop over all weeks of a month
 		while(true){
@@ -633,7 +633,7 @@ class DisplayEvents extends Events{
 	private function weekDetails($workingDateStr, $workingDate){
 		
 		$detailHtml		= '';
-		$baseUrl		= plugins_url('../pictures', __DIR__);
+		$baseUrl		= SIM\pathToUrl(MODULE_PATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);
@@ -1019,7 +1019,7 @@ class DisplayEvents extends Events{
 		$this->retrieveEvents($dateStr, '', 10, '', $offset, $cat);
 		$html ='';
 
-		$baseUrl	= plugins_url('../pictures', __DIR__);
+		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);
