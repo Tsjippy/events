@@ -5,6 +5,7 @@
 
 ### Changed
 - upgrade deps
+- enqueing of styles and scripts
 
 ### Fixed
 
