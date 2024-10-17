@@ -163,13 +163,9 @@ class DisplayEvents extends Events{
 			$eventTitle		= get_the_title($event->post_id);
 			$endDateStr		= date('d M', strtotime(($event->enddate)));
 
-			$userId = get_post_meta($event->post_id,'user',true);
-			if(is_numeric($userId) && function_exists('SIM\USERPAGES\getUserPageLink')){
-				//Get the user page of this user
-				$eventUrl	= SIM\USERPAGES\getUserPageLink($userId);
-			}else{
-				$eventUrl	= get_permalink($event->post_id);
-			}
+			$userId = get_post_meta($event->post_id, 'user', true);
+
+			$eventUrl	= apply_filters('sim-events-event-url', get_permalink($event->post_id), $userId, $this);
 
 			$e	= [
 				'day'			=> $eventDayNr,
