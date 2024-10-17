@@ -18,22 +18,12 @@ add_filter('sim_submenu_description', function($description, $moduleSlug){
 	ob_start();
 	?>
 	<p>
-		This module add a custom posttype named event.<br>
-		This creates a possibility to add a post with a date, time, location and organizer.<br>
-		It also allows the creation of birthdays and anniversaries.<br>
-		A calendar displaying all events is accesable at <a href="<?php echo site_url('events');?>"><?php echo site_url('events');?></a>.<br>
-		<br>
-		It also adds the possibility for schedules: a mealschedule or orientantion schedule or other.<br>
-		Add it to any page using the shortcode <code>[schedules]</code>
-	</p>
-
-	<p>
 		<strong>Auto created page:</strong><br>
 		<a href='<?php echo home_url('/events');?>'>Calendar</a><br>
 	</p>
 	<?php
 
-	return ob_get_clean();
+	return $description.ob_get_clean();
 }, 10, 2);
 
 add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings){
