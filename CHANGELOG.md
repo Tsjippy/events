@@ -5,6 +5,7 @@
 - 'sim-events-event-url' filter
 
 ### Changed
+- readme
 
 ### Fixed
 
