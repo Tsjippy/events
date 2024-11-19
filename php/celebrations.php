@@ -66,7 +66,8 @@ function getAnniversaries(){
 	return $messages;
 }
 
-add_action('delete_user', function($userId){
+add_action('delete_user', __NAMESPACE__.'\deleteUser');
+function deleteUser($userId){
 	$events = new CreateEvents();
 
 	//Remove birthday events
@@ -79,7 +80,7 @@ add_action('delete_user', function($userId){
 	if(is_numeric($anniversaryId)){
 		$events->removeDbRows($anniversaryId);
 	}
-});
+}
 
 /**
  *
@@ -88,14 +89,15 @@ add_action('delete_user', function($userId){
  * @return   string|false     Birthday and arrining usrs html or false if there are no events
  *
 **/
-add_filter('sim_prayer_message', function($html){
+add_filter('sim_prayer_message', __NAMESPACE__.'\prayerMessage');
+function prayerMessage($html){
 	
 	$html	.= anniversaryMessages();
 
 	$html	.= arrivingUsersMessage();
 	
 	return $html;
-});
+}
 
 /**
  * Get the couple string of a certain user

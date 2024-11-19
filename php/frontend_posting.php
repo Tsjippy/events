@@ -7,7 +7,8 @@ add_filter('sim_frontend_posting_modals', function($types){
 	return $types;
 });
 
-add_action('init', function(){
+add_action('init', __NAMESPACE__.'\addEventPostType', 999);
+function addEventPostType(){
 	SIM\registerPostTypeAndTax('event', 'events');
 	add_action('sim_frontend_post_before_content', __NAMESPACE__.'\eventSpecificFields');
 	add_action('sim_frontend_post_content_title', __NAMESPACE__.'\eventTitle');
@@ -25,7 +26,7 @@ add_action('init', function(){
 			return $catArgs;
 		}
 	);
-}, 999);
+}
 
 function eventTitle($postType){
 	$class = 'property event';
@@ -372,7 +373,8 @@ function repetitionIntervalSettings($eventDetails){
 	<?php
 }
 
-add_filter('sim_signal_post_notification_message', function($excerpt, $post){
+add_filter('sim_signal_post_notification_message', __NAMESPACE__.'\postNotification', 10, 2);
+function postNotification($excerpt, $post){
 	if($post->post_type == 'event'){
 		$events		= new DisplayEvents();
 		$event		= $events->retrieveSingleEvent($post->ID);
@@ -401,9 +403,10 @@ add_filter('sim_signal_post_notification_message', function($excerpt, $post){
 	}
 
 	return $excerpt;
-}, 10, 2);
+}
 
-add_action('sim_after_post_save', function($post, $frontEndPost){
+add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave', 1, 2);
+function afterPostSave($post, $frontEndPost){
 	if($post->post_type != 'event'){
 		return;
 	}
@@ -412,4 +415,4 @@ add_action('sim_after_post_save', function($post, $frontEndPost){
     $events->storeEventMeta($post, $frontEndPost->update);
 
 	$frontEndPost->storeCustomCategories($post, 'events');
-}, 1, 2);
+}

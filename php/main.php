@@ -2,12 +2,14 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action( 'before_delete_post', function($postId){
+add_action( 'before_delete_post', __NAMESPACE__.'\befoeDeletePost');
+function befoeDeletePost($postId){
     $events = new CreateEvents();
     $events->removeDbRows($postId);
-});
+}
 
-add_filter('post-edit-button', function($buttonHtml, $post, $content){
+add_filter('post-edit-button', __NAMESPACE__.'\editButton', 10, 3);
+function editButton($buttonHtml, $post, $content){
     if($post->post_type != 'event'){
         return $buttonHtml;
     }
@@ -26,4 +28,4 @@ add_filter('post-edit-button', function($buttonHtml, $post, $content){
     }
 
     return $buttonHtml;
-}, 10, 3);
+}

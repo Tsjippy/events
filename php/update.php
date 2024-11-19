@@ -2,7 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action('sim_plugin_update', function($oldVersion){
+add_action('sim_plugin_update', __NAMESPACE__.'\pluginUpdate');
+function pluginUpdate($oldVersion){
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     SIM\printArray($oldVersion);
@@ -18,4 +19,4 @@ add_action('sim_plugin_update', function($oldVersion){
 
         SIM\printArray('Columns added');
     }
-});
+}

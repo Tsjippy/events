@@ -2,7 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_filter('sim_after_bot_payer', function($args){
+add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
+function afterBotPrayer($args){
 
     // calendar events
     $events		= new DisplayEvents();
@@ -124,4 +125,4 @@ add_filter('sim_after_bot_payer', function($args){
 	}
 
 	return $args;
-});
+}

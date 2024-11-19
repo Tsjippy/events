@@ -6,7 +6,8 @@ add_action( 'init', function() {
     add_rewrite_endpoint( 'public_calendar', EP_ROOT);
 });
 
-add_action( 'template_redirect', function() {
+add_action( 'template_redirect', __NAMESPACE__.'\templateRedirect' );
+function templateRedirect() {
     global $wp_query;
  
     // if this is not a request for json or a singular object then bail
@@ -17,7 +18,7 @@ add_action( 'template_redirect', function() {
     // include custom template
 	$icalFeed	= new IcalFeed();
     $icalFeed->calendarStream();
-} );
+}
 
 //outlook.com: https://outlook.office.com/calendar/addcalendar
 //google: https://calendar.google.com/calendar/u/1/r/settings/addbyurl

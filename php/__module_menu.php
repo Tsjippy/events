@@ -9,7 +9,8 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
-add_filter('sim_submenu_description', function($description, $moduleSlug){
+add_filter('sim_submenu_description', __NAMESPACE__.'\subMenuDescription', 10, 2);
+function subMenuDescription($description, $moduleSlug){
 	//module slug should be the same as the constant
 	if($moduleSlug != MODULE_SLUG)	{
 		return $description;
@@ -24,9 +25,10 @@ add_filter('sim_submenu_description', function($description, $moduleSlug){
 	<?php
 
 	return $description.ob_get_clean();
-}, 10, 2);
+}
 
-add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings){
+add_filter('sim_submenu_options', __NAMESPACE__.'\subMenuOptions', 10, 3);
+function subMenuOptions($optionsHtml, $moduleSlug, $settings){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $optionsHtml;
@@ -79,9 +81,10 @@ add_filter('sim_submenu_options', function($optionsHtml, $moduleSlug, $settings)
 	SIM\pictureSelector('anniversary_image', 'Anniversary', $settings);
 
 	return ob_get_clean();
-}, 10, 3);
+}
 
-add_filter('sim_module_functions', function($functionHtml, $moduleSlug){
+add_filter('sim_module_functions', __NAMESPACE__.'\moduleFunctions', 10, 2);
+function moduleFunctions($functionHtml, $moduleSlug){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $functionHtml;
@@ -135,18 +138,20 @@ add_filter('sim_module_functions', function($functionHtml, $moduleSlug){
 
 	<?php
 	return ob_get_clean();
-}, 10, 2);
+}
 
-add_action('sim_module_actions', function(){
+add_action('sim_module_actions', __NAMESPACE__.'\moduleActions');
+function moduleActions(){
 	global $wpdb;
 	if(isset($_POST['delete-orphans'])){
 		$query  	= "DELETE `{$wpdb->prefix}sim_events` FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
     	$wpdb->query($query);
 	}
 
-});
+}
 
-add_filter('sim_module_updated', function($options, $moduleSlug, $oldOptions){
+add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);
+function moduleUpdated($options, $moduleSlug, $oldOptions){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG){
 		return $options;
@@ -160,16 +165,28 @@ add_filter('sim_module_updated', function($options, $moduleSlug, $oldOptions){
 
 	scheduleTasks();
 
+	$roleSet = get_role( 'contributor' )->capabilities;
+
+	// Only add the new role if it does not exist
+	if(!wp_roles()->is_role( 'personnelinfo' )){
+		add_role(
+			'personnelinfo',
+			'Personnel Info',
+			$roleSet
+		);
+	}
+
 	$options	= SIM\ADMIN\createDefaultPage($options, 'schedules_pages', 'Schedules', '[schedules]', $oldOptions);
 
 	return $options;
-}, 10, 3);
+}
 
-add_filter('display_post_states', function ( $states, $post ) {
+add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
+function postStates( $states, $post ) {
     
     if (is_array(SIM\getModuleOption(MODULE_SLUG, 'schedules_pages')) && in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'schedules_pages', false))) {
         $states[] = __('Schedules page');
     }
 
     return $states;
-}, 10, 2);
+}

@@ -2,7 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action('init', function(){
+add_action('init', __NAMESPACE__.'\init');
+function init(){
 	//add action for use in scheduled task
 	add_action( 'remove_old_events_action', __NAMESPACE__.'\removeOldEvents');
 	add_action( 'anniversary_check_action', __NAMESPACE__.'\anniversaryCheck');
@@ -13,7 +14,7 @@ add_action('init', function(){
 		$events = new DisplayEvents();
 		$events->sendEventReminder($eventId);
 	});
-});
+}
 
 /**
  * Schedules the tasks for this module
@@ -130,10 +131,11 @@ function addRepeatedEvents(){
 }
 
 // Remove scheduled tasks upon module deactivatio
-add_action('sim_module_deactivated', function($moduleSlug){
+add_action('sim_module_deactivated', __NAMESPACE__.'\moduleDeactivated');
+function moduleDeactivated($moduleSlug){
 	//module slug should be the same as grandparent folder name
 	if($moduleSlug != MODULE_SLUG)	{return;}
 
 	wp_clear_scheduled_hook( 'anniversary_check_action' );
 	wp_clear_scheduled_hook( 'remove_old_events_action' );
-});
+}

@@ -92,14 +92,15 @@ function displaySchedules(){
 }
 
 // register custom meta tag field
-add_action( 'init', function(){
+add_action( 'init', __NAMESPACE__.'\registerPostMeta');
+function registerPostMeta(){
 	register_post_meta( 'event', 'eventdetails', array(
         'show_in_rest' 	=> true,
         'single' 		=> true,
         'type' 			=> 'string',
 		'sanitize_callback' => 'sanitize_text_field'
     ) );
-} );
+} 
 
 add_action( 'added_post_meta', __NAMESPACE__.'\createEvents', 10, 4);
 add_action( 'updated_postmeta', __NAMESPACE__.'\createEvents', 10, 4);

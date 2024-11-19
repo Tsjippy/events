@@ -2,7 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action( 'wp_after_insert_post', function($postId, $post){
+add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 2);
+function afterInsertPost($postId, $post){
     if(has_shortcode($post->post_content, 'schedules')){
         global $Modules;
 
@@ -26,9 +27,10 @@ add_action( 'wp_after_insert_post', function($postId, $post){
 
         update_option('sim_modules', $Modules);
     }
-}, 10, 2);
+}
 
-add_action( 'wp_trash_post', function($postId){
+add_action( 'wp_trash_post',  __NAMESPACE__.'\trashPost');
+function trashPost($postId){
     global $Modules;
 
     $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents_pages', false);
@@ -46,19 +48,16 @@ add_action( 'wp_trash_post', function($postId){
         $Modules[MODULE_SLUG]['schedule_pages']   = array_values($pages);
         update_option('sim_modules', $Modules);
     }
-} );
+}
 
-add_action( 'wp_enqueue_scripts', function(){
+add_action( 'wp_enqueue_scripts', __NAMESPACE__.'\loadAssets');
+function loadAssets(){
     if(str_contains($_SERVER['REQUEST_URI'], '.map')){
         return;
     }
 
     wp_register_script('sim_frontend_events_script', SIM\pathToUrl(MODULE_PATH.'js/frontend-event.min.js'), [], MODULE_VERSION, true);
-    add_filter('sim-frontend-content-js', function($dependables){
-        $dependables[]  = 'sim_frontend_events_script';
-
-        return $dependables;
-    });
+    add_filter('sim-frontend-content-js', __NAMESPACE__.'\addDependable');
 
     //css
     wp_register_style('sim_schedules_css', SIM\pathToUrl(MODULE_PATH.'css/schedules.min.css'), array(), MODULE_VERSION);
@@ -84,4 +83,10 @@ add_action( 'wp_enqueue_scripts', function(){
             wp_enqueue_style('sim_events_css');
         }
     }
-});
+}
+
+function addDependable($dependables){
+    $dependables[]  = 'sim_frontend_events_script';
+
+    return $dependables;
+}
