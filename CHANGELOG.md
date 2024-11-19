@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- removed anomynous functions
 
 ### Fixed
 
