@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- duplicate function names
 
 ### Updated
+
+## [8.0.6] - 2024-11-22
+
+
+### Fixed
+- duplicate function names
 
 ## [8.0.5] - 2024-11-22
 
