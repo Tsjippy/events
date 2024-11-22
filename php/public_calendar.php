@@ -2,9 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action( 'init', function() {
+add_action( 'init', __NAMESPACE__.'\init');
+function init() {
     add_rewrite_endpoint( 'public_calendar', EP_ROOT);
-});
+}
 
 add_action( 'template_redirect', __NAMESPACE__.'\templateRedirect' );
 function templateRedirect() {

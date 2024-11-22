@@ -2,10 +2,11 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_filter('sim_frontend_posting_modals', function($types){
+add_filter('sim_frontend_posting_modals', __NAMESPACE__.'\postingModals');
+function postingModals($types){
 	$types[]	= 'event';
 	return $types;
-});
+}
 
 add_action('init', __NAMESPACE__.'\addEventPostType', 999);
 function addEventPostType(){

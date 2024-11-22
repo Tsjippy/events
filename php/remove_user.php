@@ -3,7 +3,8 @@ namespace SIM\EVENTS;
 use SIM;
 
 // remove all events related to the user to be deleted
-add_action('delete_user', function ($userId, $reassign){
+add_action('delete_user', __NAMESPACE__.'\userDeleted', 10, 2);
+function userDeleted($userId, $reassign){
     $events     = new Events();
 
     $allMeta    = get_user_meta($userId);
@@ -39,4 +40,4 @@ add_action('delete_user', function ($userId, $reassign){
             wp_update_post( $arg, false, false );
         }
     }
-}, 10, 2);
+}
