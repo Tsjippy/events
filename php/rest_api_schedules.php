@@ -2,8 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action( 'rest_api_init', __NAMESPACE__.'restApiInit');
-function restApiInit() {
+add_action( 'rest_api_init', __NAMESPACE__.'schedulesRestApiInit');
+function schedulesRestApiInit() {
 	//add_schedule
 	register_rest_route(
 		RESTAPIPREFIX.'/events',

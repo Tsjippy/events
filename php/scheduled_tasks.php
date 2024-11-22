@@ -2,8 +2,8 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_action('init', __NAMESPACE__.'\init');
-function init(){
+add_action('init', __NAMESPACE__.'\initTasks');
+function initTasks(){
 	//add action for use in scheduled task
 	add_action( 'remove_old_events_action', __NAMESPACE__.'\removeOldEvents');
 	add_action( 'anniversary_check_action', __NAMESPACE__.'\anniversaryCheck');
