@@ -9,6 +9,12 @@
 
 ### Updated
 
+## [8.0.4] - 2024-11-19
+
+
+### Changed
+- removed anomynous functions
+
 ## [8.0.3] - 2024-10-17
 
 
