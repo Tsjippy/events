@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- typo
-- php memory exhaustion
 
 ### Updated
+
+## [8.0.8] - 2024-11-27
+
+
+### Fixed
+- typo
+- php memory exhaustion
 
 ## [8.0.6] - 2024-11-22
 
