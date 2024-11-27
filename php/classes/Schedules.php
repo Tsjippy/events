@@ -958,7 +958,7 @@ class Schedules{
 					}
 				}
 
-				if($date == $this->currentSchedule->enddate){
+				if($date >= $this->currentSchedule->enddate){
 					break;
 				}
 
@@ -973,7 +973,7 @@ class Schedules{
 				$html .= "</tr>";
 			}
 
-			if($startTime == $this->currentSchedule->endtime){
+			if($startTime >= $this->currentSchedule->endtime){
 				break;
 			}
 			$startTime		= $endTime;
