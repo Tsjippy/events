@@ -7,6 +7,7 @@
 
 ### Fixed
 - typo
+- php memory exhaustion
 
 ### Updated
 
