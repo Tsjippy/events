@@ -223,29 +223,38 @@ function showEditScheduleModal(target){
 
 async function checkIfValidSelection(target, selected, e){
 	//we have selected something and there are no open modals
-	var openModals	= document.querySelectorAll('.modal:not(.hidden)');
-	if((selected.length > 0 || target.classList.contains('orientation')) && (openModals == null || openModals.length == 0) ){	
-		//check if selection is valid
-		var columnNr	= selected[0].node.cellIndex;
-		var firstCell	= selected[0].node;
+	let openModals	= document.querySelectorAll('.modal:not(.hidden)');
+	if((selected.length > 0 || target.classList.contains('orientation')) && (openModals == null || openModals.length == 0) ){
 
-		for (const selection of selected){
-			if(columnNr != selection.node.cellIndex){
-				let options = {
-					icon: 'error',
-					title: "You can not select times on multiple days!",
-					confirmButtonColor: "#bd2919",
-				};
+		let firstCell;
+		let lastCell;
+		if(selected.length > 0){
+			//check if selection is valid
+			let columnNr	= selected[0].node.cellIndex;
+			firstCell		= selected[0].node;
+            lastCell		= selected[selected.length-1].node;
 
-				if(document.fullscreenElement != null){
-					options['target']	= document.fullscreenElement;
+			for (const selection of selected){
+				if(columnNr != selection.node.cellIndex){
+					let options = {
+						icon: 'error',
+						title: "You can not select times on multiple days!",
+						confirmButtonColor: "#bd2919",
+					};
+
+					if(document.fullscreenElement != null){
+						options['target']	= document.fullscreenElement;
+					}
+
+					Swal.fire(options);
+
+					e.target.closest('.sim-table')._selectable.clear();
+					return;
 				}
-
-				Swal.fire(options);
-
-				e.target.closest('.sim-table')._selectable.clear();
-				return;
 			}
+		}else{
+			firstCell	= target;
+			lastCell	= target;
 		}
 		
 		firstCell.dataset.oldvalue	= firstCell.innerHTML;
@@ -261,24 +270,13 @@ async function checkIfValidSelection(target, selected, e){
                 deleteHost(firstCell);
             }
 		}else{
-            let firstCell	    = selected[0].node;
-            let lastCell		= selected[selected.length-1].node;
             let rowCount		= document.querySelectorAll('.ui-selected').length;
             applyRowSpan(firstCell, rowCount);
 
             // Only show loader when the cell is empty
             if(!firstCell.matches('.selected')){
                 Main.showLoader(firstCell.firstChild);
-            }
-
-            let startTime	= firstCell.closest('tr').dataset.starttime;
-
-            let endTime		= firstCell.dataset.endtime;
-            if(endTime == undefined){
-                endTime	= lastCell.closest('tr').dataset.endtime;
-            }
-            let table		= firstCell.closest('table');
-            let date		= table.rows[0].cells[firstCell.cellIndex].dataset.isodate;
+			}
 
             firstCell.classList.add('active');
 
@@ -306,8 +304,6 @@ async function deleteHost(target){
 
 //Do something with selected items
 async function afterSelect(e, selected, _unselected){
-	console.log(e)
-	console.log(selected);
 	let target;
 	if(selected[0] != undefined){
 		target 	= selected[0].node;
@@ -386,9 +382,7 @@ function addSelectable(){
 			}
 
 			// only allow 1 timeslot if we have fixed timeslots
-			console.log(table.closest('.schedules_div.table-wrapper').dataset.fixedslotsize == '1');
 			if(table.closest('.schedules_div.table-wrapper').dataset.fixedslotsize == '1' ){
-				console.log('test');
 				options.maxSelectable	= 1;
 			}
 

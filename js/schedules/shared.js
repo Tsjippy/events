@@ -99,6 +99,7 @@ export function showTimeslotModal(selected=''){
 
 	if(selected[0] == undefined){
 		firstCell	= selected;
+		lastCell	= firstCell;
 		startTime	= firstCell.dataset.starttime;
 		endTime		= firstCell.dataset.endtime;
 	}else{
@@ -217,7 +218,7 @@ export function showTimeslotModal(selected=''){
 	Main.showModal(modal);
 }
 
-export async function editTimeSlot(target, date, dateStr){
+export async function editTimeSlot(target, date){
 	let options	= {
 		title: 'What do you want to do?',
 		text: "Do you want to edit or remove this timeslot?",

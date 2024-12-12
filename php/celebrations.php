@@ -255,7 +255,7 @@ function arrivingUsersMessage(){
 
 	//If there are arrivals
 	if(!empty($arrivingUsers)){
-		$html 	.= '<div name="arrivals" style="font-size: 18px;">';
+		$html 	.= '<div name="arrivals" style="font-size: 18px;margin-top:20px;">';
 			$html 	.= '<h3>Arrivals</h3>';
 
 			$html .= '<p>';
