@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- editing time slots
 
 ### Updated
 
