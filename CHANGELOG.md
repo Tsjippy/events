@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- editing time slots
 
 ### Updated
+
+## [8.0.9] - 2024-12-12
+
+
+### Fixed
+- editing time slots
 
 ## [8.0.8] - 2024-11-27
 
