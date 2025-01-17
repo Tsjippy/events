@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- missing_events shortcode
 
 ### Changed
-- after update hook
 
 ### Fixed
 
 ### Updated
+
+## [8.1.0] - 2025-01-17
+
+
+### Added
+- missing_events shortcode
+
+### Changed
+- after update hook
 
 ## [8.0.9] - 2024-12-12
 
