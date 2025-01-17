@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- missing_events shortcode
 
 ### Changed
 - after update hook
