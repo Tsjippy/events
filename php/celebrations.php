@@ -39,6 +39,11 @@ function getAnniversaries(){
 		if(!empty($startYear) && $startYear != date('Y-m-d')){
 			$title		= $event->post_title;
 			$age		= SIM\getAge($startYear);
+
+			if($age == "zero"){
+				continue;
+			}
+			
 			$privacy	= (array)get_user_meta($event->post_author, 'privacy_preference', true);
 
 			if(substr($title, 0, 8) == 'Birthday' && in_array('hide_age', $privacy)){
