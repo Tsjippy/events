@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- 0 years celebrations
 
 ### Updated
+
+## [8.1.1] - 2025-02-09
+
+
+### Fixed
+- 0 years celebrations
 
 ## [8.1.0] - 2025-01-17
 
