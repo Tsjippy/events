@@ -49,7 +49,7 @@ class Schedules{
 
 		$this->mobile				= wp_is_mobile();
 
-		if(array_intersect(['editor', 'personnelinfo'], $this->user->roles)){
+		if(array_intersect(['editor'], $this->user->roles)){
 			$this->admin			= true;
 		}else{
 			$this->admin			= false;
@@ -156,7 +156,7 @@ class Schedules{
 		$this->viewRoles	= maybe_unserialize($this->currentSchedule->view_roles);
 
 		if(empty($this->adminRoles)){
-			$this->adminRoles	= ['editor', 'personnelinfo'];
+			$this->adminRoles	= ['editor'];
 		}
 		
 		if(array_intersect($this->adminRoles, $this->user->roles)){

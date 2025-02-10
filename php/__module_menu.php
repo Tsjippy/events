@@ -165,17 +165,6 @@ function moduleUpdated($options, $moduleSlug, $oldOptions){
 
 	scheduleTasks();
 
-	$roleSet = get_role( 'contributor' )->capabilities;
-
-	// Only add the new role if it does not exist
-	if(!wp_roles()->is_role( 'personnelinfo' )){
-		add_role(
-			'personnelinfo',
-			'Personnel Info',
-			$roleSet
-		);
-	}
-
 	$options	= SIM\ADMIN\createDefaultPage($options, 'schedules_pages', 'Schedules', '[schedules]', $oldOptions);
 
 	return $options;
