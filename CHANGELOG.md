@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- removed personnelinfo role
 
 ### Fixed
 
 ### Updated
+
+## [8.1.2] - 2025-02-10
+
+
+### Changed
+- removed personnelinfo role
 
 ## [8.1.1] - 2025-02-09
 
