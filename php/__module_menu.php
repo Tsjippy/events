@@ -150,13 +150,8 @@ function moduleActions(){
 
 }
 
-add_filter('sim_module_updated', __NAMESPACE__.'\moduleUpdated', 10, 3);
+add_filter('sim_module_events_after_save', __NAMESPACE__.'\moduleUpdated', 10, 3);
 function moduleUpdated($options, $moduleSlug, $oldOptions){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $options;
-	}
-
 	$events	= new Events();
 	$events->createEventsTable();
 
