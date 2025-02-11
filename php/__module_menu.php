@@ -2,7 +2,7 @@
 namespace SIM\EVENTS;
 use SIM;
 
-const MODULE_VERSION		= '8.1.2';
+const MODULE_VERSION		= '8.1.3';
 
 DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 
