@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- use site date and time format
 
 ### Fixed
 
