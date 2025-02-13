@@ -9,13 +9,8 @@ DEFINE(__NAMESPACE__.'\MODULE_PATH', plugin_dir_path(__DIR__));
 //module slug is the same as grandparent folder name
 DEFINE(__NAMESPACE__.'\MODULE_SLUG', strtolower(basename(dirname(__DIR__))));
 
-add_filter('sim_submenu_description', __NAMESPACE__.'\subMenuDescription', 10, 2);
-function subMenuDescription($description, $moduleSlug){
-	//module slug should be the same as the constant
-	if($moduleSlug != MODULE_SLUG)	{
-		return $description;
-	}
-
+add_filter('sim_submenu_events_description', __NAMESPACE__.'\subMenuDescription');
+function subMenuDescription($description){
 	ob_start();
 	?>
 	<p>
@@ -27,13 +22,8 @@ function subMenuDescription($description, $moduleSlug){
 	return $description.ob_get_clean();
 }
 
-add_filter('sim_submenu_options', __NAMESPACE__.'\subMenuOptions', 10, 3);
-function subMenuOptions($optionsHtml, $moduleSlug, $settings){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $optionsHtml;
-	}
-
+add_filter('sim_submenu_events_options', __NAMESPACE__.'\subMenuOptions', 10, 2);
+function subMenuOptions($optionsHtml, $settings){
 	ob_start();
     ?>
 	<label for="freq">How often should we check for expired events?</label>
@@ -80,16 +70,11 @@ function subMenuOptions($optionsHtml, $moduleSlug, $settings){
 	<?php
 	SIM\pictureSelector('anniversary_image', 'Anniversary', $settings);
 
-	return ob_get_clean();
+	return $optionsHtml.ob_get_clean();
 }
 
-add_filter('sim_module_functions', __NAMESPACE__.'\moduleFunctions', 10, 2);
-function moduleFunctions($functionHtml, $moduleSlug){
-	//module slug should be the same as grandparent folder name
-	if($moduleSlug != MODULE_SLUG){
-		return $functionHtml;
-	}
-
+add_filter('sim_module_events_functions', __NAMESPACE__.'\moduleFunctions');
+function moduleFunctions($functionHtml){
 	global $wpdb;
     
     $query  	= "SELECT * FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
@@ -137,7 +122,7 @@ function moduleFunctions($functionHtml, $moduleSlug){
 	</form>
 
 	<?php
-	return ob_get_clean();
+	return $functionHtml.ob_get_clean();
 }
 
 add_action('sim_module_actions', __NAMESPACE__.'\moduleActions');
@@ -147,11 +132,10 @@ function moduleActions(){
 		$query  	= "DELETE `{$wpdb->prefix}sim_events` FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
     	$wpdb->query($query);
 	}
-
 }
 
 add_filter('sim_module_events_after_save', __NAMESPACE__.'\moduleUpdated', 10, 3);
-function moduleUpdated($options, $moduleSlug, $oldOptions){
+function moduleUpdated($options, $oldOptions){
 	$events	= new Events();
 	$events->createEventsTable();
 

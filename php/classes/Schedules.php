@@ -201,9 +201,13 @@ class Schedules{
 		}
 
 		$html	= "<div class='schedules_wrapper' style='position: relative;'>";
-			$html	.= $this->addModals();
-			$html	.= $schedules;
-			$html	.= $form;
+			if(empty($schedules) && empty($form)){
+				$html	.= "There are currently no schedules set up. Please check again later";
+			}else{
+				$html	.= $this->addModals();
+				$html	.= $schedules;
+				$html	.= $form;
+			}
 		$html	.= "</div>";
 			
 		return $html;
