@@ -98,8 +98,6 @@ class CreateEvents extends Events{
 			$weeks			= (array)$repeatParam['weeks'];
 		}
 
-		$weekDayNames	= ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 		switch ($repeatParam['type']){
 			case 'daily':
 				$startDate		= strtotime("+{$index} day", $baseStartDate);
@@ -127,44 +125,46 @@ class CreateEvents extends Events{
 			case 'monthly' || 'yearly':
 				// Get the next month
 				if($repeatParam['type'] == 'yearly'){
-					$startDate	= strtotime("+{$index} year", $baseStartDate);
+					$startDate			= strtotime("+{$index} year", $baseStartDate);
+					$recurrenceString	= "year";
 				}else{
-					$startDate	= strtotime("first day of +{$index} month", $baseStartDate);
+					$startDate			= strtotime("first day of +{$index} month", $baseStartDate);
+					$recurrenceString	= "month";
 				}
 
 				// same day number
-				if($repeatParam['datetype'] == 'samedate'){
-					// The new month does not have this date
-					if(Date('t', $startDate) < Date('d', $baseStartDate)){
-						return false;
+				if(!empty($repeatParam['datetype'])){
+					if($repeatParam['datetype'] == 'samedate'){
+						// The new month does not have this date
+						if(Date('t', $startDate) < Date('d', $baseStartDate)){
+							return false;
+						}
+
+						$day		= Date('d', $baseStartDate)-1;
+						$startDate	= strtotime("+$day days", $startDate);
 					}
+					// Same week and day i.e. first friday
+					elseif($repeatParam['datetype'] == 'patterned'){
+						// The weeknumber of the first week of the month
+						$firstWeek	= Date('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
 
-					$day		= Date('d', $baseStartDate)-1;
-					$startDate	= strtotime("+$day days", $startDate);
-				// Same week and day i.e. first friday
-				}elseif($repeatParam['datetype'] == 'patterned'){
-					// The weeknumber of the first week of the month
-					$firstWeek	= Date('W', strtotime("first day of 0 month", $baseStartDate));
+						// The weeknumber of this week in the month
+						$targetWeek	= SIM\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
 
-					// The weeknumber of this week in the month
-					$targetWeek	= SIM\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
+						$dayName	= Date('l', $baseStartDate);
 
-					$dayName	= Date('l', $baseStartDate);
-
-					$startDate	= strtotime("$targetWeek $dayName of +{$index} month", $baseStartDate);
-				// last day of the month
-				}elseif($repeatParam['datetype'] == 'lastday'){
-					$startDate	= strtotime("last day +$index month", $baseStartDate);
-				// Same last day i.e. last Friday
-				}else{
-					$dayName	= Date('l', $baseStartDate);
-					$startDate	= strtotime("last $dayName of +{$index} month", $baseStartDate);
+						$startDate	= strtotime("$targetWeek $dayName of +{$index} $recurrenceString", $baseStartDate);
+					}
+					// last day of the month
+					elseif($repeatParam['datetype'] == 'lastday'){
+						$startDate	= strtotime("last day +$index month", $baseStartDate);
+					}
+					// Same last day i.e. last Friday
+					else{
+						$dayName	= Date('l', $baseStartDate);
+						$startDate	= strtotime("last $dayName of +{$index} $recurrenceString", $baseStartDate);
+					}
 				}
-
-				break;
-			case 'yearly':
-				$startDate	= strtotime("+{$index} year", $baseStartDate);
-
 
 				break;
 			case 'custom_days':
@@ -210,11 +210,13 @@ class CreateEvents extends Events{
 			$this->startDates	= [date('Y-m-d', $baseStartDate)];
 		}
 		
+		// Calculate amount of repititions
 		$repeatStop	= $repeatParam['stop'];
 		if($repeatParam['stop'] == 'after' && !empty($repeatParam['amount']) && is_numeric($amount)){
 			$amount = intval($repeatParam['amount'])-1;	// The first event is already created
 		}
 
+		// calculate repetition end date
 		if($repeatStop == 'date'){
 			$repEnddate	= strtotime($repeatParam['enddate']);
 		}else{
@@ -326,7 +328,10 @@ class CreateEvents extends Events{
 			$oldTime	= strtotime($oldMetaValue);
 			$newTime	= strtotime($metaValue);
 
-			if(Date('Y', $oldTime) != Date('Y', $newTime) && Date('m-d', $oldTime) == Date('m-d', $newTime)){
+			if(
+				Date('Y', $oldTime) != Date('Y', $newTime) && 
+				Date('m-d', $oldTime) == Date('m-d', $newTime)
+			){
 				// no need to create new events, just update the meta value
 				$postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
 

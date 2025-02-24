@@ -14,71 +14,215 @@ function showMissingEvents(){
 			'post_type'		=> 'event',
 			//'author'		=> 137,
 			'numberposts'	=> -1,
+            'tax_query'     => [
+                [
+                    'taxonomy'          => 'events',
+                    'field'             => 'slug', 
+                    'terms'             => 'anniversary',
+                    'include_children'  => true
+                ]
+            ]
 		)
 	);
 
-    $html   = "<table class='sim table'>";
+    $anniversaryRows    = [];
+    $weddingRows        = [];
+    $birthdayRows       = [];
 
     foreach($posts as $post){
-        $celDate    = get_post_meta($post->ID, 'celebrationdate', true);
+        $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
+        if(!empty($celDate)){
+            $celDate    = date(DATEFORMAT, strtotime($celDate));
+        }
 
-        $author   = get_user_by('id', $post->post_author);
+        $arrivalDate    = get_user_meta($post->post_author, 'arrival_date', true);
+        if(!empty($arrivalDate)){
+            $arrivalDate    = date(DATEFORMAT, strtotime($arrivalDate));
+        }
+
+        $weddingDate    = get_user_meta($post->post_author, 'family', true);
+        if(is_array($weddingDate)){
+            $weddingDate    = date(DATEFORMAT, strtotime($weddingDate['weddingdate']));
+        }
+
+        $author     = get_user_by('id', $post->post_author);
         if(!$author){
             wp_delete_post($post->ID);
+            continue;
+        }
+
+        if ( !empty($celDate)){
+            if($celDate != $arrivalDate){
+                // this is a rogue event
+                if( get_user_meta($post->post_author, 'SIM Nigeria anniversary_event_id', true) != $post->ID ){
+                    wp_delete_post($post->ID);
+                }
+
+                $anniversaryRows[]  = [
+                    $author,
+                    $celDate,
+                    $arrivalDate,
+                    $post->ID
+                ];
+            }
+
+            if( $celDate != $weddingDate){
+                // this is a rogue event
+                if( get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID ){
+                    wp_delete_post($post->ID);
+                }
+
+                $weddingRows[]  = [
+                    $author,
+                    $celDate,
+                    $weddingDate,
+                    $post->ID
+                ];
+            }
+        }else{
+            echo 'fail';
+        }
+    }
+
+    $posts = get_posts(
+		array(
+			'post_type'		=> 'event',
+			'numberposts'	=> -1,
+            'tax_query'     => [
+                [
+                    'taxonomy'          => 'events',
+                    'field'             => 'slug', 
+                    'terms'             => 'birthday',
+                    'include_children'  => true
+                ]
+            ]
+		)
+	);
+
+    foreach($posts as $post){
+        if(get_user_meta($post->post_author, 'birthday_event_id', true) != $post->ID){
+            wp_delete_post($post->ID);
+            continue;
+        }
+
+        $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
+        if(!empty($celDate)){
+            $celDate    = date(DATEFORMAT, strtotime($celDate));
+        }
+
+        $author     = get_user_by('id', $post->post_author);
+        if(!$author){
+            wp_delete_post($post->ID);
+            continue;
         }
 
         if (!empty($celDate)){
-            if(has_term(44, "events", $post->ID)  && $celDate != get_user_meta($post->post_author, 'arrival_date', true)){
-                if(get_user_meta($post->post_author, 'SIM Nigeria anniversary_event_id', true) != $post->ID && get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID){
-                    wp_delete_post($post->ID);
-                }else{
-                    $weddingDate    = get_user_meta($post->post_author, 'family', true);
-
-                    if(!is_array($weddingDate) || $celDate != $weddingDate['weddingdate']){
-                        $html   .= "<tr><td>Event date: $celDate.</td>";
-                        $html   .= "<td>Arrival date: ".get_user_meta($post->post_author, 'arrival_date', true)."</td>";
-    
-                        $html   .= "<td>";
-                        if(!empty( $weddingDate)){
-                            $html   .= "Wedding date: {$weddingDate['weddingdate']}";
-                        }else{
-                            $html   .= " - ";
-                        }
-                        $html   .= "</td>";
-                        $html   .= "<td><a href='/add-content/?post_id=$post->ID' target='_blank'>Edit event</a></td></tr>";
-                    }
-                }
+            $birthday   = get_user_meta($post->post_author, 'birthday', true);
+            if(!empty($birthday)){
+                $birthday    = date(DATEFORMAT, strtotime($birthday));
             }
 
-            if(has_term(43, "events", $post->ID)  && $celDate != get_user_meta($post->post_author, 'birthday', true)){
-                if(get_user_meta($post->post_author, 'birthday_event_id', true) != $post->ID){
-                    wp_delete_post($post->ID);
-                }else{
-                    $html   .= "<tr><td>Event date: $celDate.</td>";
-                    $html   .= "<td>Birthdate: ".get_user_meta($post->post_author, 'birthday', true)."</td><td> - </td>";
-                    $html   .= "<td><a href='/add-content/?post_id=$post->ID' target='_blank'>Edit event</a></td></tr>";
-                }
-                
+            if($celDate != $birthday){
+                $birthdayRows[]  = [
+                    $author,
+                    $celDate,
+                    $birthday,
+                    $post->ID
+                ];               
             }            
-        };
+        }else{
+            echo 'fail';
+        }
     }
 
-    foreach(getUserAccounts() as $user){
+    ob_start();
+
+    if(!empty($anniversaryRows)){
+        ?>
+        <h4>SIM Anniversaries</h4>
+        <?php
+        tableBody($anniversaryRows);
+    }
+
+    if(!empty($weddingRows)){
+        ?>
+        <h4>Wedding Anniversaries</h4>
+        <?php
+        tableBody($weddingRows);
+    }
+
+    if(!empty($birthdayRows)){
+        ?>
+        <h4>Birthdays</h4>
+        <?php
+        tableBody($birthdayRows);
+    }
+
+    $missingEvents   = '';
+
+    foreach(get_users() as $user){
         if(empty(get_user_meta($user->ID, 'birthday_event_id', true))){
-            $html   .= "<tr><td>Missing Birthdays event</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Birthdays</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
         if(empty(get_user_meta($user->ID, 'SIM Nigeria anniversary_event_id', true))){
-            $html   .= "<tr><td>Missing Anniversary event</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
         $weddingDate    = get_user_meta($user->ID, 'family', true);
 
         if(is_array($weddingDate) && !empty($weddingDate['weddingdate']) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
-            $html   .= "<tr><td>Missing Wedding event</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Wedding</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
     }
-    $html   .= "</table>";
+   
+    ?>
+    <h4>Missing Events</h4>
+    <table class='sim table'>
+        <thead>
+            <th>Type</th>
+            <th>Link</th>
+        </thead>
+        <tbody>
+            <?php echo $missingEvents;?>
+        </tbody>
+    </table>
 
-    return $html;
+    <?php
+
+    return ob_get_clean();
+}
+
+function tableBody($data){
+    ?>
+    <table class='sim table'>
+        <thead>
+            <th>User</th>
+            <th>Event Date</th>
+            <th>Meta Date</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            <?php
+            foreach($data as $row){
+                ?>
+                <tr>
+                    <?php
+                    foreach($row as $index=>$d){
+                        if($index == 0){
+                            echo "<td>{$d->display_name}</td>";
+                        }elseif($index == 1 || $index == 2){
+                            echo "<td>$d</td>";
+                        }else{
+                            echo "<td><a href='/add-content/?post_id=$d' target='_blank'>Edit event</a></td>";
+                        }
+                    }
+                    ?>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+    <?php
 }

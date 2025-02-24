@@ -124,6 +124,11 @@ function moduleFunctions($functionHtml){
 	<?php
 	return $functionHtml.ob_get_clean();
 }
+add_filter('sim_module_events_data', __NAMESPACE__.'\moduleData');
+function moduleData($html){
+	return $html.showMissingEvents();
+}
+
 
 add_action('sim_module_actions', __NAMESPACE__.'\moduleActions');
 function moduleActions(){
