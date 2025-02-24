@@ -2,14 +2,21 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- administror has admin role by default
 
 ### Changed
 
 ### Fixed
-- repeated yearly events
 
 ### Updated
+
+## [8.1.5] - 2025-02-24
+
+
+### Added
+- administror has admin role by default
+
+### Fixed
+- repeated yearly events
 
 ## [8.1.4] - 2025-02-13
 
