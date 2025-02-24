@@ -8,9 +8,29 @@ function pluginUpdate($oldVersion){
 
     SIM\printArray($oldVersion);
 
-    if($oldVersion < '2.41.7'){
-        $schedules = new Schedules();
+    if($oldVersion < '8.1.5'){
+        $events	= new CreateEvents();
 
-        SIM\printArray($oldVersion);
+        $posts = get_posts([
+            'post_type' => 'event',
+            'numberposts' => -1
+        ]);
+
+        foreach($posts as $post){
+            $eventMeta		= get_post_meta($post->ID, 'eventdetails', true);
+            if(!is_array($eventMeta)){
+                if(!empty($eventMeta)){
+                    $eventMeta	= (array)json_decode($eventMeta, true);
+
+                    if(!empty($eventMeta['repeat']['type']) && $eventMeta['repeat']['type'] == 'yearly'){
+                        $events->eventData  = $eventMeta;
+                        $events->postId     = $post->ID;
+                        $events->createEvents();
+                    }
+                }else{
+                    $eventMeta	= [];
+                }
+            }
+        }
     }
 }
