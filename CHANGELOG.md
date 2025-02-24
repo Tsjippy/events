@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- repeated yearly events
 
 ### Updated
 
