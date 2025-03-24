@@ -1110,6 +1110,7 @@ class DisplayEvents extends Events{
 				$timeString	= "is already started";
 			}
 			$title	= get_the_title($event->post_id);
+			
 			SIM\trySendSignal("'$title' is about to start\nIt $timeString", $event->onlyfor);
 		}
 
