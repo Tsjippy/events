@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- check for valid user when creating events
 
 ### Updated
 
