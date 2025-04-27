@@ -301,6 +301,10 @@ class CreateEvents extends Events{
 		if(is_numeric($user)){
 			$user = get_userdata($user);
 		}
+
+		if(!$user){
+			return new WP_Error('invalid user', 'Invalid User or User ID supplied');
+		}
 		
 		if(empty($metaKey)){
 			$metaKey = $type;
