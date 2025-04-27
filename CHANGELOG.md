@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- check for valid user when creating events
 
 ### Updated
+
+## [8.1.6] - 2025-04-27
+
+
+### Fixed
+- check for valid user when creating events
 
 ## [8.1.5] - 2025-02-24
 
