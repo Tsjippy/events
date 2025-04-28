@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- base picture path
 
 ### Updated
+
+## [8.1.7] - 2025-04-28
+
+
+### Fixed
+- base picture path
 
 ## [8.1.6] - 2025-04-27
 
