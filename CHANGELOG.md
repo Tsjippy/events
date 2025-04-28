@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- base picture path
 
 ### Updated
 
