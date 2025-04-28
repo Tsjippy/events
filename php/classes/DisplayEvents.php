@@ -450,7 +450,7 @@ class DisplayEvents extends Events{
 		$calendarRows	= '';
 		$detailHtml		= '';
 
-		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'../pictures');
+		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
 
 		//loop over all weeks of a month
 		while(true){
