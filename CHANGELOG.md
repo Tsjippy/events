@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- exclude private events from search
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.1.8] - 2025-07-03
+
+
+### Added
+- exclude private events from search
 
 ## [8.1.7] - 2025-04-28
 
