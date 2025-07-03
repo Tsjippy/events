@@ -10,6 +10,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+
+$events		= new DisplayEvents();
+$event		= $events->retrieveSingleEvent(get_the_ID());
+if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
+	?>
+	<div class='error'>
+		This event is not ment for you to see, sorry.
+	</div>
+
+	<?php
+	return;
+}
+
+
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="cat_card inside-article">
@@ -90,12 +104,13 @@ function displayEventCategories(){
 }
 
 function displayEventMeta(){
-	$events		= new DisplayEvents();
-	$event		= $events->retrieveSingleEvent(get_the_ID());
+	global $events;
+	global $event;
+
 	if(!$event){
 		return;
 	}
-	
+
 	$date		= $events->getDate($event);
 	$time		= $events->getTime($event);
 	$meta		= get_post_meta($event->ID, 'eventdetails', true);
