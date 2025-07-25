@@ -80,11 +80,19 @@ function anniversaryCheck(){
 
 			$age	= SIM\getAge($startYear);
 
-			SIM\trySendSignal("Hi $firstName,\nCongratulations with your $age $eventTitle!", $event->post_author);
+			do_action(
+				'sim-events-anniversary-message',
+				"Hi $firstName,\nCongratulations with your $age $eventTitle!", 
+				$event->post_author
+			);
 
 			//If the author has a partner and this events applies to both of them
 			if($partner && str_contains($event->post_title, $coupleString)){
-				SIM\trySendSignal("Hi {$partner->first_name},\nCongratulations with your $eventTitle!", $partner->ID);
+				do_action(
+					'sim-events-anniversary-message',
+					"Hi {$partner->first_name},\nCongratulations with your $eventTitle!", 
+					$partner->ID
+				);
 			}
 		}
 	}
