@@ -2,14 +2,19 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- 'sim-events-event-reminder' action
-- 'sim-theme-archive-page-title' filter
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [8.2.0] - 2025-08-07
+
+
+### Added
+- 'sim-events-event-reminder' action
+- 'sim-theme-archive-page-title' filter
 
 ## [8.1.8] - 2025-07-03
 
