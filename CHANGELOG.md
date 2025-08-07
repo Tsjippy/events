@@ -3,6 +3,7 @@
 
 ### Added
 - 'sim-events-event-reminder' action
+- 'sim-theme-archive-page-title' filter
 
 ### Changed
 
