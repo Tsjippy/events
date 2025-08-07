@@ -30,3 +30,14 @@ function editButton($buttonHtml, $post, $content){
 
     return $buttonHtml;
 }
+
+add_filter('sim-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
+function changeArchiveTitle($title, $category){
+    if($title == 'Event Posts'){
+        $title = 'Calendar';
+    }elseif(is_tax('events')){
+        $title .= ucfirst($category->name).' Events';
+    }
+	
+	return $title;
+}
