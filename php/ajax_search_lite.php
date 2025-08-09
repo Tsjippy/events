@@ -22,7 +22,7 @@ function excludePersonalEventsFromSearchWhereClause($where){
     $userId = get_current_user_id();
     
     if($userId === 0){
-        return $where;
+        return "AND (onlyfor IS NULL) $where";
     }
     
     SIM\getFamilyName($userId, false, $partnerId);
