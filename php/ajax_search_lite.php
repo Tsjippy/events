@@ -19,8 +19,18 @@ function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search){
 
 add_filter('asl_cpt_query_add_where', __NAMESPACE__.'\excludePersonalEventsFromSearchWhereClause');
 function excludePersonalEventsFromSearchWhereClause($where){
-    $userId = wp_get_current_user()->ID;
+    $userId = get_current_user_id();
+    
+    if($userId === 0){
+        return $where;
+    }
+    
     SIM\getFamilyName($userId, false, $partnerId);
-
-    return "AND (onlyfor IS NULL OR onlyfor = $userId OR onlyfor = $partnerId OR atendees LIKE '%;i:$userId;%') $where";
+    $partnerString = '';
+    
+    if(!empty($partnerId)){
+        $partnerString = "OR onlyfor = $partnerId";
+    }
+    
+    return "AND (onlyfor IS NULL OR onlyfor = $userId $partnerString OR atendees LIKE '%;i:$userId;%') $where";
 }
