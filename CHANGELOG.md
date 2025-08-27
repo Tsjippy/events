@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- cleaner interface while adding schedules
 
 ### Fixed
 
