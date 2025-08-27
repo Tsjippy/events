@@ -1341,6 +1341,12 @@ class Schedules{
 			return '';
 		}
 
+		//Get all available roles
+		$userRoles = $wp_roles->role_names;
+		
+		//Sort the roles
+		asort($userRoles);
+
 		?>
 		<h3 style='text-align:center;'>Add a schedule</h3>
 		<form class='add-schedule-form'>
@@ -1429,45 +1435,31 @@ class Schedules{
 				</label>
 				<br>
 				<br>
-				<label>
-					<h4>Roles with admin permissions:</h4>
+				<h4>Roles with admin permissions:</h4>
+				<select name='admin-roles[]' multiple>
+					<option value=''>---</option>
+
 					<?php
-					//Get all available roles
-					$userRoles = $wp_roles->role_names;
-					
-					//Sort the roles
-					asort($userRoles);
-					foreach($userRoles as $key=>$role){
-						?>
-						<label>
-							<input type="checkbox" name="admin-roles[]" value="<?php echo $key;?>">
-							<?php echo $role;?>
-						</label>
-						<br>
-						<?php
+					foreach($userRoles as $key=>$roleName){
+						echo "<option value='$key'>$roleName</option>";
 					}
 					?>
-				</label>
+				</select>
 				<br>
 				<label>
 					<h4>Roles with with full view permissions</h4>
+
 					<small><i>Roles without full view permission can only see the meal rows if they are not in the schedule</i></small><br>
-					<label>
-						<input type="checkbox" name="view-roles[]" value="everyone">
-						Everyone
-					</label>
-					<br>
-					<?php
-					foreach($userRoles as $key=>$role){
-						?>
-						<label>
-							<input type="checkbox" name="view-roles[]" value="<?php echo $key;?>">
-							<?php echo $role;?>
-						</label>
-						<br>
+					<select name='view-roles[]' multiple>
+						<option value=''>---</option>
+						<option value='everyone'>Everyone</option>
+
 						<?php
-					}
-					?>
+						foreach($userRoles as $key=>$roleName){
+							echo "<option value='$key'>$roleName</option>";
+						}
+						?>
+					</select>
 				</label>
 			</div>
 			

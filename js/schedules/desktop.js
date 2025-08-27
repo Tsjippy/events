@@ -211,12 +211,14 @@ function showEditScheduleModal(target){
 	modal.querySelector(`[name="skipdiner"]`).checked		= parseInt(table.dataset.skipdiner);
 	modal.querySelector(`[name="skiporientation"]`).checked	= table.rows.length<3;
 
-
 	let adminRoles	= JSON.parse(table.dataset.adminroles);
-	modal.querySelectorAll(`[name="admin-roles[]"]`).forEach(checkbox => checkbox.checked = adminRoles.includes(checkbox.value));
+	modal.querySelectorAll(`[name="admin-roles[]"] option`).forEach(option => option.selected = adminRoles.includes(option.value));
+	modal.querySelectorAll(`[name="admin-roles[]"]`).forEach(select => select.dispatchEvent(new Event('change')));
 
 	let viewRoles	= JSON.parse(table.dataset.viewroles);
-	modal.querySelectorAll(`[name="view-roles[]"]`).forEach(checkbox => checkbox.checked = viewRoles.includes(checkbox.value));
+
+	modal.querySelectorAll(`[name="view-roles[]"] option`).forEach(option => option.selected = viewRoles.includes(option.value));
+	modal.querySelectorAll(`[name="view-roles[]"]`).forEach(select => select.dispatchEvent(new Event('change')));
 
 	Main.showModal(modal);
 }
