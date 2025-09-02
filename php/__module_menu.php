@@ -139,7 +139,7 @@ function moduleActions(){
 	}
 }
 
-add_filter('sim_module_events_after_save', __NAMESPACE__.'\moduleUpdated', 10, 3);
+add_filter('sim_module_events_after_save', __NAMESPACE__.'\moduleUpdated', 10, 2);
 function moduleUpdated($options, $oldOptions){
 	$events	= new Events();
 	$events->createEventsTable();
