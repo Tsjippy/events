@@ -6,6 +6,7 @@
 ### Changed
 - cleaner interface while adding schedules
 - loader image
+- loader size
 
 ### Fixed
 
