@@ -4,12 +4,18 @@
 ### Added
 
 ### Changed
-- cleaner interface while adding schedules
-- loader image
 
 ### Fixed
 
 ### Updated
+
+## [8.2.1] - 2025-09-24
+
+
+### Changed
+- cleaner interface while adding schedules
+- loader image
+- loader size
 
 ## [8.2.0] - 2025-08-07
 
