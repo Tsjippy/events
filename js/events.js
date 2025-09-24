@@ -8,7 +8,11 @@ async function requestMonth(target, month, year){
 
     let calendarPage   = document.querySelector(`.events-wrap[data-date="${year}-${month}"]`);
     if(calendarPage == null){
-        target.closest('.calendar-wrap').insertAdjacentHTML('beforeEnd', sim.loaderHtml);
+        let wrapper = target.closest('.calendar-wrap');
+        
+        wrapper.insertAdjacentHTML('beforeEnd', sim.loaderHtml);
+
+        Main.adjustLoaderImageSize(wrapper.querySelector('.loader_wrapper'), 100);
         
         let formData = new FormData();
         formData.append('month', month);
@@ -38,10 +42,15 @@ async function requestWeek(target, wknr, year){
 
     let calendarPage   = document.querySelector(`.events-wrap[data-weeknr="${wknr}"]`);
     if(calendarPage == null){
-        target.closest('.calendar-wrap').insertAdjacentHTML(
+
+        let wrapper = target.closest('.calendar-wrap');
+        
+        wrapper.insertAdjacentHTML(
             'beforeEnd',
             sim.loaderHtml
         );
+
+        Main.adjustLoaderImageSize(wrapper.querySelector('.loader_wrapper'), 100);
         
         let formData = new FormData();
         formData.append('wknr',wknr);
@@ -72,6 +81,7 @@ async function requestExpandList(offset, month='', year=''){
     }
 
     document.getElementById('listview').insertAdjacentHTML('beforeEnd', sim.loaderHtml);
+    Main.adjustLoaderImageSize(document.getElementById('listview').querySelector('.loader_wrapper'), 100);
     
     let formData = new FormData();
     formData.append('offset',offset);
@@ -82,7 +92,7 @@ async function requestExpandList(offset, month='', year=''){
         
     if(response) {
         document.querySelector('#listview').querySelector('.loader').remove();
-        document.querySelector('#listview').insertAdjacentHTML('beforeEnd',response);
+        document.querySelector('#listview').insertAdjacentHTML('beforeEnd', response);
     }
 }                                                    
                                                                            
