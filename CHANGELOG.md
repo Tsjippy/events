@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- hide loaders
 
 ### Updated
 
