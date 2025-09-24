@@ -42,7 +42,7 @@ async function publishSchedule(target){
 	var response	= await FormSubmit.submitForm(target, 'events/publish_schedule');
 
 	if(response){
-		document.querySelectorAll('.schedule_actions .loadergif').forEach(el=>el.classList.add('hidden'));
+		document.querySelectorAll('.schedule_actions .loader_wrapper').forEach(el=>el.classList.add('hidden'));
 		
 		Main.hideModals();
 
