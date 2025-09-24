@@ -8,7 +8,7 @@ async function requestMonth(target, month, year){
 
     let calendarPage   = document.querySelector(`.events-wrap[data-date="${year}-${month}"]`);
     if(calendarPage == null){
-        target.closest('.calendar-wrap').insertAdjacentHTML('beforeEnd', `<img class="loader" src="${sim.loadingGif}" style="margin-left: auto;margin-right: auto;display: block;">`);
+        target.closest('.calendar-wrap').insertAdjacentHTML('beforeEnd', sim.loaderHtml);
         
         let formData = new FormData();
         formData.append('month', month);
@@ -40,7 +40,7 @@ async function requestWeek(target, wknr, year){
     if(calendarPage == null){
         target.closest('.calendar-wrap').insertAdjacentHTML(
             'beforeEnd',
-            `<img class="loader" src="${sim.loadingGif}" style="margin-left: auto;margin-right: auto;display: block;">`
+            sim.loaderHtml
         );
         
         let formData = new FormData();
@@ -71,7 +71,7 @@ async function requestExpandList(offset, month='', year=''){
         window.history.pushState({}, '', url);
     }
 
-    document.getElementById('listview').insertAdjacentHTML('beforeEnd','<img class="loader" src="'+sim.loadingGif+'" style="margin-left: auto;margin-right: auto;display: block;">');
+    document.getElementById('listview').insertAdjacentHTML('beforeEnd', sim.loaderHtml);
     
     let formData = new FormData();
     formData.append('offset',offset);
