@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- js generated loader
 
 ### Fixed
 - hide loaders
