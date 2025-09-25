@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.2] - 2025-09-25
+
+
+### Changed
 - js generated loader
 
 ### Fixed
 - hide loaders
-
-### Updated
 
 ## [8.2.1] - 2025-09-24
 
