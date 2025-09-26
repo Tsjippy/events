@@ -27,11 +27,11 @@ async function addSchedule(target){
 }
 
 function ShowPublishScheduleModal(target){
-	var modal			= target.closest('.schedules_div').querySelector('.publish_schedule');
+	var modal			= target.closest('.schedules-div').querySelector('.publish-schedule');
 	modal.querySelector('[name="schedule_id"]').value = target.dataset["schedule_id"];
 	if(target.dataset.target != null){
 		modal.querySelector('[name="schedule_target"]').value = target.dataset.target;
-		modal.querySelector('[name="publish_schedule"]').click();
+		modal.querySelector('[name="publish-schedule"]').click();
 		Main.showLoader(target,true);
 	}else{
 		Main.showModal(modal);
@@ -39,10 +39,10 @@ function ShowPublishScheduleModal(target){
 }
 
 async function publishSchedule(target){
-	var response	= await FormSubmit.submitForm(target, 'events/publish_schedule');
+	var response	= await FormSubmit.submitForm(target, 'events/publish-schedule');
 
 	if(response){
-		document.querySelectorAll('.schedule_actions .loader_wrapper').forEach(el=>el.classList.add('hidden'));
+		document.querySelectorAll('.schedule-actions .loader-wrapper').forEach(el=>el.classList.add('hidden'));
 		
 		Main.hideModals();
 
@@ -60,14 +60,14 @@ async function removeSchedule(target){
 	var formData 		= new FormData();
 	formData.append('schedule_id', scheduleId);
 
-	var confirmed		= await checkConfirmation(text, target.closest('.schedules_div'));
+	var confirmed		= await checkConfirmation(text, target.closest('.schedules-div'));
 	if(confirmed){
 		var response	= await FormSubmit.fetchRestApi('events/remove_schedule', formData);
 
 		if(response){
 			Main.displayMessage(response);
 
-			document.querySelector('.schedules_wrapper .loaderwrapper:not(.hidden)').remove();
+			document.querySelector('.schedules_wrapper .loader-wrapper:not(.hidden)').remove();
 		}
 	}
 }
@@ -187,8 +187,8 @@ async function submitRecipe(target){
 }
 
 function showEditScheduleModal(target){
-	let modal		= document.getElementById('edit_schedule_modal');
-	let wrapper		= target.closest('.schedules_div');
+	let modal		= document.getElementById('edit-schedule_modal');
+	let wrapper		= target.closest('.schedules-div');
 	let table		= wrapper.querySelector('table.schedule');
 
 	let scheduleId	= wrapper.dataset.id;
@@ -196,7 +196,7 @@ function showEditScheduleModal(target){
 	modal.querySelector(`[name="schedule_id"]`).value		= scheduleId;
 	modal.querySelector(`[name="target_id"]`).value			= table.dataset.target_id;
 	modal.querySelector(`[name="target_name"]`).value		= table.dataset.target;
-	modal.querySelector(`[name="schedule_info"]`).value		= wrapper.querySelector('.table_title.sub-title').textContent;
+	modal.querySelector(`[name="schedule_info"]`).value		= wrapper.querySelector('.table-title.sub-title').textContent;
 	modal.querySelector(`[name="startdate"]`).value			= table.tHead.querySelector('tr').cells[1].dataset.isodate;
 	modal.querySelector(`[name="enddate"]`).value			= table.tHead.querySelector('tr').cells[table.tHead.querySelector('tr').cells.length-1].dataset.isodate;
 	modal.querySelector(`[name="timeslotsize"]`).value		= wrapper.dataset.slotsize;
@@ -384,7 +384,7 @@ function addSelectable(){
 			}
 
 			// only allow 1 timeslot if we have fixed timeslots
-			if(table.closest('.schedules_div.table-wrapper').dataset.fixedslotsize == '1' ){
+			if(table.closest('.schedules-div.table-wrapper').dataset.fixedslotsize == '1' ){
 				options.maxSelectable	= 1;
 			}
 
@@ -420,7 +420,7 @@ document.addEventListener('click', function(event){
 		event.stopPropagation();
 
 		addSchedule(target);
-	}else if(target.name == 'publish_schedule'){
+	}else if(target.name == 'publish-schedule'){
 		event.stopPropagation();
 
 		publishSchedule(target);
@@ -440,7 +440,7 @@ document.addEventListener('click', function(event){
 		event.stopPropagation();
 
 		removeSchedule(target);
-	}else if(target.matches('.edit_schedule')){
+	}else if(target.matches('.edit-schedule')){
 		event.stopPropagation();
 
 		showEditScheduleModal(target);

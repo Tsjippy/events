@@ -220,7 +220,7 @@ function displayRepetitionParameters($eventDetails){
 		
 		<div class="custom_dates_selector <?php echo $repeatParam['type'] == 'custom_days' ? 'hide' : 'hidden';?>">
 			<h4> Specify repeat days</h4>
-			<div class="clone_divs_wrapper">
+			<div class="clone-divs-wrapper">
 				<?php
 				if(!empty($eventDetails['repeat']['includedates']) && is_array($eventDetails['repeat']['includedates'])){
 					$includeDates	= $eventDetails['repeat']['includedates'];
@@ -230,7 +230,7 @@ function displayRepetitionParameters($eventDetails){
 				
 				foreach($includeDates as $index=>$includeDate){
 					?>
-					<div id="includedate_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+					<div id="includedate_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
 						<label>Include date <?php echo $index+1;?></label>
 						<div class='buttonwrapper'>
 							<input type="date" name="event[repeat][includedates][<?php echo $index;?>]" style="flex: 9;" value="<?php echo $includeDate;?>">
@@ -272,7 +272,7 @@ function displayRepetitionParameters($eventDetails){
 		
 		<div>
 			<h4>Exclude dates from this pattern</h4>
-			<div class="clone_divs_wrapper">
+			<div class="clone-divs-wrapper">
 			<?php
 			if(empty($eventDetails['repeat']['excludedates'])){
 				$excludeDates	= [''];
@@ -282,7 +282,7 @@ function displayRepetitionParameters($eventDetails){
 			
 			foreach($excludeDates as $index=>$excludeDate){
 				?>
-				<div id="excludedate_div_<?php echo $index;?>" class="clone_div" data-divid="<?php echo $index;?>">
+				<div id="excludedate_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
 					<label>Exclude date <?php echo $index+1;?></label>
 					<div class='buttonwrapper'>
 						<input type="date" name="event[repeat][excludedates][<?php echo $index;?>]" style="flex: 9;" value="<?php echo $excludeDate;?>">

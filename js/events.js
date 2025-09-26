@@ -10,9 +10,7 @@ async function requestMonth(target, month, year){
     if(calendarPage == null){
         let wrapper = target.closest('.calendar-wrap');
 
-        Main.showLoader(wrapper.lastChild, false);
-
-        Main.adjustLoaderImageSize(wrapper.querySelector('.loader_wrapper'), 100);
+        Main.showLoader(wrapper.lastChild, false, 100);
         
         let formData = new FormData();
         formData.append('month', month);
@@ -45,9 +43,7 @@ async function requestWeek(target, wknr, year){
 
         let wrapper = target.closest('.calendar-wrap');
 
-        Main.showLoader(wrapper.lastChild, false);
-
-        Main.adjustLoaderImageSize(wrapper.querySelector('.loader_wrapper'), 100);
+        Main.showLoader(wrapper.lastChild, false, 100);
         
         let formData = new FormData();
         formData.append('wknr',wknr);

@@ -7,7 +7,8 @@
     "events": "webpack --watch --entry ./events.js --output-path . --output-filename events.min.js --progress --mode=production --devtool source-map",
     "mobile": "webpack --watch --entry ./schedules/mobile.js --output-path . --output-filename mobile-schedule.min.js --progress --mode=production --devtool source-map",
     "desktop": "webpack --watch --entry ./schedules/desktop.js --output-path . --output-filename desktop-schedule.min.js --progress --mode=production --devtool source-map",
-    "frontend": "webpack --watch --entry ./frontEndContent.js --output-path . --output-filename frontend-event.min.js --progress --mode=production --devtool source-map"
+    "frontend": "webpack --watch --entry ./frontEndContent.js --output-path . --output-filename frontend-event.min.js --progress --mode=production --devtool source-map",
+    "all": "run-p events mobile desktop frontend"
   },
   "author": "Ewald Harmsen",
   "license": "ISC",

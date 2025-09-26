@@ -520,7 +520,7 @@ class DisplayEvents extends Events{
 											$detailHtml .= '</div>';
 										}
 										$detailHtml .= "<div class='event-time'>";
-											$detailHtml .= "<img src='{$baseUrl}/time_red.png' loading='lazy' alt='time' class='event_icon'>";
+											$detailHtml .= "<img src='{$baseUrl}/time_red.png' loading='lazy' alt='time' class='event-icon'>";
 											$detailHtml .=  $this->getTime($event);
 										$detailHtml .= "</div>";
 									$detailHtml .= "</div>";
@@ -533,19 +533,19 @@ class DisplayEvents extends Events{
 									$detailHtml .= "<div class='event-detail'>";
 										if(!empty($event->location)){
 											$detailHtml .= "<div class='location'>";
-												$detailHtml .= "<img src='{$baseUrl}/location_red.png' loading='lazy' alt='time' class='event_icon'>";
+												$detailHtml .= "<img src='{$baseUrl}/location_red.png' loading='lazy' alt='time' class='event-icon'>";
 												$detailHtml .= $this->getLocationDetail($event);
 											$detailHtml .= "</div>";
 										}
 										if(!empty($event->organizer)){
 											$detailHtml .= "<div class='organizer'>";
-												$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event_icon'>";
+												$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event-icon'>";
 												$detailHtml .= $this->getAuthorDetail($event);
 											$detailHtml .= "</div>";
 										}
 										if(!empty($meta['repeat']['type'])){
 											$detailHtml .= "<div class='repeat'>";
-												$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event_icon'>";
+												$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
 												$detailHtml .= $this->getRepeatDetail($meta);
 											$detailHtml .= "</div>";
 										}
@@ -656,7 +656,7 @@ class DisplayEvents extends Events{
 						$detailHtml .= '</div>';
 					}
 					$detailHtml .= "<div class='event-time'>";
-						$detailHtml .= "<img src='{$baseUrl}/time_red.png' alt='time' loading='lazy' class='event_icon'>";
+						$detailHtml .= "<img src='{$baseUrl}/time_red.png' alt='time' loading='lazy' class='event-icon'>";
 						$detailHtml .=  $this->getDate($event).'   '.$this->getTime($event);
 					$detailHtml .= "</div>";
 
@@ -668,20 +668,20 @@ class DisplayEvents extends Events{
 					$detailHtml .= "<div class='event-detail'>";
 						if(!empty($event->location)){
 							$detailHtml .= "<div class='location'>";
-								$detailHtml .= "<img src='{$baseUrl}/location_red.png' alt='time' loading='lazy' class='event_icon'>";
+								$detailHtml .= "<img src='{$baseUrl}/location_red.png' alt='time' loading='lazy' class='event-icon'>";
 								$detailHtml .= $this->getLocationDetail($event);
 							$detailHtml .= "</div>";
 						}
 						if(!empty($event->organizer)){
 							$detailHtml .= "<div class='organizer'>";
-								$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event_icon'>";
+								$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event-icon'>";
 								$detailHtml .= $this->getAuthorDetail($event);
 							$detailHtml .= "</div>";
 						}
 
 						if(!empty($meta['repeat']['type'])){
 							$detailHtml .= "<div class='repeat'>";
-								$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event_icon'>";
+								$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
 								$detailHtml .= $this->getRepeatDetail($meta);
 							$detailHtml .= "</div>";
 						}
@@ -1039,28 +1039,28 @@ class DisplayEvents extends Events{
 					$html .= "</h3>";
 					$html .= "<div class='event-detail'>";
 						$html .= "<div class='date'>";
-							$html .="<img src='{$baseUrl}/date.png' alt='' loading='lazy' class='event_icon'>";
+							$html .="<img src='{$baseUrl}/date.png' alt='' loading='lazy' class='event-icon'>";
 							$html .= $this->getDate($event);
 						$html .= "</div>";
 						$html .= "<div class='time'>";
-							$html .="<img src='{$baseUrl}/time_red.png' alt='' loading='lazy' class='event_icon'>";
+							$html .="<img src='{$baseUrl}/time_red.png' alt='' loading='lazy' class='event-icon'>";
 							$html .= $this->getTime($event);
 						$html .= "</div>";
 						if(!empty($event->location)){
 							$html .= "<div class='location'>";
-								$html .= "<img src='{$baseUrl}/location_red.png' alt='time' loading='lazy' class='event_icon'>";
+								$html .= "<img src='{$baseUrl}/location_red.png' alt='time' loading='lazy' class='event-icon'>";
 								$html .= $this->getLocationDetail($event);
 							$html .= "</div>";
 						}
 						if(!empty($event->organizer)){
 							$html .= "<div class='organizer'>";
-								$html .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event_icon'>";
+								$html .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event-icon'>";
 								$html .= $this->getAuthorDetail($event);
 							$html .= "</div>";
 						}
 						if(!empty($meta['repeat']['type'])){
 							$html .= "<div class='repeat'>";
-								$html .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event_icon'>";
+								$html .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
 								$html .= $this->getRepeatDetail($meta);
 							$html .= "</div>";
 						}

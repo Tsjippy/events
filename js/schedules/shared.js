@@ -10,14 +10,14 @@ export function showAddHostModal(target, date='', startTime=''){
     modal.querySelector('[name="starttime"]').value		= startTime;
 
 	// Add new values
-	modal.querySelector('[name="schedule_id"]').value	= target.closest('.schedules_div').dataset.id;
+	modal.querySelector('[name="schedule_id"]').value	= target.closest('.schedules-div').dataset.id;
 
 	modal.classList.remove('hidden');
 }
 
 // Add current user as host
 export async function addCurrentUserAsHost(target, dateStr){
-    let scheduleOwner	= target.closest('.schedules_div').dataset.target;   
+    let scheduleOwner	= target.closest('.schedules-div').dataset.target;   
 	let text 			= `Please confirm you want to be the host for ${scheduleOwner} on ${dateStr}`;
 	let confirmed		= await checkConfirmation(text, target.firstChild);
 
@@ -58,7 +58,7 @@ export function addHostHtml(response){
 export async function removeHost(target, dateStr){
 	let text, confirmed;
 
-    let scheduleOwner	= target.closest('.schedules_div').dataset.target;
+    let scheduleOwner	= target.closest('.schedules-div').dataset.target;
 
 	if(target.classList.contains('orientation')){
 		text 	= `Are you sure you want to remove this orientation session`;
@@ -113,7 +113,7 @@ export function showTimeslotModal(selected=''){
 			Main.showLoader(firstCell.firstChild);
 		}
 	}
-	modal.querySelector('[name="schedule_id"]').value		= firstCell.closest('.schedules_div').dataset.id;
+	modal.querySelector('[name="schedule_id"]').value		= firstCell.closest('.schedules-div').dataset.id;
 	
 	let table	= firstCell.closest('table');
 	startTime	= firstCell.dataset.starttime;
@@ -158,7 +158,7 @@ export function showTimeslotModal(selected=''){
 	modal.querySelector('[name="starttime"]').value			= startTime;
 	modal.querySelector('[name="endtime"]').value			= endTime;
 
-	if(firstCell.closest('.schedules_div.table-wrapper').dataset.fixedslotsize == '1' ){
+	if(firstCell.closest('.schedules-div.table-wrapper').dataset.fixedslotsize == '1' ){
 		modal.querySelector('[name="endtime"]').closest('label').querySelector('h4').textContent = 'End time';
 		modal.querySelector('[name="endtime"]').disabled	= true;
 	}else{
@@ -166,11 +166,11 @@ export function showTimeslotModal(selected=''){
 		modal.querySelector('[name="endtime"]').closest('label').querySelector('h4').textContent = 'Select an end time:'
 	}
 	
-	if(firstCell.closest('.schedules_div.table-wrapper').dataset.subject == '' || firstCell.closest('.schedules_div.table-wrapper').dataset.subject == undefined){
+	if(firstCell.closest('.schedules-div.table-wrapper').dataset.subject == '' || firstCell.closest('.schedules-div.table-wrapper').dataset.subject == undefined){
 		modal.querySelector('[name="subject"]').value		= '';
 		modal.querySelector('[name="endtime"]').disabled	= false;
 	}else{
-		modal.querySelector('[name="subject"]').value		= firstCell.closest('.schedules_div.table-wrapper').dataset.subject;
+		modal.querySelector('[name="subject"]').value		= firstCell.closest('.schedules-div.table-wrapper').dataset.subject;
 		modal.querySelector('[name="endtime"]').disabled	= true;
 	}
 
@@ -249,7 +249,7 @@ export async function editTimeSlot(target, date){
 }
 
 function loadHostFormdata(target){
-    let scheduleId		= target.closest('.schedules_div').dataset.id;
+    let scheduleId		= target.closest('.schedules-div').dataset.id;
 	let table			= target.closest('table');
 
 	let heading, cell, date, startTime, host;
@@ -277,7 +277,7 @@ function loadHostFormdata(target){
 	formData.append('starttime', startTime);
 	formData.append('schedule_id', scheduleId);
 
-	formData.append('subject', target.closest('.schedules_div.table-wrapper').dataset.subject)
+	formData.append('subject', target.closest('.schedules-div.table-wrapper').dataset.subject)
 
 	return formData;
 }

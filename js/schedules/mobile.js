@@ -78,7 +78,7 @@ document.addEventListener('click', async function(event){
 	}else if(target.name == 'add-host'){
 		event.stopPropagation();
 
-		Main.showModal(target.closest('.schedules_div').querySelector('.add-host-mobile-wrapper'));
+		Main.showModal(target.closest('.schedules-div').querySelector('.add-host-mobile-wrapper'));
 	}
 });
 
@@ -102,7 +102,7 @@ document.addEventListener('change', function(event){
 
 		form.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));
 
-		let dayWrapper	= document.querySelector(`.schedules_div[data-id='${scheduleId}'] .day-wrapper-mobile[data-isodate='${target.value}']`);
+		let dayWrapper	= document.querySelector(`.schedules-div[data-id='${scheduleId}'] .day-wrapper-mobile[data-isodate='${target.value}']`);
 
 		if(dayWrapper != null){
 			dayWrapper.classList.add('active');
@@ -115,7 +115,7 @@ document.addEventListener('change', function(event){
 		form.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));
 
 		form.querySelectorAll('[name="date[]"]:checked ').forEach(el=>{
-			let dayWrapper	= document.querySelector(`.schedules_div[data-id='${scheduleId}'] .day-wrapper-mobile[data-isodate='${el.value}']`);
+			let dayWrapper	= document.querySelector(`.schedules-div[data-id='${scheduleId}'] .day-wrapper-mobile[data-isodate='${el.value}']`);
 
 			if(dayWrapper != null){
 				dayWrapper.classList.add('active');

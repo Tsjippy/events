@@ -254,11 +254,11 @@ class Schedules{
 		$this->currentSchedule->startdate	= max([date('Y-m-d'), $this->currentSchedule->startdate]);
 		
 		?>
-		<div class='schedules_div table-wrapper' data-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
-			<div class="modal publish_schedule hidden">
+		<div class='schedules-div table-wrapper' data-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
+			<div class="modal publish-schedule hidden">
 				<div class="modal-content">
 					<span id="modal_close" class="close">&times;</span>
-					<form action="" method="post" id="publish_schedule_form">
+					<form action="" method="post" id="publish-schedule_form">
 						<input type='hidden' name='schedule_id'>
 						<p>
 							Please select the user or family this schedule should be published for.<br>
@@ -266,7 +266,7 @@ class Schedules{
 						</p>
 						<?php
 						echo SIM\userSelect('', true, true, '', 'schedule_target', $args);
-						echo SIM\addSaveButton('publish_schedule', 'Publish this schedule');
+						echo SIM\addSaveButton('publish-schedule', 'Publish this schedule');
 						?>
 					</form>
 				</div>
@@ -276,16 +276,16 @@ class Schedules{
 				?>
 				<div class='warning'>
 					This schedule has no website user connected to it.<br>
-					Please <button type="button" class="button small schedule_action edit_schedule" data-schedule_id="<?php echo $this->currentSchedule->id;?>">Edit</button> the schedule to add one.
+					Please <button type="button" class="button small schedule-action edit-schedule" data-schedule_id="<?php echo $this->currentSchedule->id;?>">Edit</button> the schedule to add one.
 				</div>
 				<?php
 			}
 			?>
 			<div style='display:inline-block;'>
-				<h3 class="table_title">
+				<h3 class="table-title">
 					Schedule for <?php echo $this->currentSchedule->name;?>
 				</h3>
-				<h3 class="table_title sub-title">
+				<h3 class="table-title sub-title">
 					<?php echo $this->currentSchedule->info;?>
 				</h3>
 			</div>
@@ -304,7 +304,7 @@ class Schedules{
 					<div class='schedule publish warning'>
 						This schedule is currently not scheduled.<br>
 						Publish it for <?php echo $name;?> to see it.<br>
-						<button type='button' class='button schedule_action publish' data-target='<?php echo $this->currentSchedule->target;?>' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Publish</button>
+						<button type='button' class='button schedule-action publish' data-target='<?php echo $this->currentSchedule->target;?>' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Publish</button>
 					</div>
 					<?php
 				}
@@ -356,13 +356,13 @@ class Schedules{
 				<?php
 				if($this->admin){
 					?>
-					<div class='schedule_actions'>
-						<button type='button' class='button schedule_action edit_schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
-						<button type='button' class='button schedule_action remove_schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
+					<div class='schedule-actions'>
+						<button type='button' class='button schedule-action edit-schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
+						<button type='button' class='button schedule-action remove_schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
 						<?php
 						//schedule is not yet set.
 						if(!$this->currentSchedule->published && $this->currentSchedule->target != 0){
-							echo "<button type='button' class='button schedule_action publish' data-target='{$this->currentSchedule->target}' data-schedule_id='{$this->currentSchedule->id}'>Publish</button>";
+							echo "<button type='button' class='button schedule-action publish' data-target='{$this->currentSchedule->target}' data-schedule_id='{$this->currentSchedule->id}'>Publish</button>";
 						}
 						?>
 					</div>
@@ -1315,7 +1315,7 @@ class Schedules{
 		if($this->admin){
 			?>
 			<!-- Edit schedule modal -->
-			<div id='edit_schedule_modal' class="modal hidden">
+			<div id='edit-schedule_modal' class="modal hidden">
 				<div class="modal-content">
 					<span class="close">&times;</span>
 					<?php

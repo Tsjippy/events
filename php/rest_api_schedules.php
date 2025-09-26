@@ -39,7 +39,7 @@ function schedulesRestApiInit() {
 	//publish_schedule
 	register_rest_route(
 		RESTAPIPREFIX.'/events',
-		'/publish_schedule',
+		'/publish-schedule',
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
