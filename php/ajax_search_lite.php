@@ -8,7 +8,7 @@ function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search){
 
     $events         = new Events();
 
-    // THe onlyfor and atendees columns
+    // The onlyfor and atendees columns
     $querystr       = str_replace("$wpdb->posts.post_title as title,","$events->tableName.onlyfor as onlyfor, $events->tableName.atendees as atendees, $wpdb->posts.post_title as title,", $querystr);
 
     // Add the joined to join posts and events table
