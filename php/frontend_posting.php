@@ -232,7 +232,7 @@ function displayRepetitionParameters($eventDetails){
 					?>
 					<div id="includedate_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
 						<label>Include date <?php echo $index+1;?></label>
-						<div class='buttonwrapper'>
+						<div class='button-wrapper'>
 							<input type="date" name="event[repeat][includedates][<?php echo $index;?>]" style="flex: 9;" value="<?php echo $includeDate;?>">
 							<button type="button" class="add button" style="flex: 1;">+</button>
 						</div>
@@ -284,7 +284,7 @@ function displayRepetitionParameters($eventDetails){
 				?>
 				<div id="excludedate_div_<?php echo $index;?>" class="clone-div" data-divid="<?php echo $index;?>">
 					<label>Exclude date <?php echo $index+1;?></label>
-					<div class='buttonwrapper'>
+					<div class='button-wrapper'>
 						<input type="date" name="event[repeat][excludedates][<?php echo $index;?>]" style="flex: 9;" value="<?php echo $excludeDate;?>">
 						<button type="button" class="add button" style="flex: 1;">+</button>
 					</div>
