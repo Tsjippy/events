@@ -457,14 +457,14 @@ document.addEventListener('change', function(event){
 
 	//Direct table actions
 	if(target.name=='target-name'){
-		var userid = target.list.querySelector(`[value='${target.value}' i]`).dataset.value;
+		var userId = target.list.querySelector(`[value='${target.value}' i]`).dataset.value;
 
-		target.closest('form').querySelector('[name="target-id"]').value	= userid;
+		target.closest('form').querySelector('[name="target-id"]').value	= userId;
 	}else if(target.id == 'host'){
 		let host	= target.list.querySelector(`[value="${target.value}"]`);
 		let userId	= '';
 		if(host != null){
-			userId	= host.dataset.userid;
+			userId	= host.dataset.user_id;
 		}
 
 		target.closest('form').querySelector('[name="host-id"]').value	= userId;
