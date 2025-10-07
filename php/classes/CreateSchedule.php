@@ -284,7 +284,7 @@ class CreateSchedule extends Schedules{
 
 				// update the post title
 				wp_update_post( array(
-					'ID'           => $event->post-id,
+					'ID'           => $event->post_id,
 					'post_title'   => "{$this->title} with $organizer",
 				));
 
@@ -352,8 +352,8 @@ class CreateSchedule extends Schedules{
 				// remove the event and all posts related to it
 				$this->currentSession->event_ids		= array_diff($this->currentSession->event_ids, [$event->id]);
 				foreach($this->currentSession->posts as $index=>$post){
-					if($ev->post-id == $post->ID){
-						$this->currentSession->post-ids		= array_diff($this->currentSession->post-ids, [$post->ID]);
+					if($ev->post_id == $post->ID){
+						$this->currentSession->post_ids		= array_diff($this->currentSession->post_ids, [$post->ID]);
 
 						unset($this->currentSession->posts[$index]);
 					}
@@ -385,7 +385,7 @@ class CreateSchedule extends Schedules{
 			}
 			extract($ids, EXTR_OVERWRITE);
 
-			$this->currentSession->post-ids		= array_merge($postIds, $this->currentSession->post-ids);
+			$this->currentSession->post_ids		= array_merge($postIds, $this->currentSession->post_ids);
 			$this->currentSession->event_ids	= array_merge($eventIds, $this->currentSession->event_ids);
 		}
 
@@ -393,7 +393,7 @@ class CreateSchedule extends Schedules{
 		$wpdb->update(
 			$this->sessionTableName,
 			[
-				'post-ids'		=> serialize($this->currentSession->post-ids),
+				'post_ids'		=> serialize($this->currentSession->post_ids),
 				'event_ids'		=> serialize($this->currentSession->event_ids)
 			],
 			[
@@ -587,7 +587,7 @@ class CreateSchedule extends Schedules{
 			$session	= $this->getSessionEvent($session);
 		}
 
-		foreach(maybe_unserialize($session->post-ids) as $postId){
+		foreach(maybe_unserialize($session->post_ids) as $postId){
 			//delete events
 			$this->events->removeDbRows($postId, true);
 		}
@@ -771,7 +771,7 @@ class CreateSchedule extends Schedules{
 
 		$startTime		= sanitize_text_field($_POST['starttime']);
 
-		$menu			= sanitize_text_field($_POST['recipe_keyword']);
+		$menu			= sanitize_text_field($_POST['recipe-keyword']);
 
 		$events			= $this->getScheduleSession($date, $startTime);
 
@@ -779,7 +779,7 @@ class CreateSchedule extends Schedules{
 			return 'No meal found';
 		}
 
-		foreach($events->post-ids as $postId){
+		foreach($events->post_ids as $postId){
 			update_post_meta($postId, 'recipe_keyword', $menu);
 		}
 

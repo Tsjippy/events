@@ -524,10 +524,10 @@ class Schedules{
 	protected function parsePostsAndEvents(&$result){
 		global $wpdb;
 
-		$result->post-ids	= unserialize($result->post-ids);
+		$result->post_ids	= unserialize($result->post_ids);
 		$result->event_ids	= unserialize($result->event_ids);
 
-		$ids				= implode(',', $result->post-ids);
+		$ids				= implode(',', $result->post_ids);
 		$result->posts		= $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID IN ($ids)");
 
 		$ids				= implode(',', $result->event_ids);
@@ -806,7 +806,7 @@ class Schedules{
 				$dataset	.= " data-atendees='".json_encode($atendees)."'";
 			}
 
-			$reminders		= (array)get_post_meta($event->post-id, 'reminders', true);
+			$reminders		= (array)get_post_meta($event->post_id, 'reminders', true);
 			if(!empty($reminders)){
 				$dataset	.= " data-reminders='".json_encode($reminders)."'";
 			}
@@ -819,9 +819,9 @@ class Schedules{
 			}else{
 				$baseTitle	= $this->getBaseTitle();
 				$dataset	.= " data-subject='$baseTitle'";
-				$url		= get_permalink($event->post-id);
+				$url		= get_permalink($event->post_id);
 				$date		= $event->startdate;
-				$cellText	= "<span class='subject' data-userid='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
+				$cellText	= "<span class='subject' data-user_id='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
 			}
 			
 			if (!is_numeric($hostId)) {
@@ -1083,7 +1083,7 @@ class Schedules{
 							if(
 								$this->admin	||	// We can change any event
 								(
-									isset($data['event']->organizer-id)	&&						// an organizer id is set
+									isset($data['event']->organizer_id)	&&						// an organizer id is set
 									$data['event']->organizer-id	== get_current_user_id()	// we are the organizer
 								)
 							){

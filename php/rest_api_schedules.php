@@ -168,11 +168,11 @@ function schedulesRestApiInit() {
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
 				$schedule				= new CreateSchedule();
-				return $schedule->removeHost($_POST['session_id']);
+				return $schedule->removeHost($_POST['session-id']);
 			},
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-				'session_id'		=> array(
+				'session-id'		=> array(
 					'required'			=> true,
 					'validate_callback' => function($scheduleId){
 						return is_numeric($scheduleId);

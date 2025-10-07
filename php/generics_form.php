@@ -11,7 +11,7 @@ function beforeSavingFormData($formResults, $object){
 	
 	$events	= new CreateEvents();
 	$events->createCelebrationEvent('birthday', $object->userId, 'birthday', $_POST['birthday']);
-	$events->createCelebrationEvent(SITENAME.' anniversary', $object->userId, 'arrival_date', $_POST['arrival_date']);
+	$events->createCelebrationEvent(SITENAME.' anniversary', $object->userId, 'arrival_date', $_POST['arrival-date']);
 	
 	return $formResults;
 }

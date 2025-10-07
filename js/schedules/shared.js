@@ -73,7 +73,7 @@ export async function removeHost(target, dateStr){
 	if(confirmed){
 		
 		let formData		= new FormData();
-		formData.append('session_id', target.dataset.session_id);
+		formData.append('session-id', target.dataset.session_id);
 		Main.showLoader(target.firstChild);
 
 		var response = await FormSubmit.fetchRestApi('events/remove_host', formData);
@@ -125,7 +125,7 @@ export function showTimeslotModal(selected=''){
 		date		= table.rows[0].cells[firstCell.cellIndex].dataset.isodate;
 	}
 
-	hostId			= firstCell.dataset.host-id;
+	hostId			= firstCell.dataset.host_id;
 	//oldTime			= firstCell.dataset.old_time;
 	subject			= firstCell.dataset.subject;
 	location		= firstCell.dataset.location;
@@ -256,7 +256,7 @@ function loadHostFormdata(target){
 
 	if(table == null){
 		startTime		= target.dataset.starttime;
-		host			= target.dataset.host-id;
+		host			= target.dataset.host_id;
 		date			= target.dataset.isodate
 	}else{
 		heading			= table.tHead.rows[0];

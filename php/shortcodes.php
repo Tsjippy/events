@@ -162,17 +162,17 @@ function showMissingEvents(){
 
     foreach(get_users() as $user){
         if(empty(get_user_meta($user->ID, 'birthday_event_id', true))){
-            $missingEvents   .= "<tr><td>Birthdays</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Birthdays</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
         if(empty(get_user_meta($user->ID, 'SIM Nigeria anniversary_event_id', true))){
-            $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
         $weddingDate    = get_user_meta($user->ID, 'family', true);
 
         if(is_array($weddingDate) && !empty($weddingDate['weddingdate']) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
-            $missingEvents   .= "<tr><td>Wedding</td><td><a href='/edit-users/?userid=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
+            $missingEvents   .= "<tr><td>Wedding</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
     }
    

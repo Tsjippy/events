@@ -74,7 +74,7 @@ class CreateEvents extends Events{
 			$wpdb->update($this->tableName,
 				$args,
 				array(
-					'post-id'		=> $this->postId,
+					'post_id'		=> $this->postId,
 					'startdate'		=> $startDate
 				),
 			);
@@ -502,7 +502,7 @@ class CreateEvents extends Events{
 			$wpdb->insert(
 				$this->tableName,
 				array(
-					'post-id'			=> $this->postId,
+					'post_id'			=> $this->postId,
 					'startdate'			=> $startdate
 				)
 			);
