@@ -10,7 +10,7 @@
     margin-right: 5px;
 }
 
-#add_calendar{
+#add-calendar{
     margin-bottom: 10px;
     @media (max-width: $tabletwidth){
         display: none;
@@ -118,7 +118,7 @@ article.event{
         }
 
         .selected:not(li){
-            background-color: $primary_color;
+            background-color: $primaryColor;
             color: white;
         }
     }
@@ -129,7 +129,7 @@ article.event{
         border: none;
 
         a{
-            color: $primary_color;
+            color: $primaryColor;
             color: #a9a9a9;
             font-size: 12px;
             font-weight: 400;
@@ -138,7 +138,7 @@ article.event{
             padding: 10px;
 
             span{
-                color: $primary_color;
+                color: $primaryColor;
             }
         }
 
@@ -259,11 +259,11 @@ article.event{
 
         .calendar-day{
             &.has-event:not(.nullday,:hover){
-                color: $primary_color;
+                color: $primaryColor;
             }
 
             &:hover{
-                background: $primary_color;
+                background: $primaryColor;
                 color: white;
 
                 &.selected{
@@ -274,19 +274,19 @@ article.event{
 
             &.selected:not(.nullday){
                 text-decoration: underline;
-                -webkit-text-decoration-color: $primary_color;
-                text-decoration-color: $primary_color;
+                -webkit-text-decoration-color: $primaryColor;
+                text-decoration-color: $primaryColor;
             }
         }
 
         .calendar-hour{
             &.has-event{
-                background: $secundary_color;
+                background: $secundaryColor;
                 color: white;
             }
 
             &.has-event:hover, &.selected{
-                background: $primary_color;
+                background: $primaryColor;
             }
         } 
 
@@ -321,11 +321,11 @@ article.event{
                 position: relative;
                 text-align: center;
                 line-height: 46px;
-                border: 1px solid $primary_color;
-                border-top-color: $primary_color;
-                border-right-color: $primary_color;
-                border-bottom-color: $primary_color;
-                border-left-color: $primary_color;
+                border: 1px solid $primaryColor;
+                border-top-color: $primaryColor;
+                border-right-color: $primaryColor;
+                border-bottom-color: $primaryColor;
+                border-left-color: $primaryColor;
                 border-radius: 50%;
                 font-size: 12px;
                 font-weight: 600;

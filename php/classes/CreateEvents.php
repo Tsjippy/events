@@ -64,7 +64,7 @@ class CreateEvents extends Events{
 			];
 
 			// only add the data where there is a column for it
-			foreach(['id', 'post_id', 'starttime', 'endtime', 'location', 'organizer', 'location_id', 'organizer_id', 'atendees', 'onlyfor'] as $column){
+			foreach(['id', 'post-id', 'starttime', 'endtime', 'location', 'organizer', 'location_id', 'organizer-id', 'atendees', 'onlyfor'] as $column){
 				if(isset($this->eventData[$column])){
 					$args[$column]	= $this->eventData[$column];
 				}
@@ -74,7 +74,7 @@ class CreateEvents extends Events{
 			$wpdb->update($this->tableName,
 				$args,
 				array(
-					'post_id'		=> $this->postId,
+					'post-id'		=> $this->postId,
 					'startdate'		=> $startDate
 				),
 			);
@@ -383,7 +383,7 @@ class CreateEvents extends Events{
 		$this->eventData['enddate']				= $startdate;
 		$this->eventData['location']			= '';
 		$this->eventData['organizer']			= $user->display_name;
-		$this->eventData['organizer_id']		= $user->ID;
+		$this->eventData['organizer-id']		= $user->ID;
 		$this->eventData['starttime']			= '00:00';
 		$this->eventData['endtime']				= '23:59';
 		$this->eventData['allday']				= true;
@@ -419,7 +419,7 @@ class CreateEvents extends Events{
 		wp_set_object_terms($this->postId, $termId, 'events');
 
 		// Set the featured image
-		$pictureIds	= SIM\getModuleOption(MODULE_SLUG, 'picture_ids');
+		$pictureIds	= SIM\getModuleOption(MODULE_SLUG, 'picture-ids');
 		if($type == 'birthday'){
 			$pictureId = $pictureIds['birthday_image'];
 		}else{
@@ -463,9 +463,9 @@ class CreateEvents extends Events{
 		$event['repeat']['enddate']		= sanitize_text_field($event['repeat']['enddate']);
 		$event['repeat']['amount']		= sanitize_text_field($event['repeat']['amount']);
 		$event['location']				= sanitize_text_field($event['location']);
-		$event['location_id']			= sanitize_text_field($event['location_id']);
+		$event['location_id']			= sanitize_text_field($event['location-id']);
 		$event['organizer']				= sanitize_text_field($event['organizer']);
-		$event['organizer_id']			= sanitize_text_field($event['organizer_id']);
+		$event['organizer-id']			= sanitize_text_field($event['organizer-id']);
 	
 		//check if anything has changed
 		$oldMeta	= get_post_meta($this->postId, 'eventdetails', true);
@@ -498,11 +498,11 @@ class CreateEvents extends Events{
 		global $wpdb;
 		
 		//check if form row already exists
-		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post_id` = '{$this->postId}' AND startdate = '$startdate'")){
+		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post-id` = '{$this->postId}' AND startdate = '$startdate'")){
 			$wpdb->insert(
 				$this->tableName,
 				array(
-					'post_id'			=> $this->postId,
+					'post-id'			=> $this->postId,
 					'startdate'			=> $startdate
 				)
 			);

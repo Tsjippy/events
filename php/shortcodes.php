@@ -214,7 +214,7 @@ function tableBody($data){
                         }elseif($index == 1 || $index == 2){
                             echo "<td>$d</td>";
                         }else{
-                            echo "<td><a href='/add-content/?post_id=$d' target='_blank'>Edit event</a></td>";
+                            echo "<td><a href='/add-content/?post-id=$d' target='_blank'>Edit event</a></td>";
                         }
                     }
                     ?>

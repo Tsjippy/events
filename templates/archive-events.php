@@ -59,7 +59,7 @@ function showCalendar(){
 		<?php
 		do_action('sim_before_archive', 'event');
 		?>
-		<button id='add_calendar' class='button small'>Add this calendar to your personal agenda</button>
+		<button id='add-calendar' class='button small'>Add this calendar to your personal agenda</button>
 		<div id='calendaraddingoptions' class='hidden'>
 			<p>
 				To add the calendar to your sim.org calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">email.sim.org</a>.<br>
@@ -81,7 +81,7 @@ function showCalendar(){
 					$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
 					echo "<img src='{$baseUrl}/date.png' alt='time' loading='lazy' class='event-icon'>";
 					?>
-					<select class='month_selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">
+					<select class='month-selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">
 						<?php
 						for ($m=1; $m<13; $m++){
 							$monthName	= date("F", mktime(0, 0, 0, $m, 10));
@@ -95,7 +95,7 @@ function showCalendar(){
 						}
 						?>
 					</select>
-					<select class='week_selector<?php if($view!='week'){echo ' hidden';}?>' placeholder="Select week">
+					<select class='week-selector<?php if($view!='week'){echo ' hidden';}?>' placeholder="Select week">
 						<?php
 						for ($w=1;$w<=53;$w++){
 							if($_GET['week'] == $w){
@@ -107,7 +107,7 @@ function showCalendar(){
 						}
 						?>
 					</select>
-					<select class="year_selector" placeholder="Select year">
+					<select class="year-selector" placeholder="Select year">
 						<?php
 						$start 	= date('Y');
 						$end	= date("Y",strtotime('+10 year'));

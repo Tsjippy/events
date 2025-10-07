@@ -39,7 +39,7 @@ function scheduleTasks(){
 function removeOldEvents(){
 	global $wpdb;
 
-	$maxAge   	= SIM\getModuleOption(MODULE_SLUG, 'max_age');
+	$maxAge   	= SIM\getModuleOption(MODULE_SLUG, 'max-age');
 
 	$events		= new CreateEvents();
 
@@ -126,13 +126,13 @@ function addRepeatedEvents(){
 		if(!is_array($details)){
 			$details	= json_decode($details, true);
 		}else{
-			update_post_meta($result->post_id, 'eventdetails', json_encode($details));
+			update_post_meta($result->post-id, 'eventdetails', json_encode($details));
 		}
 
 		if(@is_array($details['repeat']) && !empty($details['repeat']['stop']) && $details['repeat']['stop'] == 'never'){
 			$events	= new CreateEvents();
 			$events->eventData	= $details;
-			$events->postId		= $result->post_id;
+			$events->postId		= $result->post-id;
 			$events->createEvents();
 		}
 	}

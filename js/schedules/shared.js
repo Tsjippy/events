@@ -1,7 +1,7 @@
 //shows the modal to select a user as host
 export function showAddHostModal(target, date='', startTime=''){
 	target.classList.add('active');
-	let modal											= document.querySelector('[name="add_host"]');
+	let modal											= document.querySelector('[name="add-host"]');
 
 	// Clear
 	modal.querySelectorAll('input:not([type="hidden"], [type="radio"])').forEach(el=>el.value='');
@@ -10,7 +10,7 @@ export function showAddHostModal(target, date='', startTime=''){
     modal.querySelector('[name="starttime"]').value		= startTime;
 
 	// Add new values
-	modal.querySelector('[name="schedule_id"]').value	= target.closest('.schedules-div').dataset.id;
+	modal.querySelector('[name="schedule-id"]').value	= target.closest('.schedules-div').dataset.id;
 
 	modal.classList.remove('hidden');
 }
@@ -88,8 +88,8 @@ export async function removeHost(target, dateStr){
 
 export function showTimeslotModal(selected=''){
 	let reminders, firstCell, lastCell, date, startTime, endTime, hostId, oldTime, subject, location, hostName, eventId, sessionId, atendees, li, html, option;
-	let modal 		= document.querySelector('[name="add_session"]');
-	let ul			= modal.querySelector('ul.listselectionlist');
+	let modal 		= document.querySelector('[name="add-session"]');
+	let ul			= modal.querySelector('ul.list-selection-list');
 
 	// Clear
 	modal.querySelectorAll('input:not([type="hidden"], [type="checkbox"], [type="radio"])').forEach(el=>el.value='');
@@ -113,7 +113,7 @@ export function showTimeslotModal(selected=''){
 			Main.showLoader(firstCell.firstChild);
 		}
 	}
-	modal.querySelector('[name="schedule_id"]').value		= firstCell.closest('.schedules-div').dataset.id;
+	modal.querySelector('[name="schedule-id"]').value		= firstCell.closest('.schedules-div').dataset.id;
 	
 	let table	= firstCell.closest('table');
 	startTime	= firstCell.dataset.starttime;
@@ -125,7 +125,7 @@ export function showTimeslotModal(selected=''){
 		date		= table.rows[0].cells[firstCell.cellIndex].dataset.isodate;
 	}
 
-	hostId			= firstCell.dataset.host_id;
+	hostId			= firstCell.dataset.host-id;
 	//oldTime			= firstCell.dataset.old_time;
 	subject			= firstCell.dataset.subject;
 	location		= firstCell.dataset.location;
@@ -174,14 +174,14 @@ export function showTimeslotModal(selected=''){
 		modal.querySelector('[name="endtime"]').disabled	= true;
 	}
 
-	modal.querySelector('[name="add_timeslot"]').classList.remove('add_schedule_row');
-	modal.querySelector('[name="add_timeslot"]').classList.add('update_schedule');
+	modal.querySelector('[name="add-timeslot"]').classList.remove('add_schedule_row');
+	modal.querySelector('[name="add-timeslot"]').classList.add('update_schedule');
 
 	if(sessionId != undefined){
 		modal.querySelector('[name="session-id"]').value	= sessionId;
 	}
 	if(hostId	!= undefined){
-		modal.querySelector('[name="host_id"]').value		= hostId;
+		modal.querySelector('[name="host-id"]').value		= hostId;
 
 	}
 	if(subject	!= undefined){
@@ -196,7 +196,7 @@ export function showTimeslotModal(selected=''){
 	if(atendees != undefined){
 		atendees.forEach(atendee => {
 			li	 		= document.createElement('li');
-			li.classList.add('listselection');
+			li.classList.add('list-selection');
 
 			html	= `<button type="button" class="small remove-list-selection"><span class='remove-list-selection'>×</span></button>`;
 
@@ -240,8 +240,8 @@ export async function editTimeSlot(target, date){
 		showTimeslotModal(target, date, target.dataset.starttime, target.dataset.endtime);
 		
 		//change button text
-		var modal 			= document.querySelector('[name="add_session"]');
-		modal.querySelector('[name="add_timeslot"]').textContent	= 'Update time slot';
+		var modal 			= document.querySelector('[name="add-session"]');
+		modal.querySelector('[name="add-timeslot"]').textContent	= 'Update time slot';
 	//add new rule after this one
 	}else if (answer.isDenied) {
 		return answer.isDenied;
@@ -256,7 +256,7 @@ function loadHostFormdata(target){
 
 	if(table == null){
 		startTime		= target.dataset.starttime;
-		host			= target.dataset.host_id;
+		host			= target.dataset.host-id;
 		date			= target.dataset.isodate
 	}else{
 		heading			= table.tHead.rows[0];
@@ -269,13 +269,13 @@ function loadHostFormdata(target){
 	var formData		= new FormData();
 	formData.append('date', date);
 	if(host != null){
-		formData.append('host_id', host);
+		formData.append('host-id', host);
 	}else{
-		formData.append('host_id', sim.userId);
+		formData.append('host-id', sim.userId);
 	}
 	
 	formData.append('starttime', startTime);
-	formData.append('schedule_id', scheduleId);
+	formData.append('schedule-id', scheduleId);
 
 	formData.append('subject', target.closest('.schedules-div.table-wrapper').dataset.subject)
 

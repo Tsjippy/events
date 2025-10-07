@@ -56,7 +56,7 @@ function updateDayNameDisplay(){
  * daily, weekly, monthly, yearly selector changed
  */
 function repeatTypeChosen(target){
-	let parent	= target.closest('.repeat_wrapper');
+	let parent	= target.closest('.repeat-wrapper');
 
 	//hide all what should be hidden
 	parent.querySelectorAll('.hide').forEach(el=>el.classList.replace('hide', 'hidden'));
@@ -82,7 +82,7 @@ function repeatTypeChosen(target){
 			parent.querySelector('#repeattype').textContent			= 'year(s)';
 			break;
 		case 'custom_days':
-			parent.querySelectorAll('.custom_dates_selector').forEach(el=>el.classList.replace('hidden', 'hide')); 
+			parent.querySelectorAll('.custom-dates-selector').forEach(el=>el.classList.replace('hidden', 'hide')); 
 			break;
 	}
 }
@@ -90,7 +90,7 @@ function repeatTypeChosen(target){
 function allDayClicked(target){
 	let startTime	= target.closest('.event').querySelector('[name="event[starttime]"]');
 	let endTime		= target.closest('.event').querySelector('[name="event[endtime]"]');
-	let endDate		= target.closest('.event').querySelector('[name="enddate_label"]');
+	let endDate		= target.closest('.event').querySelector('[name="enddate-label"]');
 
 	if(target.checked){
 		startTime.classList.add('hidden');
@@ -134,7 +134,7 @@ function startDateChanged(target){
  */
 function changeRepeatStatus(target){
 	//Change visibility
-    document.querySelector('.repeat_wrapper').classList.toggle('hidden');
+    document.querySelector('.repeat-wrapper').classList.toggle('hidden');
 
 	// Change repeate value
     let repeated	= target.parentNode.querySelector('[name="event[isrepeated]"]');
@@ -153,26 +153,26 @@ function changeRepeatStatus(target){
  */
 function repeatStopOptionChosen(target){
     //hide all options
-    target.closest('.event').querySelectorAll('.repeat_type_option').forEach(el=>{
-        el.querySelector('.repeat_type_option_specifics').classList.add('hidden');	
+    target.closest('.event').querySelectorAll('.repeat-type-option').forEach(el=>{
+        el.querySelector('.repeat-type-option_specifics').classList.add('hidden');	
     });
 
     //show the selected option
-    target.closest('.repeat_type_option').querySelector('.repeat_type_option_specifics').classList.remove('hidden');
+    target.closest('.repeat-type-option').querySelector('.repeat-type-option_specifics').classList.remove('hidden');
 }
 
 document.addEventListener("click", event =>{
     let target  = event.target;
 
-    if(target.name == 'enable_event_repeat'){
+    if(target.name == 'enable-event-repeat'){
         changeRepeatStatus(target);
     }else if(target.name == 'event[repeat][stop]'){
         repeatStopOptionChosen(target);
-    }else if(target.closest('.repeat_type_option') != null){
-		document.querySelectorAll('.repeat_type_option_specifics:not(.hidden)').forEach(el=>el.classList.add('hidden'));
-		target.closest('.repeat_type_option').querySelector('.repeat_type_option_specifics').classList.remove('hidden');
+    }else if(target.closest('.repeat-type-option') != null){
+		document.querySelectorAll('.repeat-type-option_specifics:not(.hidden)').forEach(el=>el.classList.add('hidden'));
+		target.closest('.repeat-type-option').querySelector('.repeat-type-option_specifics').classList.remove('hidden');
 	}else if(target.classList.contains('selectall')){
-		target.closest('.selector_wrapper').querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked = target.checked);
+		target.closest('.selector-wrapper').querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked = target.checked);
 	}
 });
 

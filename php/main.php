@@ -19,7 +19,7 @@ function editButton($buttonHtml, $post, $content){
 
     $schedules  = new Schedules();
 
-    $query  = "SELECT * FROM `{$schedules->sessionTableName}` WHERE `post_ids` LIKE '%{$post->ID}%';";
+    $query  = "SELECT * FROM `{$schedules->sessionTableName}` WHERE `post-ids` LIKE '%{$post->ID}%';";
     $result = $wpdb->get_results($query);
     
     if(!empty($result)){;

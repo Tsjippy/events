@@ -18,7 +18,7 @@ async function addSchedule(target){
 	Main.hideModals();
 
 	if(response){
-		target.closest('.schedules_wrapper').outerHTML=response.html;
+		target.closest('.schedules-wrapper').outerHTML=response.html;
 		
 		Main.displayMessage(response.message);
 
@@ -28,9 +28,9 @@ async function addSchedule(target){
 
 function ShowPublishScheduleModal(target){
 	var modal			= target.closest('.schedules-div').querySelector('.publish-schedule');
-	modal.querySelector('[name="schedule_id"]').value = target.dataset["schedule_id"];
+	modal.querySelector('[name="schedule-id"]').value = target.dataset["schedule_id"];
 	if(target.dataset.target != null){
-		modal.querySelector('[name="schedule_target"]').value = target.dataset.target;
+		modal.querySelector('[name="schedule-target"]').value = target.dataset.target;
 		modal.querySelector('[name="publish-schedule"]').click();
 		Main.showLoader(target,true);
 	}else{
@@ -39,7 +39,7 @@ function ShowPublishScheduleModal(target){
 }
 
 async function publishSchedule(target){
-	var response	= await FormSubmit.submitForm(target, 'events/publish-schedule');
+	var response	= await FormSubmit.submitForm(target, 'events/publish_schedule');
 
 	if(response){
 		document.querySelectorAll('.schedule-actions .loader-wrapper').forEach(el=>el.classList.add('hidden'));
@@ -67,7 +67,7 @@ async function removeSchedule(target){
 		if(response){
 			Main.displayMessage(response);
 
-			document.querySelector('.schedules_wrapper .loader-wrapper:not(.hidden)').remove();
+			document.querySelector('.schedules-wrapper .loader-wrapper:not(.hidden)').remove();
 		}
 	}
 }
@@ -157,17 +157,17 @@ function showRecipeModal(target){
 	var startTime		= target.closest('tr').dataset.starttime;
 
 	//Fill the modal with the values of the clickes schedule
-	var recipeModal 	= document.querySelector('[name="recipe_keyword_modal"]');
+	var recipeModal 	= document.querySelector('[name="recipe-keyword-modal"]');
 
 	FormSubmit.formReset(recipeModal.querySelector('form'));
 
-	recipeModal.querySelector('[name="schedule_id"]').value 	= table.dataset["id"];
+	recipeModal.querySelector('[name="schedule-id"]').value 	= table.dataset["id"];
 	recipeModal.querySelector('[name="date"]').value 			= date;
 	recipeModal.querySelector('[name="starttime"]').value 		= startTime;
 
 	if(target.textContent != 'Enter recipe keyword'){
-		recipeModal.querySelector('[name="recipe_keyword"]').value	= target.textContent;
-		document.querySelector('[name="add_recipe_keyword"]').textContent	= 'Update recipe keywords';
+		recipeModal.querySelector('[name="recipe-keyword"]').value	= target.textContent;
+		document.querySelector('[add-recipe-keyword"]').textContent	= 'Update recipe keywords';
 	}
 	
 	Main.showModal(recipeModal);
@@ -177,7 +177,7 @@ function showRecipeModal(target){
 async function submitRecipe(target){
 	var response = await FormSubmit.submitForm(target, 'events/add_menu');
 
-	document.querySelector('.active').textContent	= target.closest('form').querySelector('[name="recipe_keyword"]').value;
+	document.querySelector('.active').textContent	= target.closest('form').querySelector('[name="recipe-keyword"]').value;
 
 	document.querySelector('.active').classList.remove('active');
 
@@ -193,10 +193,10 @@ function showEditScheduleModal(target){
 
 	let scheduleId	= wrapper.dataset.id;
 
-	modal.querySelector(`[name="schedule_id"]`).value		= scheduleId;
-	modal.querySelector(`[name="target_id"]`).value			= table.dataset.target_id;
-	modal.querySelector(`[name="target_name"]`).value		= table.dataset.target;
-	modal.querySelector(`[name="schedule_info"]`).value		= wrapper.querySelector('.table-title.sub-title').textContent;
+	modal.querySelector(`[name="schedule-id"]`).value		= scheduleId;
+	modal.querySelector(`[name="target-id"]`).value			= table.dataset.target_id;
+	modal.querySelector(`[name="target-name"]`).value		= table.dataset.target;
+	modal.querySelector(`[name="schedule-info"]`).value		= wrapper.querySelector('.table-title.sub-title').textContent;
 	modal.querySelector(`[name="startdate"]`).value			= table.tHead.querySelector('tr').cells[1].dataset.isodate;
 	modal.querySelector(`[name="enddate"]`).value			= table.tHead.querySelector('tr').cells[table.tHead.querySelector('tr').cells.length-1].dataset.isodate;
 	modal.querySelector(`[name="timeslotsize"]`).value		= wrapper.dataset.slotsize;
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded",function() {
 	
 	addSelectable();
 
-	document.querySelector('[name="add_session"]').addEventListener('modalclosed', modalclosed);
+	document.querySelector('[name="add-session"]').addEventListener('modalclosed', modalclosed);
 });
 
 document.addEventListener('click', function(event){
@@ -424,11 +424,11 @@ document.addEventListener('click', function(event){
 		event.stopPropagation();
 
 		publishSchedule(target);
-	}else if(target.name == 'add_recipe_keyword'){
+	}else if(target.name == 'add-recipe-keyword'){
 		event.stopPropagation();
 
 		submitRecipe(target);
-	}else if(target.matches('.modal .close')  && target.closest('.modal').attributes.name.value == 'add_session'){
+	}else if(target.matches('.modal .close')  && target.closest('.modal').attributes.name.value == 'add-session'){
 		removeRowSpan(document.querySelector('td.active'));
 	}else if(target.classList.contains('keyword')){
 		showRecipeModal(target);
@@ -436,7 +436,7 @@ document.addEventListener('click', function(event){
 		event.stopPropagation();
 
 		ShowPublishScheduleModal(target);
-	}else if(target.classList.contains('remove_schedule')){
+	}else if(target.classList.contains('remove-schedule')){
 		event.stopPropagation();
 
 		removeSchedule(target);
@@ -444,7 +444,7 @@ document.addEventListener('click', function(event){
 		event.stopPropagation();
 
 		showEditScheduleModal(target);
-	}else if(target.name == 'add_host' || target.name == 'add_timeslot'){
+	}else if(target.name == 'add-host' || target.name == 'add-timeslot'){
 		event.stopPropagation();
 		
 		addHost(target);
@@ -456,10 +456,10 @@ document.addEventListener('change', function(event){
 	let target = event.target;
 
 	//Direct table actions
-	if(target.name=='target_name'){
+	if(target.name=='target-name'){
 		var userid = target.list.querySelector(`[value='${target.value}' i]`).dataset.value;
 
-		target.closest('form').querySelector('[name="target_id"]').value	= userid;
+		target.closest('form').querySelector('[name="target-id"]').value	= userid;
 	}else if(target.id == 'host'){
 		let host	= target.list.querySelector(`[value="${target.value}"]`);
 		let userId	= '';
@@ -467,10 +467,10 @@ document.addEventListener('change', function(event){
 			userId	= host.dataset.userid;
 		}
 
-		target.closest('form').querySelector('[name="host_id"]').value	= userId;
+		target.closest('form').querySelector('[name="host-id"]').value	= userId;
 	}
 
-	/* if(target.matches('[name="add_session"] .time')){
+	/* if(target.matches('[name="add-session"] .time')){
 		// get the active cell
 		let cell		= document.querySelector('td.active');
 

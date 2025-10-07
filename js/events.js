@@ -26,8 +26,8 @@ async function requestMonth(target, month, year){
         calendarPage.classList.remove('hidden');
     }
 
-    document.querySelector('div.month_selector .current').textContent = document.querySelector('select.month_selector').options[month-1].text;
-    document.querySelector('div.year_selector .current').textContent = year;
+    document.querySelector('div.month-selector .current').textContent = document.querySelector('select.month-selector').options[month-1].text;
+    document.querySelector('div.year-selector .current').textContent = year;
 }
 
 async function requestWeek(target, wknr, year){
@@ -59,8 +59,8 @@ async function requestWeek(target, wknr, year){
         calendarPage.classList.remove('hidden');
     }
 
-    document.querySelector('div.week_selector .current').textContent = wknr;
-    document.querySelector('div.year_selector .current').textContent = year;
+    document.querySelector('div.week-selector .current').textContent = wknr;
+    document.querySelector('div.year-selector .current').textContent = year;
 }
 
 async function requestExpandList(offset, month='', year=''){
@@ -209,8 +209,8 @@ function hourClicked(target){
 function viewChanged(target){
     let parent  = target.closest('.search-form');
     if(target.dataset.type  == 'weekview' || target.dataset.type  == 'monthview'){
-        parent.querySelector('div.week_selector').classList.toggle('hidden');
-        parent.querySelector('div.month_selector').classList.toggle('hidden');
+        parent.querySelector('div.week-selector').classList.toggle('hidden');
+        parent.querySelector('div.month-selector').classList.toggle('hidden');
     }
 
     //select class
@@ -248,7 +248,7 @@ document.addEventListener("click", function(event) {
         viewChanged(target);
     }
 
-    if(target.id=='add_calendar'){
+    if(target.id=='add-calendar'){
         document.getElementById('calendaraddingoptions').classList.toggle('hidden');   
     }
     
@@ -274,10 +274,10 @@ document.addEventListener("click", function(event) {
 
 document.addEventListener("change", function(event) {
 	let target = event.target;
-    if(target.classList.contains('week_selector')){
+    if(target.classList.contains('week-selector')){
         event.stopPropagation();
 
-        let year    = target.closest('.date-search').querySelector('.year_selector').value;
+        let year    = target.closest('.date-search').querySelector('.year-selector').value;
         if(document.querySelector('.viewselector.selected').dataset.type=='weekview'){
             requestWeek(target, target.value, year);
         }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
@@ -288,10 +288,10 @@ document.addEventListener("change", function(event) {
         url.searchParams.set('week', target.value);
     }
 
-    if(target.classList.contains('month_selector')){
+    if(target.classList.contains('month-selector')){
         event.stopPropagation();
 
-        let year    = target.closest('.date-search').querySelector('.year_selector').value;
+        let year    = target.closest('.date-search').querySelector('.year-selector').value;
         if(document.querySelector('.viewselector.selected').dataset.type=='monthview'){
             requestMonth(target, target.value, year);
         }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
@@ -300,16 +300,16 @@ document.addEventListener("change", function(event) {
         url.searchParams.set('month', target.value);
     }
 
-    if(target.classList.contains('year_selector')){
+    if(target.classList.contains('year-selector')){
         event.stopPropagation();
         
-        let month   = target.closest('.date-search').querySelector('.month_selector').value;
+        let month   = target.closest('.date-search').querySelector('.month-selector').value;
         if(document.querySelector('.viewselector.selected').dataset.type=='monthview'){
             requestMonth(target, month, target.value);
         }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
             requestExpandList(0,month, target.value);
         }else if(document.querySelector('.viewselector.selected').dataset.type=='weekview'){
-            let wknr  = target.closest('.date-search').querySelector('.week_selector').value;
+            let wknr  = target.closest('.date-search').querySelector('.week-selector').value;
             requestWeek(target, wknr, target.value);
         }
         url.searchParams.set('yr', target.value);

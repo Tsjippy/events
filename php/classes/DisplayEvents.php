@@ -27,7 +27,7 @@ class DisplayEvents extends Events{
 
 		//select all events attached to a post with publish status
 		$query	 = "SELECT DISTINCT {$wpdb->prefix}posts.*, {$wpdb->prefix}sim_events.* FROM {$wpdb->prefix}posts ";
-		$query	.= "INNER JOIN `{$this->tableName}` ON {$wpdb->prefix}posts.ID={$this->tableName}.post_id";
+		$query	.= "INNER JOIN `{$this->tableName}` ON {$wpdb->prefix}posts.ID={$this->tableName}.post-id";
 		
 		if(!empty($cats)){
 			$query	.= " LEFT JOIN `{$wpdb->prefix}term_relationships` ON {$wpdb->prefix}posts.ID={$wpdb->prefix}term_relationships.object_id";
@@ -91,7 +91,7 @@ class DisplayEvents extends Events{
 		ob_start();
 		?>
 		<h4 class="title"><?php echo $title;?></h4>
-		<div class="upcomingevents_wrapper">
+		<div class="upcoming-events-wrapper">
 			<?php
 			if(!$events){
 				?>
@@ -160,12 +160,12 @@ class DisplayEvents extends Events{
 			$eventDayNr		= date('d', $startDate);
 			$eventDay		= date('l', $startDate);
 			$eventMonth		= date('M', $startDate);
-			$eventTitle		= get_the_title($event->post_id);
+			$eventTitle		= get_the_title($event->post-id);
 			$endDateStr		= date('d M', strtotime(($event->enddate)));
 
-			$userId = get_post_meta($event->post_id, 'user', true);
+			$userId = get_post_meta($event->post-id, 'user', true);
 
-			$eventUrl	= apply_filters('sim-events-event-url', get_permalink($event->post_id), $userId, $this);
+			$eventUrl	= apply_filters('sim-events-event-url', get_permalink($event->post-id), $userId, $this);
 
 			$e	= [
 				'day'			=> $eventDayNr,
@@ -238,7 +238,7 @@ class DisplayEvents extends Events{
 	 * @return	string					Html with the author name linking to the user page of the author. E-mail and phonenumbers
 	*/
 	public function getAuthorDetail($event){
-		$userId		= $event->organizer_id;
+		$userId		= $event->organizer-id;
 		$user		= get_userdata($userId);
 
 		if(empty($userId)){
@@ -328,7 +328,7 @@ class DisplayEvents extends Events{
 	 * @return	string					Html containing buttons to export the event
 	*/
 	public function eventExportHtml($event){
-		$eventMeta		= get_post_meta($event->post_id, 'eventdetails', true);
+		$eventMeta		= get_post_meta($event->post-id, 'eventdetails', true);
 		if(!is_array($eventMeta)){
 			if(!empty($eventMeta)){
 				$eventMeta	= (array)json_decode($eventMeta, true);
@@ -341,7 +341,7 @@ class DisplayEvents extends Events{
 		date_default_timezone_set(wp_timezone_string());
 
 		$title			= urlencode($event->post_title);
-		$description	= urlencode("<a href='".get_permalink($event->post_id)."'>Read more on ".SITEURLWITHOUTSCHEME."</a>");
+		$description	= urlencode("<a href='".get_permalink($event->post-id)."'>Read more on ".SITEURLWITHOUTSCHEME."</a>");
 		$location		= urlencode($event->location);
 		$startDate		= date('Ymd', strtotime($event->startdate));
 		$endDate		= date('Ymd', strtotime($event->enddate));
@@ -514,9 +514,9 @@ class DisplayEvents extends Events{
 
 								$detailHtml .= "<article class='event-article'>";
 									$detailHtml .= "<div class='event-header'>";
-										if(has_post_thumbnail($event->post_id)){
+										if(has_post_thumbnail($event->post-id)){
 											$detailHtml .= "<div class='event-image'>";
-												$detailHtml .= get_the_post_thumbnail($event->post_id);
+												$detailHtml .= get_the_post_thumbnail($event->post-id);
 											$detailHtml .= '</div>';
 										}
 										$detailHtml .= "<div class='event-time'>";
@@ -650,9 +650,9 @@ class DisplayEvents extends Events{
 
 			$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->startdate))."' data-starttime='{$event->starttime}'>";
 				$detailHtml .= "<article class='event-article'>";
-					if(has_post_thumbnail($event->post_id)){
+					if(has_post_thumbnail($event->post-id)){
 						$detailHtml .= "<div class='event-image'>";
-							$detailHtml .= get_the_post_thumbnail($event->post_id);
+							$detailHtml .= get_the_post_thumbnail($event->post-id);
 						$detailHtml .= '</div>';
 					}
 					$detailHtml .= "<div class='event-time'>";
@@ -1031,7 +1031,7 @@ class DisplayEvents extends Events{
 
 			$html .= "<article class='event-article'>";
 				$html .= "<div class='event-wrapper'>";
-					$html .= get_the_post_thumbnail($event->post_id,'medium');
+					$html .= get_the_post_thumbnail($event->post-id,'medium');
 					$html .= "<h3 class='event-title'>";
 						$html .= "<a href='$url'>";
 							$html .= $event->post_title;
@@ -1109,7 +1109,7 @@ class DisplayEvents extends Events{
 			}else{
 				$timeString	= "is already started";
 			}
-			$title	= get_the_title($event->post_id);
+			$title	= get_the_title($event->post-id);
 
 			do_action('sim-events-event-reminder', "'$title' is about to start\nIt $timeString", $event->onlyfor);
 		}

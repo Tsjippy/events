@@ -36,7 +36,7 @@ function subMenuOptions($optionsHtml, $settings){
 	<br>
 	<br>
 	<label>Minimum age of events before they get removed:<br></label>
-	<select name="max_age">
+	<select name="max-age">
 		<option value=''>---</option>
 		<?php
 			$strings	= [
@@ -49,7 +49,7 @@ function subMenuOptions($optionsHtml, $settings){
 
 			foreach($strings as $string){
 				$selected	= '';
-				if($settings["max_age"] == $string){
+				if($settings["max-age"] == $string){
 					$selected	= 'selected=selected';
 				}
 
@@ -77,11 +77,11 @@ add_filter('sim_module_events_functions', __NAMESPACE__.'\moduleFunctions');
 function moduleFunctions($functionHtml){
 	global $wpdb;
     
-    $query  	= "SELECT * FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
+    $query  	= "SELECT * FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post-id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
 
     $orphans	= $wpdb->get_results($query);
 
-	$query  	= "SELECT * FROM `{$wpdb->prefix}sim_events` WHERE post_id NOT IN (SELECT ID FROM $wpdb->posts)";
+	$query  	= "SELECT * FROM `{$wpdb->prefix}sim_events` WHERE post-id NOT IN (SELECT ID FROM $wpdb->posts)";
 
     $orphans	= array_merge($wpdb->get_results($query), $orphans);
 
@@ -134,7 +134,7 @@ add_action('sim_module_actions', __NAMESPACE__.'\moduleActions');
 function moduleActions(){
 	global $wpdb;
 	if(isset($_POST['delete-orphans'])){
-		$query  	= "DELETE `{$wpdb->prefix}sim_events` FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
+		$query  	= "DELETE `{$wpdb->prefix}sim_events` FROM `{$wpdb->prefix}sim_events` INNER JOIN $wpdb->posts ON post-id = $wpdb->posts.ID WHERE $wpdb->posts.post_author NOT IN (SELECT ID FROM $wpdb->users)";
     	$wpdb->query($query);
 	}
 }

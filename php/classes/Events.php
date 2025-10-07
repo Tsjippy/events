@@ -31,7 +31,7 @@ class Events{
 
 		$sql = "CREATE TABLE {$this->tableName}(
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			post_id mediumint(9) NOT NULL,
+			post-id mediumint(9) NOT NULL,
 			startdate varchar(80) NOT NULL,
 			enddate varchar(80) NOT NULL,
 			starttime varchar(80) NOT NULL,
@@ -39,7 +39,7 @@ class Events{
 			location varchar(80),
 			organizer varchar(80),
 			location_id mediumint(9),
-			organizer_id mediumint(9),
+			organizer-id mediumint(9),
 			atendees varchar(80),
 			onlyfor mediumint(9),
 			PRIMARY KEY  (id)
@@ -56,7 +56,7 @@ class Events{
 	*/
 	public function retrieveSingleEvent($postId){
 		global $wpdb;
-		$query		= "SELECT * FROM {$wpdb->prefix}posts INNER JOIN `{$this->tableName}` ON {$wpdb->prefix}posts.ID={$this->tableName}.post_id WHERE post_id=$postId ORDER BY ABS( DATEDIFF( startdate, CURDATE() ) ) LIMIT 1";
+		$query		= "SELECT * FROM {$wpdb->prefix}posts INNER JOIN `{$this->tableName}` ON {$wpdb->prefix}posts.ID={$this->tableName}.post-id WHERE post-id=$postId ORDER BY ABS( DATEDIFF( startdate, CURDATE() ) ) LIMIT 1";
 		$results	= $wpdb->get_results($query);
 		
 		if(empty($results)){
@@ -83,7 +83,7 @@ class Events{
 
 		return $wpdb->delete(
 			$this->tableName,
-			['post_id' => $postId],
+			['post-id' => $postId],
 			['%d']
 		);
 	}

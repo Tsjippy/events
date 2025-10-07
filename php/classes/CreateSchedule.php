@@ -70,7 +70,7 @@ class CreateSchedule extends Schedules{
 		$event['enddate']				= $this->date;
 		$event['endtime']				= $this->endTime;
 		$event['location']				= $this->location;
-		$event['organizer_id']			= $this->hostId;
+		$event['organizer-id']			= $this->hostId;
 		if(empty($_POST['others'])){
 			$event['atendees']			= serialize([]);
 		}else{
@@ -210,7 +210,7 @@ class CreateSchedule extends Schedules{
 			foreach($a['onlyfor'] as $userId){
 				if(is_numeric($userId)){
 					$event['onlyfor']	= $userId;
-					$event['post_id']	= $postId;
+					$event['post-id']	= $postId;
 					$eventId 			= $this->addEventToDb($event);
 
 					if(is_wp_error($eventId)){
@@ -284,15 +284,15 @@ class CreateSchedule extends Schedules{
 
 				// update the post title
 				wp_update_post( array(
-					'ID'           => $event->post_id,
+					'ID'           => $event->post-id,
 					'post_title'   => "{$this->title} with $organizer",
 				));
 
 				$updated			= true;
 			}
 
-			if($event->organizer_id != $this->hostId){
-				$args['organizer_id']	= $this->hostId;
+			if($event->organizer-id != $this->hostId){
+				$args['organizer-id']	= $this->hostId;
 				$updated				= true;
 			}
 
@@ -346,14 +346,14 @@ class CreateSchedule extends Schedules{
 
 			if(
 				$ev->onlyfor != $this->currentSchedule->target 	&& 		// not an event for the target of the schedule
-				$ev->onlyfor != $event->organizer_id				&&		// not organizer of the event
+				$ev->onlyfor != $event->organizer-id				&&		// not organizer of the event
 				!in_array($ev->onlyfor, $_POST['others'])				// and not one of the atendees
 			){
 				// remove the event and all posts related to it
 				$this->currentSession->event_ids		= array_diff($this->currentSession->event_ids, [$event->id]);
 				foreach($this->currentSession->posts as $index=>$post){
-					if($ev->post_id == $post->ID){
-						$this->currentSession->post_ids		= array_diff($this->currentSession->post_ids, [$post->ID]);
+					if($ev->post-id == $post->ID){
+						$this->currentSession->post-ids		= array_diff($this->currentSession->post-ids, [$post->ID]);
 
 						unset($this->currentSession->posts[$index]);
 					}
@@ -385,7 +385,7 @@ class CreateSchedule extends Schedules{
 			}
 			extract($ids, EXTR_OVERWRITE);
 
-			$this->currentSession->post_ids		= array_merge($postIds, $this->currentSession->post_ids);
+			$this->currentSession->post-ids		= array_merge($postIds, $this->currentSession->post-ids);
 			$this->currentSession->event_ids	= array_merge($eventIds, $this->currentSession->event_ids);
 		}
 
@@ -393,7 +393,7 @@ class CreateSchedule extends Schedules{
 		$wpdb->update(
 			$this->sessionTableName,
 			[
-				'post_ids'		=> serialize($this->currentSession->post_ids),
+				'post-ids'		=> serialize($this->currentSession->post-ids),
 				'event_ids'		=> serialize($this->currentSession->event_ids)
 			],
 			[
@@ -411,13 +411,13 @@ class CreateSchedule extends Schedules{
 	public function addSchedule($update=false){
 		global $wpdb;
 	
-		$name		= sanitize_text_field($_POST['target_name']);
+		$name		= sanitize_text_field($_POST['target-name']);
 		//check if schedule already exists
 		if(!$update && $wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `name` = '$name'") != null){
 			return new WP_Error('schedule', "A schedule for $name already exists!");
 		}
 
-		$info		= sanitize_text_field($_POST['schedule_info']);
+		$info		= sanitize_text_field($_POST['schedule-info']);
 
 		if(empty($_POST['skiplunch'])){
 			$lunch	= true;
@@ -464,7 +464,7 @@ class CreateSchedule extends Schedules{
 		}
 
 		$arg	= array(
-			'target'				=> $_POST['target_id'],
+			'target'				=> $_POST['target-id'],
 			'name'					=> $name,
 			'info'					=> $info,
 			'lunch'					=> $lunch,
@@ -486,7 +486,7 @@ class CreateSchedule extends Schedules{
 			$wpdb->update(
 				$this->tableName,
 				$arg,
-				array( 'id' => $_POST['schedule_id'] )
+				array( 'id' => $_POST['schedule-id'] )
 			);
 			$action	= 'updated';
 		}else{
@@ -517,9 +517,9 @@ class CreateSchedule extends Schedules{
 	public function publishSchedule(){
 		global $wpdb;
 		
-		$scheduleId	= $_POST['schedule_id'];
+		$scheduleId	= $_POST['schedule-id'];
 
-		SIM\updateFamilyMeta($_POST['schedule_target'], 'schedule', $scheduleId);
+		SIM\updateFamilyMeta($_POST['schedule-target'], 'schedule', $scheduleId);
 
 		$wpdb->update(
 			$this->tableName,
@@ -587,7 +587,7 @@ class CreateSchedule extends Schedules{
 			$session	= $this->getSessionEvent($session);
 		}
 
-		foreach(maybe_unserialize($session->post_ids) as $postId){
+		foreach(maybe_unserialize($session->post-ids) as $postId){
 			//delete events
 			$this->events->removeDbRows($postId, true);
 		}
@@ -607,7 +607,7 @@ class CreateSchedule extends Schedules{
 	*/
 	public function addHost($date){
 		$message			= '';
-		$this->scheduleId	= $_POST['schedule_id'];
+		$this->scheduleId	= $_POST['schedule-id'];
 		$this->startTime	= $_POST['starttime'];
 		$schedule			= $this->getScheduleById($this->scheduleId);
 
@@ -617,8 +617,8 @@ class CreateSchedule extends Schedules{
 			return new \WP_Error('schedules', 'This is already booked, sorry');
 		}
 
-		if(is_numeric($_POST['host_id'])){
-			$this->hostId	= $_POST['host_id'];
+		if(is_numeric($_POST['host-id'])){
+			$this->hostId	= $_POST['host-id'];
 			$host			= get_userdata($this->hostId);
 			$partnerId		= SIM\hasPartner($this->hostId);
 
@@ -722,7 +722,7 @@ class CreateSchedule extends Schedules{
 		$date				= $this->currentSession->events[0]->startdate;
 		$startTime			= $this->currentSession->events[0]->starttime;
 
-		$hostId				= $this->currentSession->events[0]->organizer_id;
+		$hostId				= $this->currentSession->events[0]->organizer-id;
 
 		$partnerId			= SIM\hasPartner($this->user->ID);
 		if(
@@ -765,7 +765,7 @@ class CreateSchedule extends Schedules{
 	 * @return string	success message
 	*/
 	public function addMenu(){
-		$scheduleId		= $_POST['schedule_id'];
+		$scheduleId		= $_POST['schedule-id'];
 
 		$date			= sanitize_text_field($_POST['date']);
 
@@ -779,7 +779,7 @@ class CreateSchedule extends Schedules{
 			return 'No meal found';
 		}
 
-		foreach($events->post_ids as $postId){
+		foreach($events->post-ids as $postId){
 			update_post_meta($postId, 'recipe_keyword', $menu);
 		}
 

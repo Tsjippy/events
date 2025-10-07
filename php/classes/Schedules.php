@@ -95,7 +95,7 @@ class Schedules{
 		$sql = "CREATE TABLE {$this->sessionTableName} (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			schedule_id mediumint(9) NOT NULL,
-			post_ids longtext NOT NULL,
+			post-ids longtext NOT NULL,
 			event_ids longtext NOT NULL,
 			meal boolean NOT NULL,
 			PRIMARY KEY  (id)
@@ -200,7 +200,7 @@ class Schedules{
 			$schedules	.= $this->showSchedule();
 		}
 
-		$html	= "<div class='schedules_wrapper' style='position: relative;'>";
+		$html	= "<div class='schedules-wrapper' style='position: relative;'>";
 			if(empty($schedules) && empty($form)){
 				$html	.= "There are currently no schedules set up. Please check again later";
 			}else{
@@ -257,15 +257,15 @@ class Schedules{
 		<div class='schedules-div table-wrapper' data-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
 			<div class="modal publish-schedule hidden">
 				<div class="modal-content">
-					<span id="modal_close" class="close">&times;</span>
+					<span id="modal-close" class="close">&times;</span>
 					<form action="" method="post" id="publish-schedule_form">
-						<input type='hidden' name='schedule_id'>
+						<input type='hidden' name='schedule-id'>
 						<p>
 							Please select the user or family this schedule should be published for.<br>
 							The schedule will show up on the dashboard of these persons after publish.
 						</p>
 						<?php
-						echo SIM\userSelect('', true, true, '', 'schedule_target', $args);
+						echo SIM\userSelect('', true, true, '', 'schedule-target', $args);
 						echo SIM\addSaveButton('publish-schedule', 'Publish this schedule');
 						?>
 					</form>
@@ -358,7 +358,7 @@ class Schedules{
 					?>
 					<div class='schedule-actions'>
 						<button type='button' class='button schedule-action edit-schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
-						<button type='button' class='button schedule-action remove_schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
+						<button type='button' class='button schedule-action remove-schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
 						<?php
 						//schedule is not yet set.
 						if(!$this->currentSchedule->published && $this->currentSchedule->target != 0){
@@ -382,7 +382,7 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule_id' value='<?php echo $this->currentSchedule->id;?>'>
+					<input type='hidden' name='schedule-id' value='<?php echo $this->currentSchedule->id;?>'>
 
 					<?php
 					if($this->currentSchedule->lunch){
@@ -480,11 +480,11 @@ class Schedules{
 						?>
 						<p>Please select the user or family who is hosting</p>
 						<?php
-						echo SIM\userSelect('', true, true, '', 'host_id', [], '', [], 'list');
+						echo SIM\userSelect('', true, true, '', 'host-id', [], '', [], 'list');
 					}else{
-						echo "<input type='hidden' name='host_id' value='{$this->user->ID}'>";
+						echo "<input type='hidden' name='host-id' value='{$this->user->ID}'>";
 					}
-					echo SIM\addSaveButton('add_host_mobile', 'Save', 'update_schedule');
+					echo SIM\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
 					?>
 				</form>
 			</div>
@@ -524,10 +524,10 @@ class Schedules{
 	protected function parsePostsAndEvents(&$result){
 		global $wpdb;
 
-		$result->post_ids	= unserialize($result->post_ids);
+		$result->post-ids	= unserialize($result->post-ids);
 		$result->event_ids	= unserialize($result->event_ids);
 
-		$ids				= implode(',', $result->post_ids);
+		$ids				= implode(',', $result->post-ids);
 		$result->posts		= $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID IN ($ids)");
 
 		$ids				= implode(',', $result->event_ids);
@@ -700,7 +700,7 @@ class Schedules{
 			
 			$hostData		= "";
 			$data			= $this->currentSchedule->sessions[$date][$startTime];
-			$hostId			= $data->events[0]->organizer_id;
+			$hostId			= $data->events[0]->organizer-id;
 			$partnerId 		= SIM\hasPartner($this->user->ID);
 
 			if($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId){
@@ -780,7 +780,7 @@ class Schedules{
 			$this->currentSession		= $this->currentSchedule->sessions[$date][$startTime];
 			$event						= $this->currentSession->events[0];
 
-			$hostId			= $event->organizer_id;
+			$hostId			= $event->organizer-id;
 			$dataset	= "data-starttime='{$event->starttime}' data-endtime='{$event->endtime}' data-session_id='{$this->currentSession->id}'";
 			if (is_numeric($hostId)) {
 				$dataset	.= " data-host='".get_userdata($hostId)->display_name."' data-host_id='$hostId'";
@@ -806,7 +806,7 @@ class Schedules{
 				$dataset	.= " data-atendees='".json_encode($atendees)."'";
 			}
 
-			$reminders		= (array)get_post_meta($event->post_id, 'reminders', true);
+			$reminders		= (array)get_post_meta($event->post-id, 'reminders', true);
 			if(!empty($reminders)){
 				$dataset	.= " data-reminders='".json_encode($reminders)."'";
 			}
@@ -819,7 +819,7 @@ class Schedules{
 			}else{
 				$baseTitle	= $this->getBaseTitle();
 				$dataset	.= " data-subject='$baseTitle'";
-				$url		= get_permalink($event->post_id);
+				$url		= get_permalink($event->post-id);
 				$date		= $event->startdate;
 				$cellText	= "<span class='subject' data-userid='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
 			}
@@ -871,7 +871,7 @@ class Schedules{
 		//Make the cell editable if:
 		if(
 			$this->admin							||		// we are admin
-			$this->user->ID == $event->organizer_id || 		// We are the organizer
+			$this->user->ID == $event->organizer-id || 		// We are the organizer
 			$cellText == 'Available'						// This cell  is available
 		){
 			$class .= ' available';
@@ -1083,8 +1083,8 @@ class Schedules{
 							if(
 								$this->admin	||	// We can change any event
 								(
-									isset($data['event']->organizer_id)	&&						// an organizer id is set
-									$data['event']->organizer_id	== get_current_user_id()	// we are the organizer
+									isset($data['event']->organizer-id)	&&						// an organizer id is set
+									$data['event']->organizer-id	== get_current_user_id()	// we are the organizer
 								)
 							){
 								$icon	= '';
@@ -1140,13 +1140,13 @@ class Schedules{
 		ob_start();
 		?>
 		<!-- Add host modal for admins -->
-		<div name='add_host' class="modal hidden">
+		<div name='add-host' class="modal hidden">
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule_id'>
+					<input type='hidden' name='schedule-id'>
 					<input type='hidden' name='session-id'>
-					<input type='hidden' name='host_id'>
+					<input type='hidden' name='host-id'>
 					<input type='hidden' name='starttime'>
 					<input type='hidden' name='endtime'>
 					<input type='hidden' name='date'>
@@ -1159,9 +1159,9 @@ class Schedules{
 					}else{
 						echo "<input type='hidden' name='host' value='{$this->user->ID}'>";
 					}
-					$id	= 'add_host';
+					$id	= 'add-host';
 					if($this->mobile){
-						$id	= 'add_host_mobile';
+						$id	= 'add-host-mobile';
 					}
 					echo SIM\addSaveButton($id,'Add host','update_schedule');
 					?>
@@ -1170,20 +1170,20 @@ class Schedules{
 		</div>
 		
 		<!-- Add recipe modal -->
-		<div name='recipe_keyword_modal' class="modal hidden">
+		<div name='recipe-keyword-modal' class="modal hidden">
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule_id'>
+					<input type='hidden' name='schedule-id'>
 					<input type='hidden' name='date'>
 					<input type='hidden' name='starttime'>
 					
 					<p>Enter one or two keywords for the meal you are planning to serve<br>
 					For instance 'pasta', 'rice', 'Nigerian', 'salad'</p>
-					<input type='text' class='wide' name='recipe_keyword'>
+					<input type='text' class='wide' name='recipe-keyword'>
 					
 					<?php
-					echo SIM\addSaveButton('add_recipe_keyword','Add recipe keywords','update_schedule');
+					echo SIM\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
 					?>
 				</form>
 			</div>
@@ -1213,7 +1213,7 @@ class Schedules{
 			
 			$schdeuleId		= $_REQUEST['schedule'];
 			$sessionId		= $_REQUEST['session'];
-			$hostId			= $session->events[0]->organizer_id;
+			$hostId			= $session->events[0]->organizer-id;
 			$date			= $session->events[0]->startdate;
 			$startTime		= $session->events[0]->starttime;
 			$endTime		= $session->events[0]->endtime;
@@ -1236,13 +1236,13 @@ class Schedules{
 		}
 		?>
 		<!-- Add session modal -->
-		<div name='add_session' class="modal <?php echo $hidden;?>">
+		<div name='add-session' class="modal <?php echo $hidden;?>">
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule_id' value='<?php echo $schdeuleId;?>'>
+					<input type='hidden' name='schedule-id' value='<?php echo $schdeuleId;?>'>
 					<input type='hidden' name='session-id' value='<?php echo $sessionId;?>'>
-					<input type='hidden' name='host_id' value='<?php echo $hostId;?>'>
+					<input type='hidden' name='host-id' value='<?php echo $hostId;?>'>
 					
 					<h3>Add a session</h3>
 
@@ -1305,7 +1305,7 @@ class Schedules{
 					<br>
 					<?php
 					
-					echo SIM\addSaveButton('add_timeslot', "$action time slot",'update_event add_schedule_row');
+					echo SIM\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
 					?>
 				</form>
 			</div>
@@ -1350,13 +1350,13 @@ class Schedules{
 		?>
 		<h3 style='text-align:center;'>Add a schedule</h3>
 		<form class='add-schedule-form'>
-			<input type="hidden" name="schedule_id">
-			<input type="hidden" name="target_id">
+			<input type="hidden" name="schedule-id">
+			<input type="hidden" name="target-id">
 			<input type="hidden" name="update" value="<?php echo $update;?>">
 			
 			<label>
 				<h4>Name of the person the schedule is for</h4>
-				<input type='text' name='target_name' class='wide' list="website_users" required>
+				<input type='text' name='target-name' class='wide' list="website_users" required>
 			</label>
 			
 			<datalist id="website_users">
@@ -1369,7 +1369,7 @@ class Schedules{
 
 			<label>
 				<h4>Extra info or subtitle for this schedule</h4>
-				<input type='text' class='wide' name='schedule_info'>
+				<input type='text' class='wide' name='schedule-info'>
 			</label>
 			
 			<label>

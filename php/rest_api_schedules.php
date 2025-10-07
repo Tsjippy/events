@@ -17,13 +17,13 @@ function schedulesRestApiInit() {
 			'permission_callback' 	=> function(){
 				$schedule	= new CreateSchedule();
 
-				if(is_numeric($_POST['schedule_id'])){
-					$schedule->getScheduleById($_POST['schedule_id']);
+				if(is_numeric($_POST['schedule-id'])){
+					$schedule->getScheduleById($_POST['schedule-id']);
 				}
 				return $schedule->admin;
 			},
 			'args'					=> array(
-				'target_name'		=> array(
+				'target-name'		=> array(
 					'required'	=> true
 				),
 				'startdate'		=> array(
@@ -39,7 +39,7 @@ function schedulesRestApiInit() {
 	//publish_schedule
 	register_rest_route(
 		RESTAPIPREFIX.'/events',
-		'/publish-schedule',
+		'/publish_schedule',
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
@@ -51,7 +51,7 @@ function schedulesRestApiInit() {
 				return $schedule->admin;
 			},
 			'args'					=> array(
-				'schedule_id'		=> array(
+				'schedule-id'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($scheduleId){
 						return is_numeric($scheduleId);
@@ -69,14 +69,14 @@ function schedulesRestApiInit() {
 			'methods' 				=> 'POST',
 			'callback' 				=> function(){
 				$schedule		= new CreateSchedule();
-				return $schedule->removeSchedule($_POST['schedule_id']);
+				return $schedule->removeSchedule($_POST['schedule-id']);
 			},
 			'permission_callback' 	=> function(){
 				$schedule	= new CreateSchedule();
 				return $schedule->admin;
 			},
 			'args'					=> array(
-				'schedule_id'		=> array(
+				'schedule-id'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($scheduleId){
 						return is_numeric($scheduleId);
@@ -138,7 +138,7 @@ function schedulesRestApiInit() {
 			},
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-				'schedule_id'		=> array(
+				'schedule-id'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($scheduleId){
 						return is_numeric($scheduleId);
@@ -194,7 +194,7 @@ function schedulesRestApiInit() {
 			},
 			'permission_callback' 	=> '__return_true',
 			'args'					=> array(
-				'schedule_id'		=> array(
+				'schedule-id'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($scheduleId){
 						return is_numeric($scheduleId);
@@ -209,7 +209,7 @@ function schedulesRestApiInit() {
 				'starttime'		=> array(
 					'required'	=> true
 				),
-				'recipe_keyword'		=> array(
+				'recipe-keyword'		=> array(
 					'required'	=> true
 				),
 			)

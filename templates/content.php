@@ -26,7 +26,7 @@ if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<div class="cat_card inside-article">
+	<div class="cat-card inside-article">
 		<?php do_action( 'sim_before_content' );?>
 		<div class='entry-content'>
 			<div class="description event">
@@ -194,7 +194,7 @@ function displayEventMeta(){
 					echo "<img src='{$baseUrl}/location_red.png' alt='' loading='lazy' class='event-icon'>";
 					?>
 					<h4>LOCATION</h4>
-					<div class='location_details'>
+					<div class='location-details'>
 						<?php
 						echo $events->getLocationDetail($event);
 						?>
@@ -209,7 +209,7 @@ function displayEventMeta(){
 					echo "<img src='{$baseUrl}/organizer.png' alt='' loading='lazy' class='event-icon'>";
 					?>
 					<h4>ORGANIZER</h4>
-					<div class='author_details'>
+					<div class='author-details''>
 						<?php
 						echo $events->getAuthorDetail($event);
 						?>

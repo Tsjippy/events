@@ -49,7 +49,7 @@ document.addEventListener('click', async function(event){
             	sessionWrapper.remove();
 			}
         }
-	}else if (target.name == 'add_host_mobile' ){
+	}else if (target.name == 'add-host-mobile' ){
 		event.stopPropagation();
 		addHost(target, true)
 	}else if(target.closest('.edit-session-mobile') != null){
@@ -68,7 +68,7 @@ document.addEventListener('click', async function(event){
 
             wrapper.remove();
         }
-	}else if(target.name == 'add_host' || target.name == 'add_timeslot'){
+	}else if(target.name == 'add-host' || target.name == 'add-timeslot'){
 		event.stopPropagation();
 		
 		addHost(target);
@@ -95,10 +95,10 @@ document.addEventListener('change', function(event){
 			target.closest('form').querySelector('.diner.select-wrapper').classList.remove('hidden');
 			target.closest('form').querySelector('.lunch.select-wrapper').classList.add('hidden');
 		}
-	}else if(target.matches('.schedules_wrapper [name="add_session"] [name="date"]')){
+	}else if(target.matches('.schedules-wrapper [name="add-session"] [name="date"]')){
 		// Add the active class to the currently selected date
 		let form		= target.closest('form');
-		let scheduleId	= form.querySelector('[name="schedule_id"').value;
+		let scheduleId	= form.querySelector('[name="schedule-id"').value;
 
 		form.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));
 
@@ -110,7 +110,7 @@ document.addEventListener('change', function(event){
 	}else if(target.matches('.add-host-mobile-wrapper [name="date[]"]')){
 		// Add the active class to the currently selected dates
 		let form		= target.closest('form');
-		let scheduleId	= form.querySelector('[name="schedule_id"').value;
+		let scheduleId	= form.querySelector('[name="schedule-id"').value;
 
 		form.querySelectorAll('.active').forEach(el=>el.classList.remove('active'));
 
