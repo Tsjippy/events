@@ -194,7 +194,7 @@ function showEditScheduleModal(target){
 	let scheduleId	= wrapper.dataset.id;
 
 	modal.querySelector(`[name="schedule-id"]`).value		= scheduleId;
-	modal.querySelector(`[name="target-id"]`).value			= table.dataset.target_id;
+	modal.querySelector(`[name="target-id"]`).value			= table.dataset.targetId;
 	modal.querySelector(`[name="target-name"]`).value		= table.dataset.target;
 	modal.querySelector(`[name="schedule-info"]`).value		= wrapper.querySelector('.table-title.sub-title').textContent;
 	modal.querySelector(`[name="startdate"]`).value			= table.tHead.querySelector('tr').cells[1].dataset.isodate;
@@ -464,7 +464,7 @@ document.addEventListener('change', function(event){
 		let host	= target.list.querySelector(`[value="${target.value}"]`);
 		let userId	= '';
 		if(host != null){
-			userId	= host.dataset.user_id;
+			userId	= host.dataset.userId;
 		}
 
 		target.closest('form').querySelector('[name="host-id"]').value	= userId;
