@@ -5,6 +5,7 @@
 
 ### Changed
 - element names and classes
+- data attribute names
 
 ### Fixed
 - bugs
