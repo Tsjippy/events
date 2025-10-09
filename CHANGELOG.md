@@ -7,6 +7,7 @@
 - element names and classes
 
 ### Fixed
+- bugs
 
 ### Updated
 
