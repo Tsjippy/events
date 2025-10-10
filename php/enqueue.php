@@ -5,48 +5,36 @@ use SIM;
 add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 2);
 function afterInsertPost($postId, $post){
     if(has_shortcode($post->post_content, 'schedules')){
-        global $Modules;
+        $pages  = SIM\getModuleOption(MODULE_SLUG, 'schedule-pages', false);
 
-        if(!is_array($Modules[MODULE_SLUG]['schedule_pages'])){
-            $Modules[MODULE_SLUG]['schedule_pages']    = [$postId];
-        }else{
-            $Modules[MODULE_SLUG]['schedule_pages'][]  = $postId;
-        }
+        $pages[]  = $postId;
 
-        update_option('sim_modules', $Modules);
+        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'schedule-pages');
     }
 
     if(has_shortcode($post->post_content, 'upcomingevents')){
-        global $Modules;
+        $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents-pages', false);
 
-        if(!is_array($Modules[MODULE_SLUG]['upcomingevents_pages'])){
-            $Modules[MODULE_SLUG]['upcomingevents_pages']    = [$postId];
-        }else{
-            $Modules[MODULE_SLUG]['upcomingevents_pages'][]  = $postId;
-        }
+        $pages[]  = $postId;
 
-        update_option('sim_modules', $Modules);
+        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'upcomingevents-pages');
     }
 }
 
 add_action( 'wp_trash_post',  __NAMESPACE__.'\trashPost');
 function trashPost($postId){
-    global $Modules;
-
-    $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents_pages', false);
+    $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents-pages', false);
     $index  = array_search($postId, $pages);
-    if($index){
-        unset($Modules[MODULE_SLUG]['upcomingevents_pages'][$index]);
-        $Modules[MODULE_SLUG]['upcomingevents_pages']   = array_values($pages);
-        update_option('sim_modules', $Modules);
+    if($index){ 
+        unset($pages[$index]);
+        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'upcomingevents-pages');
     }
 
-    $pages  = SIM\getModuleOption(MODULE_SLUG, 'schedule_pages', false);
+    $pages  = SIM\getModuleOption(MODULE_SLUG, 'schedule-pages', false);
     $index  = array_search($postId, $pages);
     if($index){
-        unset($Modules[MODULE_SLUG]['schedule_pages'][$index]);
-        $Modules[MODULE_SLUG]['schedule_pages']   = array_values($pages);
-        update_option('sim_modules', $Modules);
+        unset($pages[$index]);
+        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'schedule-pages');
     }
 }
 
