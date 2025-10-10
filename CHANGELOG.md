@@ -6,6 +6,7 @@
 ### Changed
 - element names and classes
 - data attribute names
+- page maintenance
 
 ### Fixed
 - bugs
