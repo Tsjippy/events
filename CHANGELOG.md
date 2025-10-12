@@ -7,6 +7,7 @@
 - element names and classes
 - data attribute names
 - page maintenance
+- dataset names
 
 ### Fixed
 - bugs
