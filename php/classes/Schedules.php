@@ -276,7 +276,7 @@ class Schedules{
 				?>
 				<div class='warning'>
 					This schedule has no website user connected to it.<br>
-					Please <button type="button" class="button small schedule-action edit-schedule" data-schedule_id="<?php echo $this->currentSchedule->id;?>">Edit</button> the schedule to add one.
+					Please <button type="button" class="button small schedule-action edit-schedule" data-schedule-id="<?php echo $this->currentSchedule->id;?>">Edit</button> the schedule to add one.
 				</div>
 				<?php
 			}
@@ -304,7 +304,7 @@ class Schedules{
 					<div class='schedule publish warning'>
 						This schedule is currently not scheduled.<br>
 						Publish it for <?php echo $name;?> to see it.<br>
-						<button type='button' class='button schedule-action publish' data-target='<?php echo $this->currentSchedule->target;?>' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Publish</button>
+						<button type='button' class='button schedule-action publish' data-target='<?php echo $this->currentSchedule->target;?>' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Publish</button>
 					</div>
 					<?php
 				}
@@ -313,7 +313,7 @@ class Schedules{
 				<p>Click on an available date to indicate you want to host.<br>Click on any date you are subscribed for to unsubscribe</p>
 
 				<?php
-				$dataSet	= "data-id='{$this->currentSchedule->id}' data-target='{$this->currentSchedule->name}' data-target_id='{$this->currentSchedule->target}' data-action='update_schedule'";
+				$dataSet	= "data-id='{$this->currentSchedule->id}' data-target='{$this->currentSchedule->name}' data-target-id='{$this->currentSchedule->target}' data-action='update_schedule'";
 
 				if($this->admin){
 					$skipLunch	= !$this->currentSchedule->lunch;
@@ -357,12 +357,12 @@ class Schedules{
 				if($this->admin){
 					?>
 					<div class='schedule-actions'>
-						<button type='button' class='button schedule-action edit-schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
-						<button type='button' class='button schedule-action remove-schedule' data-schedule_id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
+						<button type='button' class='button schedule-action edit-schedule' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
+						<button type='button' class='button schedule-action remove-schedule' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
 						<?php
 						//schedule is not yet set.
 						if(!$this->currentSchedule->published && $this->currentSchedule->target != 0){
-							echo "<button type='button' class='button schedule-action publish' data-target='{$this->currentSchedule->target}' data-schedule_id='{$this->currentSchedule->id}'>Publish</button>";
+							echo "<button type='button' class='button schedule-action publish' data-target='{$this->currentSchedule->target}' data-schedule-id='{$this->currentSchedule->id}'>Publish</button>";
 						}
 						?>
 					</div>
@@ -712,7 +712,7 @@ class Schedules{
 				$date			= $data->events[0]->startdate;
 				$startTime		= $data->events[0]->starttime;
 				if(is_numeric($hostId)){
-					$hostData	.= " data-host=$hostId data-session_id='$data->id'";
+					$hostData	.= " data-host=$hostId data-session-id='$data->id'";
 				}
 			}
 
@@ -733,7 +733,7 @@ class Schedules{
 				$dateStr	= date(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
-				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host_id='$hostId' data-isodate='$date'>";
+				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host-id='$hostId' data-isodate='$date'>";
 					$cellText .= 'Available   ';
 					$cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
 				$cellText .= "</span>";
@@ -781,9 +781,9 @@ class Schedules{
 			$event						= $this->currentSession->events[0];
 
 			$hostId			= $event->organizer-id;
-			$dataset	= "data-starttime='{$event->starttime}' data-endtime='{$event->endtime}' data-session_id='{$this->currentSession->id}'";
+			$dataset	= "data-starttime='{$event->starttime}' data-endtime='{$event->endtime}' data-session-id='{$this->currentSession->id}'";
 			if (is_numeric($hostId)) {
-				$dataset	.= " data-host='".get_userdata($hostId)->display_name."' data-host_id='$hostId'";
+				$dataset	.= " data-host='".get_userdata($hostId)->display_name."' data-host-id='$hostId'";
 			}
 
 			if(!empty($event->atendees)){
@@ -821,7 +821,7 @@ class Schedules{
 				$dataset	.= " data-subject='$baseTitle'";
 				$url		= get_permalink($event->post_id);
 				$date		= $event->startdate;
-				$cellText	= "<span class='subject' data-user_id='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
+				$cellText	= "<span class='subject' data-user-id='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
 			}
 			
 			if (!is_numeric($hostId)) {
@@ -850,7 +850,7 @@ class Schedules{
 				$dateStr	= date(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
-				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host_id='$hostId' data-isodate='$date'>";
+				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host-id='$hostId' data-isodate='$date'>";
 					$cellText .= 'Available   ';
 					$cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
 				$cellText .= "</span>";
@@ -1074,7 +1074,7 @@ class Schedules{
 							$class	.= ' orientation';
 						}
 
-						$html 	.= "<div class='session-wrapper-mobile $class' data-session_id='{$this->currentSchedule->sessions[$date][$startTime]->id}' style='display:flex;'>";
+						$html 	.= "<div class='session-wrapper-mobile $class' data-session-id='{$this->currentSchedule->sessions[$date][$startTime]->id}' style='display:flex;'>";
 							$html 	.= "<div style='padding-right:10px;'>";
 								$html 	.= "<strong>$description</strong>:<br>";
 								$html 	.=	$content.'<br>';
