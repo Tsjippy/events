@@ -23,7 +23,7 @@ function editButton($buttonHtml, $post, $content){
     $result = $wpdb->get_results($query);
     
     if(!empty($result)){;
-        $url        = SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, 'schedules_pages')."?schedule={$result[0]->schedule_id}&session={$result[0]->id}";
+        $url        = SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, 'schedules-pages')."?schedule={$result[0]->schedule_id}&session={$result[0]->id}";
 
         $buttonHtml	= "<a href=$url class='button small'>Edit this schedule session</a>";
     }

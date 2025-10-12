@@ -149,7 +149,7 @@ function moduleUpdated($options, $oldOptions){
 
 	scheduleTasks();
 
-	$options	= SIM\ADMIN\createDefaultPage($options, 'schedules_pages', 'Schedules', '[schedules]', $oldOptions);
+	$options	= SIM\ADMIN\createDefaultPage($options, 'schedules-pages', 'Schedules', '[schedules]', $oldOptions);
 
 	return $options;
 }
@@ -157,7 +157,7 @@ function moduleUpdated($options, $oldOptions){
 add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
 function postStates( $states, $post ) {
     
-    if (is_array(SIM\getModuleOption(MODULE_SLUG, 'schedules_pages')) && in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'schedules_pages', false))) {
+    if (is_array(SIM\getModuleOption(MODULE_SLUG, 'schedules-pages')) && in_array($post->ID, SIM\getModuleOption(MODULE_SLUG, 'schedules-pages', false))) {
         $states[] = __('Schedules page');
     }
 
