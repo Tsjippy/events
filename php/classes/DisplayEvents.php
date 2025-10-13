@@ -238,7 +238,7 @@ class DisplayEvents extends Events{
 	 * @return	string					Html with the author name linking to the user page of the author. E-mail and phonenumbers
 	*/
 	public function getAuthorDetail($event){
-		$userId		= $event->organizer-id;
+		$userId		= $event->organizer_id;
 		$user		= get_userdata($userId);
 
 		if(empty($userId)){
