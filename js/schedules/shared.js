@@ -4,7 +4,7 @@ export function showAddHostModal(target, date='', startTime=''){
 	let modal											= document.querySelector('[name="add-host"]');
 
 	// Clear
-	modal.querySelectorAll('input:not([type="hidden"], [type="radio"])').forEach(el=>el.value='');
+	modal.querySelectorAll('input:not([type="hidden" class="no-reset"], [type="radio"])').forEach(el=>el.value='');
 
     modal.querySelector('[name="date"]').value			= date;
     modal.querySelector('[name="starttime"]').value		= startTime;
@@ -92,7 +92,7 @@ export function showTimeslotModal(selected=''){
 	let ul			= modal.querySelector('ul.list-selection-list');
 
 	// Clear
-	modal.querySelectorAll('input:not([type="hidden"], [type="checkbox"], [type="radio"])').forEach(el=>el.value='');
+	modal.querySelectorAll('input:not([type="hidden" class="no-reset"], [type="checkbox"], [type="radio"])').forEach(el=>el.value='');
 	if(ul != null){
 		ul.innerHTML	= '';
 	}
@@ -201,7 +201,7 @@ export function showTimeslotModal(selected=''){
 			html	= `<button type="button" class="small remove-list-selection"><span class='remove-list-selection'>×</span></button>`;
 
 			if(typeof(atendee) === 'object'){
-				html   += `<input type='hidden' name='others[]' value='${atendee.id}'>`;
+				html   += `<input type='hidden' class='no-reset' class='no-reset' name='others[]' value='${atendee.id}'>`;
 				html   += `<span>${atendee.name}</span>`;
 			}else{
 				html   += `<span>`;

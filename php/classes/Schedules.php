@@ -259,7 +259,7 @@ class Schedules{
 				<div class="modal-content">
 					<span id="modal-close" class="close">&times;</span>
 					<form action="" method="post" id="publish-schedule_form">
-						<input type='hidden' name='schedule-id'>
+						<input type='hidden' class='no-reset' name='schedule-id'>
 						<p>
 							Please select the user or family this schedule should be published for.<br>
 							The schedule will show up on the dashboard of these persons after publish.
@@ -382,7 +382,7 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule-id' value='<?php echo $this->currentSchedule->id;?>'>
+					<input type='hidden' class='no-reset' name='schedule-id' value='<?php echo $this->currentSchedule->id;?>'>
 
 					<?php
 					if($this->currentSchedule->lunch){
@@ -404,7 +404,7 @@ class Schedules{
 						<?php
 					}else{
 						?>
-						<input type='hidden' name='starttime' value='18:00'>
+						<input type='hidden' class='no-reset' name='starttime' value='18:00'>
 						<?php
 					}
 					$date				= $this->currentSchedule->startdate;
@@ -482,7 +482,7 @@ class Schedules{
 						<?php
 						echo SIM\userSelect('', true, true, '', 'host-id', [], '', [], 'list');
 					}else{
-						echo "<input type='hidden' name='host-id' value='{$this->user->ID}'>";
+						echo "<input type='hidden' class='no-reset' name='host-id' value='{$this->user->ID}'>";
 					}
 					echo SIM\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
 					?>
@@ -1144,12 +1144,12 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule-id'>
-					<input type='hidden' name='session-id'>
-					<input type='hidden' name='host-id'>
-					<input type='hidden' name='starttime'>
-					<input type='hidden' name='endtime'>
-					<input type='hidden' name='date'>
+					<input type='hidden' class='no-reset' name='schedule-id'>
+					<input type='hidden' class='no-reset' name='session-id'>
+					<input type='hidden' class='no-reset' name='host-id'>
+					<input type='hidden' class='no-reset' name='starttime'>
+					<input type='hidden' class='no-reset' name='endtime'>
+					<input type='hidden' class='no-reset' name='date'>
 						<?php
 					if($this->admin){
 						?>
@@ -1157,7 +1157,7 @@ class Schedules{
 						<?php
 						echo SIM\userSelect('', true, true, '', 'host', [], '', [], 'list');
 					}else{
-						echo "<input type='hidden' name='host' value='{$this->user->ID}'>";
+						echo "<input type='hidden' class='no-reset' name='host' value='{$this->user->ID}'>";
 					}
 					$id	= 'add-host';
 					if($this->mobile){
@@ -1174,9 +1174,9 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule-id'>
-					<input type='hidden' name='date'>
-					<input type='hidden' name='starttime'>
+					<input type='hidden' class='no-reset' name='schedule-id'>
+					<input type='hidden' class='no-reset' name='date'>
+					<input type='hidden' class='no-reset' name='starttime'>
 					
 					<p>Enter one or two keywords for the meal you are planning to serve<br>
 					For instance 'pasta', 'rice', 'Nigerian', 'salad'</p>
@@ -1240,9 +1240,9 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' name='schedule-id' value='<?php echo $schdeuleId;?>'>
-					<input type='hidden' name='session-id' value='<?php echo $sessionId;?>'>
-					<input type='hidden' name='host-id' value='<?php echo $hostId;?>'>
+					<input type='hidden' class='no-reset' name='schedule-id' value='<?php echo $schdeuleId;?>'>
+					<input type='hidden' class='no-reset' name='session-id' value='<?php echo $sessionId;?>'>
+					<input type='hidden' class='no-reset' name='host-id' value='<?php echo $hostId;?>'>
 					
 					<h3>Add a session</h3>
 
@@ -1350,9 +1350,9 @@ class Schedules{
 		?>
 		<h3 style='text-align:center;'>Add a schedule</h3>
 		<form class='add-schedule-form'>
-			<input type="hidden" name="schedule-id">
-			<input type="hidden" name="target-id">
-			<input type="hidden" name="update" value="<?php echo $update;?>">
+			<input type="hidden" class="no-reset" name="schedule-id">
+			<input type="hidden" class="no-reset" name="target-id">
+			<input type="hidden" class="no-reset" name="update" value="<?php echo $update;?>">
 			
 			<label>
 				<h4>Name of the person the schedule is for</h4>
