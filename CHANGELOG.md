@@ -4,6 +4,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.2.5] - 2025-10-13
+
+
+### Changed
 - element names and classes
 - data attribute names
 - page maintenance
@@ -11,8 +20,6 @@
 
 ### Fixed
 - bugs
-
-### Updated
 
 ## [8.2.4] - 2025-10-06
 
