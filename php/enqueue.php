@@ -60,8 +60,8 @@ function loadAssets(){
         wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), MODULE_VERSION, true);
     }
 
-    $schedulePages         = (array)SIM\getModuleOption(MODULE_SLUG, 'schedule_pages');
-    $upcomingEventsPages   = (array)SIM\getModuleOption(MODULE_SLUG, 'upcomingevents_pages');
+    $schedulePages         = (array)SIM\getModuleOption(MODULE_SLUG, 'schedule-pages');
+    $upcomingEventsPages   = (array)SIM\getModuleOption(MODULE_SLUG, 'upcoming-events-pages');
     if(is_numeric(get_the_ID())){
         if(in_array(get_the_ID(), $schedulePages)){
         wp_enqueue_style('sim_schedules_css');
