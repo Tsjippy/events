@@ -7,6 +7,7 @@
 
 ### Fixed
 - databse queiries
+- storing event end dates
 
 ### Updated
 
