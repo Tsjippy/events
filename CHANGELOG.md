@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- databse queiries
 
 ### Updated
 
