@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- databse queiries
-- storing event end dates
 
 ### Updated
+
+## [8.2.6] - 2025-10-16
+
+
+### Fixed
+- databse queiries
+- storing event end dates
 
 ## [8.2.5] - 2025-10-13
 
