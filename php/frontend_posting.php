@@ -82,7 +82,7 @@ function eventSpecificFields($frontEndContent){
 		<label name="location">
 			<h4>Location</h4>
 			<input type='hidden' class='no-reset' class='datalistvalue'	name='event[location-id]' 	value='<?php if(isset($eventDetails['location-id'])){echo $eventDetails['location-id'];} ?>'>
-			<input type='text'							name='event[location]' 		value='<?php if(isset($eventDetails['location'])){echo $eventDetails['location'];} ?>' list="locations">
+			<input type='text'											name='event[location]' 		value='<?php if(isset($eventDetails['location'])){echo $eventDetails['location'];} ?>' list="locations">
 			<datalist id="locations">
 				<?php
 				$locations = get_posts(

@@ -64,7 +64,7 @@ class CreateEvents extends Events{
 			];
 
 			// only add the data where there is a column for it
-			foreach(['id', 'post-id', 'starttime', 'endtime', 'location', 'organizer', 'location_id', 'organizer-id', 'atendees', 'onlyfor'] as $column){
+			foreach(['id', 'post_id', 'starttime', 'endtime', 'location', 'organizer', 'location_id', 'organizer_id', 'atendees', 'onlyfor'] as $column){
 				if(isset($this->eventData[$column])){
 					$args[$column]	= $this->eventData[$column];
 				}
