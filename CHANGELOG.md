@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- using array_filter
 
 ### Fixed
 
