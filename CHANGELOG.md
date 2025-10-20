@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- ajax search
 
 ### Updated
 
