@@ -31,7 +31,7 @@ function getAnniversaries(){
 		$startYear	= get_post_meta($event->ID, 'celebrationdate', true);
 
 		if(is_array($startYear)){
-			SIM\cleanUpNestedArray($startYear);
+			array_filter($startYear);
 
 			$startYear	= array_values($startYear)[0];
 		}

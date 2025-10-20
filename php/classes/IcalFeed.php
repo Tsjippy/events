@@ -188,7 +188,7 @@ class IcalFeed{
 
 			if(!empty($meta['repeat']['excludedates'])){
 				$excludeDates		= $meta['repeat']['excludedates'];
-				SIM\cleanUpNestedArray($excludeDates);
+				array_filter($excludeDates);
 				if(!empty($excludeDates)){
 					$icalEvent	.="EXDATE:";
 					
