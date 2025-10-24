@@ -7,6 +7,7 @@
 
 ### Fixed
 - ajax search
+- db query
 
 ### Updated
 
