@@ -40,15 +40,8 @@ function eventTitle($postType){
 	echo "</label>";
 }
 
-function eventSpecificFields($frontEndContent){
-	$categories	= get_categories( array(
-		'orderby' => 'name',
-		'order'   => 'ASC',
-		'taxonomy'=> 'events',
-		'hide_empty' => false,
-	) );
-	
-	$frontEndContent->showCategories('event', $categories);
+function eventSpecificFields($frontEndContent){	
+	$frontEndContent->showCategories('event', 'events');
 	
 	$eventDetails	= get_post_meta($frontEndContent->postId, 'eventdetails', true);
 	if(!is_array($eventDetails)){

@@ -83,7 +83,7 @@ class Events{
 
 		return $wpdb->delete(
 			$this->tableName,
-			['post-id' => $postId],
+			['post_id' => $postId],
 			['%d']
 		);
 	}
