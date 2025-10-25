@@ -2,12 +2,6 @@
 namespace SIM\EVENTS;
 use SIM;
 
-add_filter('sim_frontend_posting_modals', __NAMESPACE__.'\postingModals');
-function postingModals($types){
-	$types[]	= 'event';
-	return $types;
-}
-
 add_action('init', __NAMESPACE__.'\addEventPostType', 999);
 function addEventPostType(){
 	SIM\registerPostTypeAndTax('event', 'events');
@@ -40,9 +34,7 @@ function eventTitle($postType){
 	echo "</label>";
 }
 
-function eventSpecificFields($frontEndContent){	
-	$frontEndContent->showCategories('event', 'events');
-	
+function eventSpecificFields($frontEndContent){		
 	$eventDetails	= get_post_meta($frontEndContent->postId, 'eventdetails', true);
 	if(!is_array($eventDetails)){
 		if(!empty($eventDetails)){
@@ -407,6 +399,4 @@ function afterPostSave($post, $frontEndPost){
 	
     $events = new CreateEvents();
     $events->storeEventMeta($post, $frontEndPost->update);
-
-	$frontEndPost->storeCustomCategories($post, 'events');
 }
