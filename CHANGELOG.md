@@ -6,10 +6,15 @@
 ### Changed
 
 ### Fixed
-- ajax search
-- db query
 
 ### Updated
+
+## [8.2.8] - 2025-10-25
+
+
+### Fixed
+- ajax search
+- db query
 
 ## [8.2.7] - 2025-10-20
 
