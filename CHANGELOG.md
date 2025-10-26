@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- new format for frontendcontent
 
 ### Fixed
 
