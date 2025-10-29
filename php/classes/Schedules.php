@@ -61,7 +61,7 @@ class Schedules{
 	*/
 	public function createDbTable(){
 		if ( !function_exists( 'maybe_create_table' ) ) {
-			require_once ABSPATH . '/wp-admin/install-helper.php';
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 		
 		//only create db if it does not exist
