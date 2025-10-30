@@ -64,6 +64,7 @@ class CreateSchedule extends Schedules{
 	 * @param	bool	$addPartner		Whether to add an event for the schedule target partner as well. Default true
 	*/
 	protected function addScheduleEvents($addHostPartner=true, $addPartner=true){
+		$family							= new SIM\FAMILY\Family();
 		$event							= [];
 		$event['startdate']				= $this->date;
 		$event['starttime']				= $this->startTime;
@@ -80,7 +81,7 @@ class CreateSchedule extends Schedules{
 		$hostPartner					= false;
 		if(is_numeric($this->hostId)){
 			if($addHostPartner){
-				$event['organizer']				= SIM\getFamilyName($this->hostId, false, $hostPartner);
+				$event['organizer']				= $family->getFamilyName($this->hostId, false, $hostPartner);
 			}else{
 				$event['organizer']				= get_userdata($this->hostId)->display_name;
 			}
@@ -89,7 +90,7 @@ class CreateSchedule extends Schedules{
 		}
 
 		if($addPartner){
-			$partnerId	= SIM\hasPartner($this->currentSchedule->target);
+			$partnerId	= $family->getPartner($this->currentSchedule->target);
 		}else{
 			$partnerId	= false;
 		}
@@ -235,13 +236,14 @@ class CreateSchedule extends Schedules{
 	*/
 	protected function updateScheduleEvents($addHostPartner=true, $addPartner=true){
 		global $wpdb;
+		$family		= new SIM\FAMILY\Family();
 
 		$updated	= false;
 
 		$hostPartner					= false;
 		if(is_numeric($this->hostId)){
 			if($addHostPartner){
-				$organizer				= SIM\getFamilyName($this->hostId, false, $hostPartner);
+				$organizer				= $family->getFamilyName($this->hostId, false, $hostPartner);
 			}else{
 				$organizer				= get_userdata($this->hostId)->display_name;
 			}
@@ -412,6 +414,7 @@ class CreateSchedule extends Schedules{
 		global $wpdb;
 	
 		$name		= sanitize_text_field($_POST['target-name']);
+
 		//check if schedule already exists
 		if(!$update && $wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `name` = '$name'") != null){
 			return new WP_Error('schedule', "A schedule for $name already exists!");
@@ -516,10 +519,11 @@ class CreateSchedule extends Schedules{
 	*/
 	public function publishSchedule(){
 		global $wpdb;
+		$family		= new SIM\FAMILY\Family();
 		
 		$scheduleId	= $_POST['schedule-id'];
 
-		SIM\updateFamilyMeta($_POST['schedule-target'], 'schedule', $scheduleId);
+		$family->updateFamilyMeta($_POST['schedule-target'], 'schedule', $scheduleId);
 
 		$wpdb->update(
 			$this->tableName,
@@ -544,6 +548,8 @@ class CreateSchedule extends Schedules{
 	public function removeSchedule($scheduleId){
 		global $wpdb;
 
+		$family	= new SIM\FAMILY\Family();
+
 		if(!is_numeric($scheduleId)){
 			return new WP_Error('schedules', 'Schedule id should be numeric');
 		}
@@ -552,7 +558,7 @@ class CreateSchedule extends Schedules{
 
 		//Remove the schedule from the user meta
 		if(is_numeric($schedule->target)){
-			SIM\updateFamilyMeta($schedule->target,'schedule','delete');
+			$family->removeFamilyMeta($schedule->target, 'schedule');
 		}
 		
 		//Delete all the posts and events of this schedule
@@ -606,6 +612,7 @@ class CreateSchedule extends Schedules{
 	 * @return string	success message and new cell html
 	*/
 	public function addHost($date){
+		$family				= new SIM\FAMILY\Family();
 		$message			= '';
 		$this->scheduleId	= $_POST['schedule-id'];
 		$this->startTime	= $_POST['starttime'];
@@ -620,7 +627,7 @@ class CreateSchedule extends Schedules{
 		if(is_numeric($_POST['host-id'])){
 			$this->hostId	= $_POST['host-id'];
 			$host			= get_userdata($this->hostId);
-			$partnerId		= SIM\hasPartner($this->hostId);
+			$partnerId		= $family->getPartner($this->hostId);
 
 			if(
 				!$this->admin						&&			// We are not admin
@@ -631,7 +638,7 @@ class CreateSchedule extends Schedules{
 			}
 			
 			if($partnerId && !isset($_POST['subject'])){
-				$hostName		= SIM\getFamilyName($host);
+				$hostName		= $family->getFamilyName($host);
 			}else{
 				$hostName		= $host->display_name;
 			}
@@ -714,6 +721,7 @@ class CreateSchedule extends Schedules{
 	 * @return string	success message
 	*/
 	public function removeHost($sessionId){
+		$family					= new SIM\FAMILY\Family();
 
 		$this->currentSession	= $this->getSessionEvent($sessionId);
 
@@ -724,7 +732,7 @@ class CreateSchedule extends Schedules{
 
 		$hostId				= $this->currentSession->events[0]->organizer-id;
 
-		$partnerId			= SIM\hasPartner($this->user->ID);
+		$partnerId			= $family->getPartner($this->user->ID);
 		if(
 			!$this->admin 				&&
 			$hostId != $this->user->ID 	&&

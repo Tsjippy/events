@@ -117,15 +117,15 @@ function getCoupleString($user, $partner=''){
 		$user	= get_userdata($user);
 	}
 
-	$family		= get_user_meta($user->ID, 'family', true);
+	$family		= new SIM\FAMILY\Family();
 	$lastName	= $user->last_name;
 
-	if(!empty($family['name'])){
-		$lastName	= $family['name'];
+	if(!empty($family->getFamilyMeta($user, 'name'))){
+		$lastName	= $family->getFamilyMeta($user, 'name');
 	}
 
 	if(empty($partner)){
-		$partner		= SIM\hasPartner($user->ID, true);
+		$partner		= $family->getPartner($user->ID, true);
 
 		if(!$partner){
 			return "$user->first_name $lastName";
@@ -136,12 +136,13 @@ function getCoupleString($user, $partner=''){
 }
 
 function replaceCoupleString($string, $replaceString, $user, $partner=''){
+	$family	= new SIM\FAMILY\Family();
 	if(is_numeric($user)){
 		$user	= get_userdata($user);
 	}
 
 	if(empty($partner)){
-		$partner		= SIM\hasPartner($user->ID, true);
+		$partner		= $family->getPartner($user->ID, true);
 
 		if(!$partner){
 			return $string;
@@ -162,6 +163,7 @@ function replaceCoupleString($string, $replaceString, $user, $partner=''){
  *
  */
 function anniversaryMessages(){
+	$family					= new SIM\FAMILY\Family();
 	$currentUser			= wp_get_current_user();
 	$anniversaryMessages 	= getAnniversaries();
 
@@ -179,7 +181,7 @@ function anniversaryMessages(){
 
 		$message	= str_replace('&amp;', '&', $message);
 
-		$partner	= SIM\hasPartner($userId, true);
+		$partner	= $family->getPartner($userId, true);
 
 		$userdata	= get_userdata($userId);
 		if(!$userdata){
@@ -208,11 +210,12 @@ function anniversaryMessages(){
 			// Add family picture if needed
 			if($newMessage != $message && $addImage){
 				$message	= $newMessage;
-				$family		= get_user_meta($userId, 'family', true);
+				$family		= new SIM\FAMILY\Family();
+				$picture	= $family->getFamilyMeta($userId, 'picture');
 
-				if(is_array($family['picture']) && is_numeric($family['picture'][0])){
-					$url		= wp_get_attachment_url($family['picture'][0]);
-					$picture	= wp_get_attachment_image($family['picture'][0], 'avatar', false, 'style=border-radius: 50%;');
+				if(is_numeric($picture)){
+					$url		= wp_get_attachment_url($picture);
+					$picture	= wp_get_attachment_image($picture, 'avatar', false, 'style=border-radius: 50%;');
 					$message	.= "<a href='$url'>$picture</a>";
 				}
 
@@ -255,6 +258,7 @@ function anniversaryMessages(){
  *
 */
 function arrivingUsersMessage(){
+	$family			= new SIM\FAMILY\Family();
 	$arrivingUsers	= getArrivingUsers();
 	$html			= '';
 
@@ -279,7 +283,7 @@ function arrivingUsersMessage(){
 							continue;
 						}
 
-						$name		= SIM\getFamilyName($user, false, $partnerId);
+						$name		= $family->getFamilyName($user, false, $partnerId);
 
 						if($partnerId){
 							$skip[]		= $partnerId;

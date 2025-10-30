@@ -10,8 +10,8 @@ function beforeSavingFormData($formResults, $object){
 	}
 	
 	$events	= new CreateEvents();
-	$events->createCelebrationEvent('birthday', $object->userId, 'birthday', $_POST['birthday']);
-	$events->createCelebrationEvent(SITENAME.' anniversary', $object->userId, 'arrival_date', $_POST['arrival-date']);
+	$events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), $_POST['birthday']);
+	$events->createCelebrationEvent(SITENAME.' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), $_POST['arrival-date']);
 	
 	return $formResults;
 }

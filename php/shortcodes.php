@@ -9,6 +9,8 @@ function schedules(){
 
 add_shortcode('missing_events', __NAMESPACE__ . '\showMissingEvents');
 function showMissingEvents(){
+    $family					= new SIM\FAMILY\Family();
+
 	$posts = get_posts(
 		array(
 			'post_type'		=> 'event',
@@ -40,10 +42,8 @@ function showMissingEvents(){
             $arrivalDate    = date(DATEFORMAT, strtotime($arrivalDate));
         }
 
-        $weddingDate    = get_user_meta($post->post_author, 'family', true);
-        if(is_array($weddingDate)){
-            $weddingDate    = date(DATEFORMAT, strtotime($weddingDate['weddingdate']));
-        }
+        $weddingDate    = $family->getWeddingDate($post->post_author);
+        $weddingDate    = date(DATEFORMAT, strtotime($weddingDate));
 
         $author     = get_user_by('id', $post->post_author);
         if(!$author){
@@ -169,9 +169,9 @@ function showMissingEvents(){
             $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
-        $weddingDate    = get_user_meta($user->ID, 'family', true);
+        $weddingDate    = $family->getWeddingDate($user->ID);
 
-        if(is_array($weddingDate) && !empty($weddingDate['weddingdate']) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
+        if($weddingDate && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
             $missingEvents   .= "<tr><td>Wedding</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
     }

@@ -19,13 +19,14 @@ function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search){
 
 add_filter('asl_cpt_query_add_where', __NAMESPACE__.'\excludePersonalEventsFromSearchWhereClause');
 function excludePersonalEventsFromSearchWhereClause($where){
+    $family	= new SIM\FAMILY\Family();
     $userId = get_current_user_id();
     
     if($userId === 0){
         return "AND (onlyfor IS NULL) $where";
     }
     
-    SIM\getFamilyName($userId, false, $partnerId);
+    $family->getFamilyName($userId, false, $partnerId);
     $partnerString = '';
     
     if(!empty($partnerId)){

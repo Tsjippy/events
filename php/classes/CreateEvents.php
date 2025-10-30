@@ -6,7 +6,7 @@ use WP_Error;
 class CreateEvents extends Events{
 	public $eventData;
 	public $startDates;
-	public $partnerId;
+	public $partner;
 	
 
 	/**
@@ -297,7 +297,9 @@ class CreateEvents extends Events{
 	 * @param	string		$metaKey	the meta key key
 	 * @param	string		$metaValue	the meta value, should be a date string
 	*/
-	public function createCelebrationEvent($type, $user, $metaKey='', $metaValue=''){
+	public function createCelebrationEvent($type, $user, $oldValue, $newValue){
+		$family			= new SIM\FAMILY\Family();
+
 		if(is_numeric($user)){
 			$user = get_userdata($user);
 		}
@@ -305,32 +307,23 @@ class CreateEvents extends Events{
 		if(!$user){
 			return new WP_Error('invalid user', 'Invalid User or User ID supplied');
 		}
-		
-		if(empty($metaKey)){
-			$metaKey = $type;
-		}
 
-		if($type != 'birthday' && SIM\isChild($user->ID)){
+		if($type != 'birthday' && $family->isChild($user->ID)){
 			//do not create annversaries for children
 			return;
 		}
 
 		$eventIdMetaKey		= $type.'_event_id';
 
-		$oldMetaValue	= SIM\getMetaArrayValue($user->ID, $metaKey);
-		if(!is_array($metaValue) && is_array($oldMetaValue) && count($oldMetaValue) == 1){
-			$oldMetaValue	= array_values($oldMetaValue)[0];
-		}
-
-		if(empty($metaValue) && empty($oldMetaValue) || $metaValue == $oldMetaValue){
+		if($newValue == $oldValue){
 			// nothing to work with or no update
 			return;
-		}elseif(empty($metaValue)){
-			$metaValue = $oldMetaValue;
+		}elseif(empty($newValue)){
+			$newValue = $oldValue;
 		}else{
 			// check if just the year was updated
-			$oldTime	= strtotime($oldMetaValue);
-			$newTime	= strtotime($metaValue);
+			$oldTime	= strtotime($oldValue);
+			$newTime	= strtotime($newValue);
 
 			if(
 				Date('Y', $oldTime) != Date('Y', $newTime) && 
@@ -339,38 +332,23 @@ class CreateEvents extends Events{
 				// no need to create new events, just update the meta value
 				$postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
 
-				update_post_meta($postId, 'celebrationdate', $metaValue);
+				update_post_meta($postId, 'celebrationdate', $newValue);
 				return;
 			}
 		}
 
 		$title				= ucfirst($type).' '.$user->display_name;
-		$this->partnerId	= SIM\hasPartner($user->ID);
-		if($this->partnerId){
-			$partnerMeta	= SIM\getMetaArrayValue($this->partnerId, $metaKey);
-			if(is_array($partnerMeta) && count($partnerMeta) == 1){
-				$partnerMeta	= array_values($partnerMeta)[0];
-			}
-
-			//only treat as a couples event if they both have the same value
-			if($partnerMeta == $metaValue){
-				$partnerName	= get_userdata($this->partnerId)->first_name;
-				$title			= ucfirst($type)." {$user->first_name} & $partnerName {$user->last_name}";
-			}else{
-				$this->partnerId	= false;
-			}
+		$this->partner		= $family->getPartner($user->ID, true);
+		if($this->partner){
+			$title			= ucfirst($type)." {$user->first_name} & {$this->partner->first_name} {$user->last_name}";
 		}
 		
 		//get old post
 		$this->postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
-		$this->deleteOldCelEvent($this->postId, $metaValue, $user->ID, $type, $title);
-
-		if($this->partnerId){
-			$this->deleteOldCelEvent(get_user_meta($this->partnerId, $eventIdMetaKey, true), $metaValue, $this->partnerId, $type, $title);
-		}
+		$this->deleteOldCelEvent($this->postId, $newValue, $user->ID, $type, $title);
 
 		// Create the post
-		$this->createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey);
+		$this->createCelebrationPost($user, $newValue, $title, $type, $eventIdMetaKey);
 
 		$this->createEvents();
 	}
@@ -429,10 +407,6 @@ class CreateEvents extends Events{
 
 		//Store the post id for the user
 		update_user_meta($user->ID, $eventIdMetaKey, $this->postId);
-
-		if($this->partnerId){
-			update_user_meta($this->partnerId, $eventIdMetaKey, $this->postId);
-		}
 	}
 
 	/**
@@ -498,7 +472,7 @@ class CreateEvents extends Events{
 		global $wpdb;
 		
 		//check if form row already exists
-		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post-id` = '{$this->postId}' AND startdate = '$startdate'")){
+		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post_id` = '{$this->postId}' AND startdate = '$startdate'")){
 			$wpdb->insert(
 				$this->tableName,
 				array(

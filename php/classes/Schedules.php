@@ -214,13 +214,14 @@ class Schedules{
 	}
 
 	public function showSchedule() {
+		$family	= new SIM\FAMILY\Family();
 		ob_start();
 
 		if (
 			$this->currentSchedule->target											&&		// There is a target set
 			(
 				$this->currentSchedule->target == $this->user->ID 					||		// Target is me
-				$this->currentSchedule->target == SIM\hasPartner($this->user->ID)			// Target is the partner
+				$this->currentSchedule->target == $family->getPartner($this->user->ID)			// Target is the partner
 			) 																		&&
 			!$this->admin 															&& 		// We are not admin
 			!$this->currentSchedule->published												// Schedule is not yet published
@@ -681,6 +682,8 @@ class Schedules{
 	 * @return 	array					Cell html
 	*/
 	public function writeMealCell($date, $startTime){
+		$family	= new SIM\FAMILY\Family();
+
 		//get event which starts on this date and time
 		$class	= 'meal';
 
@@ -701,7 +704,7 @@ class Schedules{
 			$hostData		= "";
 			$data			= $this->currentSchedule->sessions[$date][$startTime];
 			$hostId			= $data->events[0]->organizer-id;
-			$partnerId 		= SIM\hasPartner($this->user->ID);
+			$partnerId 		= $family->getPartner($this->user->ID);
 
 			if($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId){
 				$cellText	= 'Taken';
@@ -771,6 +774,8 @@ class Schedules{
 	 * @return 	array					Cell html
 	*/
 	public function writeOrientationCell( $date, $startTime) {
+		$family	= new SIM\FAMILY\Family();
+
 		$this->getScheduleSessions();
 
 		$rowSpan	= '';
@@ -813,7 +818,7 @@ class Schedules{
 
 			$endTime	= $event->endtime;
 			$class 		.= ' selected';
-			$partnerId 	= SIM\hasPartner($this->user->ID);
+			$partnerId 	= $family->getPartner($this->user->ID);
 			if($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId){
 				$cellText	= 'Taken';
 			}else{

@@ -129,7 +129,9 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue ){
 }
 
 function upcomingArrivalsBlock($attributes){
-	$args = wp_parse_args($attributes, array(
+	$family	= new SIM\FAMILY\Family();
+
+	$args 	= wp_parse_args($attributes, array(
 		'title' 		=> 'Upcoming Arrivals',
 		'months'		=> 2
 	));
@@ -162,7 +164,7 @@ function upcomingArrivalsBlock($attributes){
 			continue;
 		}
 
-		$name		= SIM\getFamilyName($user, false, $partnerId);
+		$name		= $family->getFamilyName($user, false, $partnerId);
 
 		if($partnerId){
 			$skip[]		= $partnerId;

@@ -4,6 +4,7 @@ use SIM;
 
 add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
 function afterBotPrayer($args){
+	$family	= new SIM\FAMILY\Family();
 
     // calendar events
     $events		= new DisplayEvents();
@@ -64,12 +65,11 @@ function afterBotPrayer($args){
 
             // add appropriate picture
 			if(str_contains($msg, '&')){
-				$family	= get_user_meta($userId, 'family', true);
+				$family	= new SIM\FAMILY\Family();
+				$picture	= $family->getFamilyMeta($userId, 'picture');
 
-				if(isset($family['picture'][0])){
-                    $args['pictures'][] = get_attached_file($family['picture'][0]);
-				}elseif(is_numeric($family['picture'])){
-					$args['pictures'][] = get_attached_file($family['picture']);
+				if(is_numeric($picture)){
+                    $args['pictures'][] = get_attached_file($picture);
 				}
 			}else{
                 $profilePicture	= get_user_meta($userId, 'profile_picture', true);
@@ -100,16 +100,15 @@ function afterBotPrayer($args){
 					continue;
 				}
 
-				$name		= SIM\getFamilyName($user, false, $partnerId);
+				$name		= $family->getFamilyName($user, false, $partnerId);
 
 				if($partnerId){
 					$skip[]		= $partnerId;
 
-                    $family	= get_user_meta($user->ID, 'family', true);
+                    $picture	= $family->getFamilyMeta($userId, 'picture');
 
-                    if(isset($family['picture'][0])){
-						SIM\printArray($args['pictures']);
-                        $args['pictures'][] = get_attached_file($family['picture'][0]);
+                    if($picture){
+                        $args['pictures'][] = get_attached_file($picture);
                     }
 				}else{
                     $profilePicture	= get_user_meta($user->ID, 'profile_picture', true);

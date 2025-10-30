@@ -58,6 +58,7 @@ function removeOldEvents(){
 */
 function anniversaryCheck(){
 	$events		= new DisplayEvents();
+	$family		= new SIM\FAMILY\Family();
 
 	// Get all the events of today
 	$events->retrieveEvents(date('Y-m-d'), date('Y-m-d'));
@@ -69,7 +70,7 @@ function anniversaryCheck(){
 			$userData		= get_userdata($event->post_author);
 			$firstName		= $userData->first_name;
 			$eventTitle		= $event->post_title;
-			$partner		= SIM\hasPartner($event->post_author, true);
+			$partner		= $family->getPartner($event->post_author, true);
 
 			if($partner){
 				$coupleString	= $firstName.' & '.$partner->display_name;

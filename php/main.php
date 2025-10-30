@@ -41,3 +41,11 @@ function changeArchiveTitle($title, $category){
 	
 	return $title;
 }
+
+// Recreate events when weddingdate is updated
+add_action('sim-family-after-weddingdate-update', function($userId, $oldDate, $newDate){
+    $events		= new CreateEvents();
+
+    $events->createCelebrationEvent('Wedding anniversary', $userId, $oldDate, $newDate);
+    
+}, 10, 3);
