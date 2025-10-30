@@ -165,7 +165,7 @@ function showMissingEvents(){
             $missingEvents   .= "<tr><td>Birthdays</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 
-        if(empty(get_user_meta($user->ID, 'SIM Nigeria anniversary_event_id', true))){
+        if(empty(get_user_meta($user->ID, SITENAME.' anniversary_event_id', true))){
             $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
         }
 

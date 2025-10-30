@@ -345,7 +345,7 @@ class CreateEvents extends Events{
 		
 		//get old post
 		$this->postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
-		$this->deleteOldCelEvent($this->postId, $newValue, $user->ID, $type, $title);
+		$this->deleteOldCelEvent($this->postId, $oldValue, $user->ID, $type, $title);
 
 		// Create the post
 		$this->createCelebrationPost($user, $newValue, $title, $type, $eventIdMetaKey);
