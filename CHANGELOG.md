@@ -5,6 +5,7 @@
 
 ### Changed
 - new format for frontendcontent
+- use upgrade.php not install-helper.php
 
 ### Fixed
 
