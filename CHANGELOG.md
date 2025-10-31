@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- getting family picture
 
 ### Updated
 
