@@ -119,9 +119,9 @@ function getCoupleString($user, $partner=''){
 
 	$family		= new SIM\FAMILY\Family();
 	$lastName	= $user->last_name;
-
-	if(!empty($family->getFamilyMeta($user, 'name'))){
-		$lastName	= $family->getFamilyMeta($user, 'name');
+	$familyName	= $family->getFamilyMeta($user, 'family_name');
+	if(!empty($familyName)){
+		$lastName	= $familyName;
 	}
 
 	if(empty($partner)){
@@ -211,7 +211,7 @@ function anniversaryMessages(){
 			if($newMessage != $message && $addImage){
 				$message	= $newMessage;
 				$family		= new SIM\FAMILY\Family();
-				$picture	= $family->getFamilyMeta($userId, 'picture');
+				$picture	= $family->getFamilyMeta($userId, 'family_picture');
 
 				if(is_numeric($picture)){
 					$url		= wp_get_attachment_url($picture);

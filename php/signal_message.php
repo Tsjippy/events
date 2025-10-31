@@ -66,7 +66,7 @@ function afterBotPrayer($args){
             // add appropriate picture
 			if(str_contains($msg, '&')){
 				$family	= new SIM\FAMILY\Family();
-				$picture	= $family->getFamilyMeta($userId, 'picture');
+				$picture	= $family->getFamilyMeta($userId, 'family_picture');
 
 				if(is_numeric($picture)){
                     $args['pictures'][] = get_attached_file($picture);
@@ -105,7 +105,7 @@ function afterBotPrayer($args){
 				if($partnerId){
 					$skip[]		= $partnerId;
 
-                    $picture	= $family->getFamilyMeta($userId, 'picture');
+                    $picture	= $family->getFamilyMeta($userId, 'family_picture');
 
                     if($picture){
                         $args['pictures'][] = get_attached_file($picture);
