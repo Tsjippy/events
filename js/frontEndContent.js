@@ -173,10 +173,14 @@ document.addEventListener("click", event =>{
 		target.closest('.repeat-type-option').querySelector('.repeat-type-option_specifics').classList.remove('hidden');
 	}else if(target.classList.contains('selectall')){
 		target.closest('.selector-wrapper').querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked = target.checked);
+	}else{
+		return;
 	}
+
+	event.stopImmediatePropagation();
 });
 
-document.addEventListener('change', event=>{
+document.addEventListener('change', event => {
     let target  = event.target;
 
     if(target.name == 'event[allday]'){
@@ -185,5 +189,9 @@ document.addEventListener('change', event=>{
         startDateChanged(target);
     }else if(target.name == 'event[repeat][type]'){
         repeatTypeChosen(target);
-    }
+    }else{
+		return;
+	}
+
+	event.stopImmediatePropagation();
 });

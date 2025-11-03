@@ -514,4 +514,10 @@ document.addEventListener('change', function(event){
 			applyRowSpan(cell, rowSpan);
 		}
 	} */
+
+	else{
+		return;
+	}
+
+	event.stopImmediatePropagation();
 });

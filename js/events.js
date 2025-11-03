@@ -227,32 +227,33 @@ function viewChanged(target){
 }
 
 document.addEventListener("click", function(event) {
-	let target = event.target;
+	let target  = event.target;
+
     if(target.classList.contains('prevnext')){
         prevNext(target);
     }
 
-    if(target.classList.contains('calendar-day')){
+    else if(target.classList.contains('calendar-day')){
         event.stopPropagation();
 
         calendarDayClicked(target)
     }
 
-    if(target.classList.contains('calendar-hour')){
+    else if(target.classList.contains('calendar-hour')){
         event.stopPropagation();
         hourClicked(target);
     }
 
-    if(target.classList.contains('viewselector')){
+    else if(target.classList.contains('viewselector')){
         event.stopPropagation();
         viewChanged(target);
     }
 
-    if(target.id=='add-calendar'){
+    else if(target.id=='add-calendar'){
         document.getElementById('calendaraddingoptions').classList.toggle('hidden');   
     }
     
-    if(target.classList.contains('calendarurl')){
+    else if(target.classList.contains('calendarurl')){
         event.stopPropagation();
         if(target.textContent != ''){
             navigator.clipboard.writeText(target.textContent);
@@ -269,7 +270,11 @@ document.addEventListener("click", function(event) {
 
             Swal.fire(options);
         }
+    }else{
+        return;
     }
+
+    event.stopImmediatePropagation();
 });
 
 document.addEventListener("change", function(event) {
@@ -288,7 +293,7 @@ document.addEventListener("change", function(event) {
         url.searchParams.set('week', target.value);
     }
 
-    if(target.classList.contains('month-selector')){
+    else if(target.classList.contains('month-selector')){
         event.stopPropagation();
 
         let year    = target.closest('.date-search').querySelector('.year-selector').value;
@@ -300,7 +305,7 @@ document.addEventListener("change", function(event) {
         url.searchParams.set('month', target.value);
     }
 
-    if(target.classList.contains('year-selector')){
+    else if(target.classList.contains('year-selector')){
         event.stopPropagation();
         
         let month   = target.closest('.date-search').querySelector('.month-selector').value;
@@ -313,7 +318,11 @@ document.addEventListener("change", function(event) {
             requestWeek(target, wknr, target.value);
         }
         url.searchParams.set('yr', target.value);
+    }else{
+        return;
     }
+
+    event.stopImmediatePropagation();
     
     window.history.pushState({}, '', url);
 });

@@ -121,5 +121,9 @@ document.addEventListener('change', function(event){
 				dayWrapper.classList.add('active');
 			}
 		});
+	}else{
+		return;
 	}
+
+	event.stopImmediatePropagation();
 });
