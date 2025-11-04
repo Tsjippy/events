@@ -255,7 +255,7 @@ class Schedules{
 		$this->currentSchedule->startdate	= max([date('Y-m-d'), $this->currentSchedule->startdate]);
 		
 		?>
-		<div class='schedules-div table-wrapper' data-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
+		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
 			<div class="modal publish-schedule hidden">
 				<div class="modal-content">
 					<span id="modal-close" class="close">&times;</span>
@@ -314,7 +314,7 @@ class Schedules{
 				<p>Click on an available date to indicate you want to host.<br>Click on any date you are subscribed for to unsubscribe</p>
 
 				<?php
-				$dataSet	= "data-id='{$this->currentSchedule->id}' data-target='{$this->currentSchedule->name}' data-target-id='{$this->currentSchedule->target}' data-action='update_schedule'";
+				$dataSet	= "data-schedule-id='{$this->currentSchedule->id}' data-target='{$this->currentSchedule->name}' data-target-id='{$this->currentSchedule->target}' data-action='update_schedule'";
 
 				if($this->admin){
 					$skipLunch	= !$this->currentSchedule->lunch;
