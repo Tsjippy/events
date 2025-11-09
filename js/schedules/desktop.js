@@ -191,8 +191,6 @@ function showEditScheduleModal(target){
 	let wrapper		= target.closest('.schedules-div');
 	let table		= wrapper.querySelector('table.schedule');
 
-	let scheduleId	= wrapper.dataset.id;
-
 	modal.querySelector(`[name="schedule-id"]`).value		= scheduleId;
 	modal.querySelector(`[name="target-id"]`).value			= table.dataset.targetId;
 	modal.querySelector(`[name="target-name"]`).value		= table.dataset.target;
