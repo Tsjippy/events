@@ -12,7 +12,7 @@ add_filter('sim-family-meta-keys', function($metaKeys){
 
 //create  events
 add_filter('sim_before_saving_formdata', __NAMESPACE__.'\beforeSavingFormData', 10, 2);
-function beforeSavingFormData($formResults, $object){
+function beforeSavingFormData($submission, $object){
 	if($object->formData->name == 'user_generics' || $object->formData->name == 'child_generic'){
 		$events	= new CreateEvents();
 		$events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), $_POST['birthday']);
@@ -32,5 +32,5 @@ function beforeSavingFormData($formResults, $object){
 		}
 	}
 
-	return $formResults;
+	return $submission;
 }
