@@ -7,6 +7,7 @@
 - formresults to submission
 
 ### Fixed
+- double classes attribute
 
 ### Updated
 
