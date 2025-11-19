@@ -201,7 +201,7 @@ export function showTimeslotModal(selected=''){
 			html	= `<button type="button" class="small remove-list-selection"><span class='remove-list-selection'>×</span></button>`;
 
 			if(typeof(atendee) === 'object'){
-				html   += `<input type='hidden' class='no-reset' class='no-reset' name='others[]' value='${atendee.id}'>`;
+				html   += `<input type='hidden' class='no-reset' name='others[]' value='${atendee.id}'>`;
 				html   += `<span>${atendee.name}</span>`;
 			}else{
 				html   += `<span>`;
