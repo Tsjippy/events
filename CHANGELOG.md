@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [8.3.3] - 2025-11-21
+
+
+### Changed
 - formresults to submission
 
 ### Fixed
 - double classes attribute
-
-### Updated
 
 ## [8.3.2] - 2025-11-04
 
