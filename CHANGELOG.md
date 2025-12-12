@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- sim_before_saving_formdata filter to sim_before_submitting_formdata
 
 ### Fixed
 
 ### Updated
+
+## [8.3.4] - 2025-12-12
+
+
+### Changed
+- sim_before_saving_formdata filter to sim_before_submitting_formdata
 
 ## [8.3.3] - 2025-11-21
 
