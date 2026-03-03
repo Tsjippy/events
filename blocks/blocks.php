@@ -106,11 +106,23 @@ add_action( 'added_post_meta', __NAMESPACE__.'\createEvents', 10, 4);
 add_action( 'updated_postmeta', __NAMESPACE__.'\createEvents', 10, 4);
 
 function createEvents($metaId, $postId,  $metaKey,  $metaValue ){
-	if($metaKey != 'eventdetails' || empty($metaValue)){
+	if(
+		$metaKey != 'eventdetails' || 
+		empty($metaValue)
+	){
 		return;
 	}
 
 	$metaValue		= json_decode($metaValue, true);
+
+	// Do not create events for the past
+	if(
+		!empty($metaValue) &&
+		!empty($metaValue['startdate']) &&
+		$metaValue['startdate'] < date('Y-m-d')
+	){
+		return;
+	}
 
 	$events			= new CreateEvents();
 	$events->postId	= $postId;
