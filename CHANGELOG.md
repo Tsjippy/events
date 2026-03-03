@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- do not try to create events that are in the past
 
 ### Fixed
 
