@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- do not try to create events that are in the past
 
 ### Fixed
 
 ### Updated
+
+## [8.3.5] - 2026-03-04
+
+
+### Changed
+- do not try to create events that are in the past
 
 ## [8.3.4] - 2025-12-12
 
