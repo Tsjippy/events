@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- main plugin name from sim-base to tsjippy-shared-functionality
 
 ### Fixed
 
