@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-wp_enqueue_style('sim_events_css');
+wp_enqueue_style('tsjippy_events_css');
 
 if(!isset($skipHeader) || !$skipHeader){
 	get_header(); 

@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action('init', __NAMESPACE__.'\addEventPostType', 999);
 function addEventPostType(){
 	SIM\registerPostTypeAndTax('event', 'events');
-	add_action('sim_frontend_post_before_content', __NAMESPACE__.'\eventSpecificFields');
-	add_action('sim_frontend_post_content_title', __NAMESPACE__.'\eventTitle');
+	add_action('tsjippy_frontend_post_before_content', __NAMESPACE__.'\eventSpecificFields');
+	add_action('tsjippy_frontend_post_content_title', __NAMESPACE__.'\eventTitle');
 	
 	add_filter(
 		'widget_categories_args',
@@ -363,7 +363,7 @@ function repetitionIntervalSettings($eventDetails){
 	<?php
 }
 
-add_filter('sim_signal_post_notification_message', __NAMESPACE__.'\postNotification', 10, 2);
+add_filter('tsjippy_signal_post_notification_message', __NAMESPACE__.'\postNotification', 10, 2);
 function postNotification($excerpt, $post){
 	if($post->post_type == 'event'){
 		$events		= new DisplayEvents();
@@ -395,7 +395,7 @@ function postNotification($excerpt, $post){
 	return $excerpt;
 }
 
-add_action('sim_after_post_save', __NAMESPACE__.'\afterPostSave', 1, 2);
+add_action('tsjippy_after_post_save', __NAMESPACE__.'\afterPostSave', 1, 2);
 function afterPostSave($post, $frontEndPost){
 	if($post->post_type != 'event'){
 		return;

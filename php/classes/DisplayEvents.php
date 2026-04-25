@@ -30,7 +30,7 @@ class DisplayEvents extends Events{
 		global $wpdb;
 
 		//select all events attached to a post with publish status
-		$query	 = "SELECT DISTINCT {$wpdb->posts}.*, {$wpdb->prefix}sim_events.* FROM {$wpdb->posts} ";
+		$query	 = "SELECT DISTINCT {$wpdb->posts}.*, {$wpdb->prefix}tsjippy_events.* FROM {$wpdb->posts} ";
 		$query	.= "INNER JOIN `{$this->tableName}` ON {$wpdb->posts}.ID={$this->tableName}.post_id";
 		
 		if(!empty($cats)){
@@ -169,7 +169,7 @@ class DisplayEvents extends Events{
 
 			$userId = get_post_meta($event->post_id, 'user', true);
 
-			$eventUrl	= apply_filters('sim-events-event-url', get_permalink($event->post_id), $userId, $this);
+			$eventUrl	= apply_filters('tsjippy-events-event-url', get_permalink($event->post_id), $userId, $this);
 
 			$e	= [
 				'day'			=> $eventDayNr,
@@ -1115,7 +1115,7 @@ class DisplayEvents extends Events{
 			}
 			$title	= get_the_title($event->post_id);
 
-			do_action('sim-events-event-reminder', "'$title' is about to start\nIt $timeString", $event->onlyfor);
+			do_action('tsjippy-events-event-reminder', "'$title' is about to start\nIt $timeString", $event->onlyfor);
 		}
 
 		return true;

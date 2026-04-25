@@ -27,7 +27,7 @@ if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 	<div class="cat-card inside-article">
-		<?php do_action( 'sim_before_content' );?>
+		<?php do_action( 'tsjippy_before_content' );?>
 		<div class='entry-content'>
 			<div class="description event">
 				<?php
@@ -53,7 +53,7 @@ if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
 
 <?php
 function displayEventCategories(){
-	$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures', __DIR__);
+	$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures', __DIR__);
 
 	$categories = wp_get_post_terms(
 		get_the_ID(),
@@ -121,7 +121,7 @@ function displayEventMeta(){
 			$meta	= [];
 		}
 	}
-	$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
+	$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
 
 	?>
 	<div class='event metas' style='margin-top:10px;'>

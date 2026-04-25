@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
+add_filter('tsjippy_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
 function afterBotPrayer($args){
 	$family	= new SIM\FAMILY\Family();
 

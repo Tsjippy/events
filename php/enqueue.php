@@ -16,7 +16,7 @@ function afterInsertPost($postId, $post){
         $settings   = SETTINGS;
         $settings['schedule-pages']  = $pages;
 
-        update_option("sim_events_settings", $settings );
+        update_option("tsjippy_events_settings", $settings );
     }
 
     if(has_shortcode($post->post_content, 'upcomingevents')){
@@ -27,7 +27,7 @@ function afterInsertPost($postId, $post){
         $settings   = SETTINGS;
         $settings['upcomingevents-pages']  = $pages;
 
-        update_option("sim_events_settings", $settings );
+        update_option("tsjippy_events_settings", $settings );
     }
 }
 
@@ -40,7 +40,7 @@ function trashPost($postId){
         $settings   = SETTINGS;
         $settings['upcomingevents-pages']  = $pages;
 
-        update_option("sim_events_settings", $settings );
+        update_option("tsjippy_events_settings", $settings );
     }
 
     $pages  = SETTINGS['schedule-pages'] ?? [];
@@ -50,7 +50,7 @@ function trashPost($postId){
         $settings   = SETTINGS;
         $settings['schedule-pages']  = $pages;
 
-        update_option("sim_events_settings", $settings );
+        update_option("tsjippy_events_settings", $settings );
     }
 }
 
@@ -60,37 +60,37 @@ function loadAssets(){
         return;
     }
 
-    wp_register_script('sim_frontend_events_script', SIM\pathToUrl(PLUGINPATH.'js/frontend-event.min.js'), [], PLUGINVERSION, true);
-    add_filter('sim-frontend-content-js', __NAMESPACE__.'\addDependable');
+    wp_register_script('tsjippy_frontend_events_script', SIM\pathToUrl(PLUGINPATH.'js/frontend-event.min.js'), [], PLUGINVERSION, true);
+    add_filter('tsjippy-frontend-content-js', __NAMESPACE__.'\addDependable');
 
     //css
-    wp_register_style('sim_schedules_css', SIM\pathToUrl(PLUGINPATH.'css/schedules.min.css'), array(), PLUGINVERSION);
-    wp_register_style('sim_events_css', SIM\pathToUrl(PLUGINPATH.'css/events.min.css'), array(), PLUGINVERSION);
+    wp_register_style('tsjippy_schedules_css', SIM\pathToUrl(PLUGINPATH.'css/schedules.min.css'), array(), PLUGINVERSION);
+    wp_register_style('tsjippy_events_css', SIM\pathToUrl(PLUGINPATH.'css/events.min.css'), array(), PLUGINVERSION);
         
     //js
-    wp_register_script('sim_event_script', SIM\pathToUrl(PLUGINPATH.'js/events.min.js'), array('sim_formsubmit_script'), PLUGINVERSION,true);
+    wp_register_script('tsjippy_event_script', SIM\pathToUrl(PLUGINPATH.'js/events.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION,true);
 
     if(wp_is_mobile()){
-        wp_register_script('sim_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/mobile-schedule.min.js'), array('sim_formsubmit_script'), PLUGINVERSION, true);
+        wp_register_script('tsjippy_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/mobile-schedule.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }else{
-        wp_register_script('sim_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), PLUGINVERSION, true);
+        wp_register_script('tsjippy_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/desktop-schedule.min.js'), array('tsjippy_table_script','selectable','tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }
 
     $schedulePages         = SETTINGS['schedule-pages'] ?? [];
     $upcomingEventsPages   = SETTINGS['upcoming-events-pages'] ?? [];
     if(is_numeric(get_the_ID())){
         if(in_array(get_the_ID(), $schedulePages)){
-        wp_enqueue_style('sim_schedules_css');
+        wp_enqueue_style('tsjippy_schedules_css');
 
-            wp_enqueue_script('sim_schedules_script');
+            wp_enqueue_script('tsjippy_schedules_script');
         }elseif(in_array(get_the_ID(), $upcomingEventsPages)){
-            wp_enqueue_style('sim_events_css');
+            wp_enqueue_style('tsjippy_events_css');
         }
     }
 }
 
 function addDependable($dependables){
-    $dependables[]  = 'sim_frontend_events_script';
+    $dependables[]  = 'tsjippy_frontend_events_script';
 
     return $dependables;
 }

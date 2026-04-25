@@ -15,7 +15,7 @@ class Events{
 	
 	public function __construct(){
 		global $wpdb;
-		$this->tableName		= $wpdb->prefix.'sim_events';
+		$this->tableName		= $wpdb->prefix.'tsjippy_events';
 		$this->dayStartTime		= '00:00';
 		$this->dayEndTime		= '23:59';
 	}

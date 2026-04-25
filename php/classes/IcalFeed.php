@@ -63,7 +63,7 @@ class IcalFeed{
 
 		// Set the headers
 		header('Content-type: text/calendar; charset=utf-8');
-		header('Content-Disposition: attachment; filename="sim_events.ics"');
+		header('Content-Disposition: attachment; filename="tsjippy_events.ics"');
 		
 		for ($i = 0; $i < ob_get_level(); $i++) {
 			ob_get_clean();

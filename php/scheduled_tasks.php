@@ -70,7 +70,7 @@ function anniversaryCheck(){
 			$age	= SIM\getAge($startYear);
 
 			do_action(
-				'sim-events-anniversary-message',
+				'tsjippy-events-anniversary-message',
 				"Hi $firstName,\nCongratulations with your $age $eventTitle!", 
 				$event->post_author
 			);
@@ -78,7 +78,7 @@ function anniversaryCheck(){
 			//If the author has a partner and this events applies to both of them
 			if($partner && str_contains($event->post_title, $coupleString)){
 				do_action(
-					'sim-events-anniversary-message',
+					'tsjippy-events-anniversary-message',
 					"Hi {$partner->first_name},\nCongratulations with your $eventTitle!", 
 					$partner->ID
 				);
@@ -125,11 +125,4 @@ function addRepeatedEvents(){
 			$events->createEvents();
 		}
 	}
-}
-
-// Remove scheduled tasks upon module deactivatio
-add_action('sim_module_events_deactivated', __NAMESPACE__.'\moduleDeactivated');
-function moduleDeactivated(){
-	wp_clear_scheduled_hook( 'anniversary_check_action' );
-	wp_clear_scheduled_hook( 'remove_old_events_action' );
 }

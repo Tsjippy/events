@@ -34,8 +34,8 @@ class Schedules{
 	public function __construct(){
 		global $wpdb;
 
-		$this->tableName		= $wpdb->prefix . 'sim_schedules';
-		$this->sessionTableName	= $wpdb->prefix . 'sim_schedule_sessions';
+		$this->tableName		= $wpdb->prefix . 'tsjippy_schedules';
+		$this->sessionTableName	= $wpdb->prefix . 'tsjippy_schedule_sessions';
 
 		$this->getSchedules();
 		
@@ -192,8 +192,8 @@ class Schedules{
 	 * @return 	string		the schedules html
 	*/
 	public function showschedules(){
-		wp_enqueue_style('sim_schedules_css');
-		wp_enqueue_script('sim_schedules_script');
+		wp_enqueue_style('tsjippy_schedules_css');
+		wp_enqueue_script('tsjippy_schedules_script');
 
 		$schedules	= '';
 		$form		= $this->addScheduleForm();
@@ -329,7 +329,7 @@ class Schedules{
 				}
 
 				?>
-				<table class="sim-table schedule" <?php echo $dataSet;?>>
+				<table class="tsjippy-table schedule" <?php echo $dataSet;?>>
 					<thead>
 						<tr>
 							<th class='sticky'>Dates</th>

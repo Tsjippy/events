@@ -375,7 +375,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     /**
-     * Schedules the tasks for this module
+     * Schedules the tasks for this plugin
      *
     */
     public function postSettingsSave(){

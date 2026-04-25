@@ -27,7 +27,7 @@ function editButton($buttonHtml, $post, $content){
     $result = $wpdb->get_results($query);
     
     if(!empty($result)){;
-        $url        = SIM\ADMIN\getDefaultPageLink(MODULE_SLUG, 'schedules-pages')."?schedule={$result[0]->schedule_id}&session={$result[0]->id}";
+        $url        = SIM\ADMIN\getDefaultPageLink('events', 'schedules-pages')."?schedule={$result[0]->schedule_id}&session={$result[0]->id}";
 
         $buttonHtml	= "<a href=$url class='button small'>Edit this schedule session</a>";
     }
@@ -35,7 +35,7 @@ function editButton($buttonHtml, $post, $content){
     return $buttonHtml;
 }
 
-add_filter('sim-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
+add_filter('tsjippy-theme-archive-page-title', __NAMESPACE__.'\changeArchiveTitle', 10, 2);
 function changeArchiveTitle($title, $category){
     if($title == 'Event Posts'){
         $title = 'Calendar';
