@@ -7,6 +7,7 @@
 ### Changed
 - main plugin name from sim-base to tsjippy-shared-functionality
 - from module to plugin
+- sim prefix to tsjippy prefix
 
 ### Fixed
 
