@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('sim_events_module_update', __NAMESPACE__.'\pluginUpdate');
 function pluginUpdate($oldVersion){
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';

@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action( 'init', __NAMESPACE__.'\init');
 function init() {
     add_rewrite_endpoint( 'public_calendar', EP_ROOT);

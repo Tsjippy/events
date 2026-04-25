@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class IcalFeed{
 	public $icalFormat;
 

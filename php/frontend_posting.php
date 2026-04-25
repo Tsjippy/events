@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('init', __NAMESPACE__.'\addEventPostType', 999);
 function addEventPostType(){
 	SIM\registerPostTypeAndTax('event', 'events');

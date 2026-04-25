@@ -3,6 +3,10 @@ namespace SIM\EVENTS;
 use SIM;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class DisplayEvents extends Events{
 	public $calendarRows;
 	public $events;

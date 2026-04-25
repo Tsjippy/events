@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Add meta keys to store in family meta table
 add_filter('sim-family-meta-keys', function($metaKeys){
     $metaKeys[] = 'Wedding anniversary_event_id';

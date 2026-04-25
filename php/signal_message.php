@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_filter('sim_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
 function afterBotPrayer($args){
 	$family	= new SIM\FAMILY\Family();

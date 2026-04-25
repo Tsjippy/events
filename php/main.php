@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Remove event when post is deleted
 add_action( 'before_delete_post', __NAMESPACE__.'\befoeDeletePost');
 function befoeDeletePost($postId){
@@ -40,4 +44,17 @@ function changeArchiveTitle($title, $category){
     }
 	
 	return $title;
+}
+
+/**
+ * Add a description to the schedules page
+ */
+add_filter('display_post_states', __NAMESPACE__.'\postStates', 10, 2);
+function postStates( $states, $post ) {
+    
+    if (in_array($post->ID, SETTINGS['schedules-pages'] ?? [])) {
+        $states[] = __('Schedules page');
+    }
+
+    return $states;
 }

@@ -3,6 +3,10 @@ namespace SIM\EVENTS;
 use SIM;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class CreateEvents extends Events{
 	public $eventData;
 	public $startDates;
@@ -397,13 +401,17 @@ class CreateEvents extends Events{
 		wp_set_object_terms($this->postId, $termId, 'events');
 
 		// Set the featured image
-		$pictureIds	= SIM\getModuleOption(MODULE_SLUG, 'picture-ids');
+		$pictureIds	= SETTINGS['picture-ids'] ?? [];
+
 		if($type == 'birthday'){
-			$pictureId = $pictureIds['birthday_image'];
+			$pictureId = $pictureIds['birthday_image'] ?? -1;
 		}else{
-			$pictureId = $pictureIds['anniversary_image'];
+			$pictureId = $pictureIds['anniversary_image'] ?? -1;
 		}
-		set_post_thumbnail( $this->postId, $pictureId);
+
+		if($pictureId != -1){
+			set_post_thumbnail( $this->postId, $pictureId);
+		}
 
 		//Store the post id for the user
 		update_user_meta($user->ID, $eventIdMetaKey, $this->postId);

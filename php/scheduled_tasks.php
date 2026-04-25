@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action('init', __NAMESPACE__.'\initTasks');
 function initTasks(){
 	//add action for use in scheduled task
@@ -17,29 +21,13 @@ function initTasks(){
 }
 
 /**
- * Schedules the tasks for this module
- *
-*/
-function scheduleTasks(){
-	SIM\scheduleTask('anniversary_check_action', 'daily');
-	SIM\scheduleTask('remove_old_schedules_action', 'daily');
-	SIM\scheduleTask('add_repeated_events_action', 'yearly');
-
-    $freq   = SIM\getModuleOption(MODULE_SLUG, 'freq');
-
-    if($freq){
-		SIM\scheduleTask('remove_old_events_action', $freq);
-	}
-}
-
-/**
  * Clean up events, in events table. Not the post
  *
 */
 function removeOldEvents(){
 	global $wpdb;
 
-	$maxAge   	= SIM\getModuleOption(MODULE_SLUG, 'max-age');
+	$maxAge   	= SETTINGS['max-age'] ?? 90;
 
 	$events		= new CreateEvents();
 

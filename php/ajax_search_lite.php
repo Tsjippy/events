@@ -2,6 +2,10 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_filter('asl_query_cpt', __NAMESPACE__.'\excludePersonalEventsFromSearch', 10, 4);
 function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search){
     global $wpdb;

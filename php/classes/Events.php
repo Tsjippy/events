@@ -3,6 +3,9 @@ namespace SIM\EVENTS;
 use SIM;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class Events{
 	public $tableName;
@@ -31,7 +34,7 @@ class Events{
 
 		$sql = "CREATE TABLE {$this->tableName}(
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			post-id mediumint(9) NOT NULL,
+			post_id mediumint(9) NOT NULL,
 			startdate varchar(80) NOT NULL,
 			enddate varchar(80) NOT NULL,
 			starttime varchar(80) NOT NULL,
@@ -39,7 +42,7 @@ class Events{
 			location varchar(80),
 			organizer varchar(80),
 			location_id mediumint(9),
-			organizer-id mediumint(9),
+			organizer_id mediumint(9),
 			atendees varchar(80),
 			onlyfor mediumint(9),
 			PRIMARY KEY  (id)

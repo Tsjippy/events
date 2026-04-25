@@ -3,6 +3,10 @@ namespace SIM\EVENTS;
 use SIM;
 use WP_Error;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class CreateSchedule extends Schedules{
 	public $date;
 	public $startTime;

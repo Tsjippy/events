@@ -2,39 +2,55 @@
 namespace SIM\EVENTS;
 use SIM;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action( 'wp_after_insert_post', __NAMESPACE__.'\afterInsertPost', 10, 2);
 function afterInsertPost($postId, $post){
     if(has_shortcode($post->post_content, 'schedules')){
-        $pages  = SIM\getModuleOption(MODULE_SLUG, 'schedule-pages', false);
+        $pages  = SETTINGS['schedule-pages'] ?? [];
 
         $pages[]  = $postId;
 
-        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'schedule-pages');
+        $settings   = SETTINGS;
+        $settings['schedule-pages']  = $pages;
+
+        update_option("sim_events_settings", $settings );
     }
 
     if(has_shortcode($post->post_content, 'upcomingevents')){
-        $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents-pages', false);
+        $pages  = SETTINGS['upcomingevents-pages'] ?? [];
 
         $pages[]  = $postId;
 
-        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'upcomingevents-pages');
+        $settings   = SETTINGS;
+        $settings['upcomingevents-pages']  = $pages;
+
+        update_option("sim_events_settings", $settings );
     }
 }
 
 add_action( 'wp_trash_post',  __NAMESPACE__.'\trashPost');
 function trashPost($postId){
-    $pages  = SIM\getModuleOption(MODULE_SLUG, 'upcomingevents-pages', false);
+    $pages  = SETTINGS['upcomingevents-pages'] ?? [];
     $index  = array_search($postId, $pages);
     if($index){ 
         unset($pages[$index]);
-        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'upcomingevents-pages');
+        $settings   = SETTINGS;
+        $settings['upcomingevents-pages']  = $pages;
+
+        update_option("sim_events_settings", $settings );
     }
 
-    $pages  = SIM\getModuleOption(MODULE_SLUG, 'schedule-pages', false);
+    $pages  = SETTINGS['schedule-pages'] ?? [];
     $index  = array_search($postId, $pages);
     if($index){
         unset($pages[$index]);
-        SIM\updateModuleOptions(MODULE_SLUG, $pages, 'schedule-pages');
+        $settings   = SETTINGS;
+        $settings['schedule-pages']  = $pages;
+
+        update_option("sim_events_settings", $settings );
     }
 }
 
@@ -60,8 +76,8 @@ function loadAssets(){
         wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), MODULE_VERSION, true);
     }
 
-    $schedulePages         = (array)SIM\getModuleOption(MODULE_SLUG, 'schedule-pages');
-    $upcomingEventsPages   = (array)SIM\getModuleOption(MODULE_SLUG, 'upcoming-events-pages');
+    $schedulePages         = SETTINGS['schedule-pages'] ?? [];
+    $upcomingEventsPages   = SETTINGS['upcoming-events-pages'] ?? [];
     if(is_numeric(get_the_ID())){
         if(in_array(get_the_ID(), $schedulePages)){
         wp_enqueue_style('sim_schedules_css');
