@@ -454,7 +454,7 @@ class DisplayEvents extends Events{
 		$calendarRows	= '';
 		$detailHtml		= '';
 
-		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
+		$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
 
 		//loop over all weeks of a month
 		while(true){
@@ -633,7 +633,7 @@ class DisplayEvents extends Events{
 	private function weekDetails($workingDateStr, $workingDate){
 		
 		$detailHtml		= '';
-		$baseUrl		= SIM\pathToUrl(MODULE_PATH.'pictures');
+		$baseUrl		= SIM\pathToUrl(PLUGINPATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);
@@ -1019,7 +1019,7 @@ class DisplayEvents extends Events{
 		$this->retrieveEvents($dateStr, '', 10, '', $offset, $cat);
 		$html ='';
 
-		$baseUrl	= SIM\pathToUrl(MODULE_PATH.'pictures');
+		$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);

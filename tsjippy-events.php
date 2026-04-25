@@ -27,17 +27,12 @@ $pluginData = get_plugin_data(__FILE__, false, false);
 
 // Define constants
 define(__NAMESPACE__ .'\PLUGIN', plugin_basename(__FILE__));
-define(__NAMESPACE__ .'\PLUGINPATH', __FILE__);
+define(__NAMESPACE__ .'\PLUGINPATH', __DIR__.'/');
 define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
 define(__NAMESPACE__ .'\SETTINGS', get_option('sim_events_settings', []));
 
 // run on activation
-add_action( 'activated_plugin', function ( $plugin ) {
-    if( $plugin != PLUGIN ) {
-        return;
-    }
-
-    // Create the dbs
+register_activation_hook( __FILE__, function(){// Create the dbs
 	$events	= new Events();
 	$events->createEventsTable();
 
@@ -48,3 +43,15 @@ add_action( 'activated_plugin', function ( $plugin ) {
 
     update_option('sim_events_settings', $settings);
 });
+
+register_deactivation_hook( __FILE__, function(){
+	foreach(SETTINGS['schedules-pages'] as $page){
+		// Remove the auto created page
+		wp_delete_post($page, true);
+	}
+
+	wp_clear_scheduled_hook( 'anniversary_check_action' );
+	wp_clear_scheduled_hook( 'remove_old_schedules_action' );
+	wp_clear_scheduled_hook( 'add_repeated_events_action' );
+	wp_clear_scheduled_hook( 'remove_old_events_action' );
+} );

@@ -60,20 +60,20 @@ function loadAssets(){
         return;
     }
 
-    wp_register_script('sim_frontend_events_script', SIM\pathToUrl(MODULE_PATH.'js/frontend-event.min.js'), [], MODULE_VERSION, true);
+    wp_register_script('sim_frontend_events_script', SIM\pathToUrl(PLUGINPATH.'js/frontend-event.min.js'), [], PLUGINVERSION, true);
     add_filter('sim-frontend-content-js', __NAMESPACE__.'\addDependable');
 
     //css
-    wp_register_style('sim_schedules_css', SIM\pathToUrl(MODULE_PATH.'css/schedules.min.css'), array(), MODULE_VERSION);
-    wp_register_style('sim_events_css', SIM\pathToUrl(MODULE_PATH.'css/events.min.css'), array(), MODULE_VERSION);
+    wp_register_style('sim_schedules_css', SIM\pathToUrl(PLUGINPATH.'css/schedules.min.css'), array(), PLUGINVERSION);
+    wp_register_style('sim_events_css', SIM\pathToUrl(PLUGINPATH.'css/events.min.css'), array(), PLUGINVERSION);
         
     //js
-    wp_register_script('sim_event_script', SIM\pathToUrl(MODULE_PATH.'js/events.min.js'), array('sim_formsubmit_script'), MODULE_VERSION,true);
+    wp_register_script('sim_event_script', SIM\pathToUrl(PLUGINPATH.'js/events.min.js'), array('sim_formsubmit_script'), PLUGINVERSION,true);
 
     if(wp_is_mobile()){
-        wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/mobile-schedule.min.js'), array('sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_register_script('sim_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/mobile-schedule.min.js'), array('sim_formsubmit_script'), PLUGINVERSION, true);
     }else{
-        wp_register_script('sim_schedules_script', SIM\pathToUrl(MODULE_PATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), MODULE_VERSION, true);
+        wp_register_script('sim_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/desktop-schedule.min.js'), array('sim_table_script','selectable','sim_formsubmit_script'), PLUGINVERSION, true);
     }
 
     $schedulePages         = SETTINGS['schedule-pages'] ?? [];

@@ -1214,11 +1214,11 @@ class Schedules{
 		$checked1		= 'checked';
 		$checked2		= '';
 
-		if(is_numeric($_REQUEST['schedule']) && is_numeric($_REQUEST['session'])){
+		if(isset($_REQUEST['schedule']) && isset($_REQUEST['session']) && is_numeric($_REQUEST['schedule']) && is_numeric($_REQUEST['session'])){
 			$hidden			= '';
 			$action			= 'Update';
-			$this->getScheduleById($_REQUEST['schedule']);
-			$session	= $this->getSessionEvent($_REQUEST['session']);
+			$this->getScheduleById((int) $_REQUEST['schedule']);
+			$session	= $this->getSessionEvent((int) $_REQUEST['session']);
 			
 			$schdeuleId		= $_REQUEST['schedule'];
 			$sessionId		= $_REQUEST['session'];
