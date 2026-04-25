@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- trailing slash to pluginpath connstant
 
 ### Changed
 - main plugin name from sim-base to tsjippy-shared-functionality
