@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_filter('tsjippy_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
 function afterBotPrayer($args){
-	$family	= new SIM\FAMILY\Family();
+	$family	= new TSJIPPY\FAMILY\Family();
 
     // calendar events
     $events		= new DisplayEvents();
@@ -62,14 +62,14 @@ function afterBotPrayer($args){
 			$messageString .= $msg;
 
             // User page url
-			$url			= SIM\maybeGetUserPageUrl($userId);
+			$url			= TSJIPPY\maybeGetUserPageUrl($userId);
 			if($url){
 				$args['urls'][]	= str_replace('https://', '', $url);
 			}
 
             // add appropriate picture
 			if(str_contains($msg, '&')){
-				$family	= new SIM\FAMILY\Family();
+				$family	= new TSJIPPY\FAMILY\Family();
 				$picture	= $family->getFamilyMeta($userId, 'family_picture');
 
 				if(is_numeric($picture)){
@@ -93,7 +93,7 @@ function afterBotPrayer($args){
 	if(!empty($arrivalUsers)){
 		if(count($arrivalUsers) == 1){
 			$args['message'] 	.= "\n\n".$arrivalUsers[0]->display_name." arrives today.";
-			$args['urls'][]		= str_replace('https://', '', SIM\maybeGetUserPageUrl($arrivalUsers[0]->ID))."\n";
+			$args['urls'][]		= str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID))."\n";
 		}else{
 			$args['message'] .= "\n\nToday the following people will arrive: ";
 
@@ -122,7 +122,7 @@ function afterBotPrayer($args){
                 }
 
 				$args['message'] 	.= "$name\n";
-				$args['urls'][] 	= str_replace('https://', '', SIM\maybeGetUserPageUrl($user->ID));
+				$args['urls'][] 	= str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($user->ID));
 			}
 		}
 	}

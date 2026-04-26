@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {

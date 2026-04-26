@@ -5,8 +5,8 @@
  * 
  */
 
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -78,7 +78,7 @@ function showCalendar(){
 			<div class="date-selector">
 				<div class="date-search">
 					<?php
-					$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
+					$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 					echo "<img src='{$baseUrl}/date.png' alt='time' loading='lazy' class='event-icon'>";
 					?>
 					<select class='month-selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">

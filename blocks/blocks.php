@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 add_action('init', function () {
 	register_block_type(
@@ -135,13 +135,13 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue ){
 	$result					= $events->createEvents();
 
 	if(is_wp_error($result)){
-		SIM\printArray($result);
-		SIM\printArray($metaValue);
+		TSJIPPY\printArray($result);
+		TSJIPPY\printArray($metaValue);
 	}
 }
 
 function upcomingArrivalsBlock($attributes){
-	$family	= new SIM\FAMILY\Family();
+	$family	= new TSJIPPY\FAMILY\Family();
 
 	$args 	= wp_parse_args($attributes, array(
 		'title' 		=> 'Upcoming Arrivals',
@@ -182,7 +182,7 @@ function upcomingArrivalsBlock($attributes){
 			$skip[]		= $partnerId;
 		}
 
-		$url 	= SIM\maybeGetUserPageUrl($user->ID);
+		$url 	= TSJIPPY\maybeGetUserPageUrl($user->ID);
 
 		$dateString	= date(DATEFORMAT, strtotime(get_user_meta($user->ID, 'arrival_date', true)));
 

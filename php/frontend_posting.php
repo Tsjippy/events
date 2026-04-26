@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action('init', __NAMESPACE__.'\addEventPostType', 999);
 function addEventPostType(){
-	SIM\registerPostTypeAndTax('event', 'events');
+	TSJIPPY\registerPostTypeAndTax('event', 'events');
 	add_action('tsjippy_frontend_post_before_content', __NAMESPACE__.'\eventSpecificFields');
 	add_action('tsjippy_frontend_post_content_title', __NAMESPACE__.'\eventTitle');
 	
@@ -95,7 +95,7 @@ function eventSpecificFields($frontEndContent){
 			<input type='text'							name='event[organizer]'		value='<?php if(isset($eventDetails['organizer'])){echo $eventDetails['organizer'];} ?>' list="users">
 			<datalist id="users">
 				<?php
-				foreach(SIM\getUserAccounts(false, true, true) as $user){
+				foreach(TSJIPPY\getUserAccounts(false, true, true) as $user){
 					echo "<option data-value='{$user->ID}' value='{$user->display_name}'></option>";
 				}
 				?>
@@ -143,7 +143,7 @@ function displayRepetitionParameters($eventDetails){
 			$dayNum	= $dayNum - 7;
 		}
 
-		$occurence		= SIM\numberToWords($occurence);
+		$occurence		= TSJIPPY\numberToWords($occurence);
 
 		$hideLast		= 'hidden';
 		$hideLastDay	= 'hidden';

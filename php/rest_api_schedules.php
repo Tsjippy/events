@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -151,13 +151,13 @@ function schedulesRestApiInit() {
 				'date'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($param){
-						return SIM\isDate($param);
+						return TSJIPPY\isDate($param);
 					}
 				),
 				'starttime'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($param){
-						return SIM\isTime($param);
+						return TSJIPPY\isTime($param);
 					}
 				)
 			)
@@ -207,7 +207,7 @@ function schedulesRestApiInit() {
 				'date'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($param){
-						return SIM\isDate($param);
+						return TSJIPPY\isDate($param);
 					}
 				),
 				'starttime'		=> array(

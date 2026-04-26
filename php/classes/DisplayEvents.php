@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -248,7 +248,7 @@ class DisplayEvents extends Events{
 		if(empty($userId)){
 			return $event->organizer;
 		}else{
-			$url	= SIM\maybeGetUserPageUrl($userId);
+			$url	= TSJIPPY\maybeGetUserPageUrl($userId);
 			$email	= $user->user_email;
 			$phone	= get_user_meta($userId,'phonenumbers',true);
 
@@ -454,7 +454,7 @@ class DisplayEvents extends Events{
 		$calendarRows	= '';
 		$detailHtml		= '';
 
-		$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
+		$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
 		//loop over all weeks of a month
 		while(true){
@@ -633,7 +633,7 @@ class DisplayEvents extends Events{
 	private function weekDetails($workingDateStr, $workingDate){
 		
 		$detailHtml		= '';
-		$baseUrl		= SIM\pathToUrl(PLUGINPATH.'pictures');
+		$baseUrl		= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);
@@ -1019,7 +1019,7 @@ class DisplayEvents extends Events{
 		$this->retrieveEvents($dateStr, '', 10, '', $offset, $cat);
 		$html ='';
 
-		$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
+		$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);

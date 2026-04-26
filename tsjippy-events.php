@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 /**
  * Plugin Name:  		Tsjippy Events
@@ -14,6 +14,7 @@ use SIM;
  * Plugin URI:			https://github.com/Tsjippy/events/
  * Tested:				6.9
  * TextDomain:			tsjippy
+ * Requires Plugins:	tsjippy-shared-functionality
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
@@ -29,6 +30,7 @@ $pluginData = get_plugin_data(__FILE__, false, false);
 define(__NAMESPACE__ .'\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ .'\PLUGINPATH', __DIR__.'/');
 define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
+define(__NAMESPACE__ .'\PLUGINSLUG', basename(__FILE__, '.php'));
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_events_settings', []));
 
 // run on activation
@@ -39,7 +41,7 @@ register_activation_hook( __FILE__, function(){// Create the dbs
 	$schedules	= new Schedules();
 	$schedules->createDbTable();
 
-	$settings	= SIM\ADMIN\createDefaultPage(SETTINGS, 'schedules-pages', 'Schedules', '[schedules]', SETTINGS);
+	$settings	= TSJIPPY\ADMIN\createDefaultPage(SETTINGS, 'schedules-pages', 'Schedules', '[schedules]', SETTINGS);
 
     update_option('tsjippy_events_settings', $settings);
 });

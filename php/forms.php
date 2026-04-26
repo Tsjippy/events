@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,7 +24,7 @@ function beforeSavingFormData($submission, $object){
 	}
 
 	if($object->formData->name == 'user_family'){
-		$family = new SIM\FAMILY\Family();
+		$family = new TSJIPPY\FAMILY\Family();
 
 		// Then the weddingdate
 		$newDate	= sanitize_text_field($_POST['weddingdate']);

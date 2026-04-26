@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 add_action( 'rest_api_init',  __NAMESPACE__.'\blockRestApiInit');
 function blockRestApiInit() {

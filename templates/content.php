@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 /**
  * The content of an event.
@@ -53,7 +53,7 @@ if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
 
 <?php
 function displayEventCategories(){
-	$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures', __DIR__);
+	$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures', __DIR__);
 
 	$categories = wp_get_post_terms(
 		get_the_ID(),
@@ -121,7 +121,7 @@ function displayEventMeta(){
 			$meta	= [];
 		}
 	}
-	$baseUrl	= SIM\pathToUrl(PLUGINPATH.'pictures');
+	$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
 	?>
 	<div class='event metas' style='margin-top:10px;'>

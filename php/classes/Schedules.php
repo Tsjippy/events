@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -218,7 +218,7 @@ class Schedules{
 	}
 
 	public function showSchedule() {
-		$family	= new SIM\FAMILY\Family();
+		$family	= new TSJIPPY\FAMILY\Family();
 		ob_start();
 
 		if (
@@ -270,8 +270,8 @@ class Schedules{
 							The schedule will show up on the dashboard of these persons after publish.
 						</p>
 						<?php
-						echo SIM\userSelect('', true, true, '', 'schedule-target', $args);
-						echo SIM\addSaveButton('publish-schedule', 'Publish this schedule');
+						echo TSJIPPY\userSelect('', true, true, '', 'schedule-target', $args);
+						echo TSJIPPY\addSaveButton('publish-schedule', 'Publish this schedule');
 						?>
 					</form>
 				</div>
@@ -485,11 +485,11 @@ class Schedules{
 						?>
 						<p>Please select the user or family who is hosting</p>
 						<?php
-						echo SIM\userSelect('', true, true, '', 'host-id', [], '', [], 'list');
+						echo TSJIPPY\userSelect('', true, true, '', 'host-id', [], '', [], 'list');
 					}else{
 						echo "<input type='hidden' class='no-reset' name='host-id' value='{$this->user->ID}'>";
 					}
-					echo SIM\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
+					echo TSJIPPY\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
 					?>
 				</form>
 			</div>
@@ -686,7 +686,7 @@ class Schedules{
 	 * @return 	array					Cell html
 	*/
 	public function writeMealCell($date, $startTime){
-		$family	= new SIM\FAMILY\Family();
+		$family	= new TSJIPPY\FAMILY\Family();
 
 		//get event which starts on this date and time
 		$class	= 'meal';
@@ -778,7 +778,7 @@ class Schedules{
 	 * @return 	array					Cell html
 	*/
 	public function writeOrientationCell( $date, $startTime) {
-		$family	= new SIM\FAMILY\Family();
+		$family	= new TSJIPPY\FAMILY\Family();
 
 		$this->getScheduleSessions();
 
@@ -1164,7 +1164,7 @@ class Schedules{
 						?>
 						<p>Please select the user or family who is hosting</p>
 						<?php
-						echo SIM\userSelect('', true, true, '', 'host', [], '', [], 'list');
+						echo TSJIPPY\userSelect('', true, true, '', 'host', [], '', [], 'list');
 					}else{
 						echo "<input type='hidden' class='no-reset' name='host' value='{$this->user->ID}'>";
 					}
@@ -1172,7 +1172,7 @@ class Schedules{
 					if($this->mobile){
 						$id	= 'add-host-mobile';
 					}
-					echo SIM\addSaveButton($id,'Add host','update_schedule');
+					echo TSJIPPY\addSaveButton($id,'Add host','update_schedule');
 					?>
 				</form>
 			</div>
@@ -1192,7 +1192,7 @@ class Schedules{
 					<input type='text' class='wide' name='recipe-keyword'>
 					
 					<?php
-					echo SIM\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
+					echo TSJIPPY\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
 					?>
 				</form>
 			</div>
@@ -1287,7 +1287,7 @@ class Schedules{
 						<label>
 							<h4>Who is in charge</h4>
 							<?php
-							echo SIM\userSelect('', true, false, 'wide', 'host', [], $host, [], 'list', 'admin_host');
+							echo TSJIPPY\userSelect('', true, false, 'wide', 'host', [], $host, [], 'list', 'admin_host');
 							?>
 						</label>
 						<?php
@@ -1298,7 +1298,7 @@ class Schedules{
 						<h4>Other people involved</h4>
 					</label>
 					<?php
-					echo SIM\userSelect('', true, false, 'wide', 'others', [], $others, [], 'list', 'admin_host', true);
+					echo TSJIPPY\userSelect('', true, false, 'wide', 'others', [], $others, [], 'list', 'admin_host', true);
 					?>
 	
 					<h4>Warnings</h4>
@@ -1314,7 +1314,7 @@ class Schedules{
 					<br>
 					<?php
 					
-					echo SIM\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
+					echo TSJIPPY\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
 					?>
 				</form>
 			</div>
@@ -1370,7 +1370,7 @@ class Schedules{
 			
 			<datalist id="website-users">
 				<?php
-				foreach(SIM\getUserAccounts(true) as $user){
+				foreach(TSJIPPY\getUserAccounts(true) as $user){
 					echo "<option value='{$user->display_name}' data-value='{$user->ID}'></option>";
 				}
 				?>
@@ -1477,7 +1477,7 @@ class Schedules{
 			if($update){
 				$action = 'Update';
 			}
-			echo SIM\addSaveButton('add_schedule', "$action schedule");
+			echo TSJIPPY\addSaveButton('add_schedule', "$action schedule");
 		echo '</form>';
 		return ob_get_clean();
 	}

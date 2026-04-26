@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -165,7 +165,7 @@ class IcalFeed{
 
 						if($freq == 'MONTHLY'){
 							//number of the week in the month
-							$icalEvent	.= SIM\numberToWords($week);
+							$icalEvent	.= TSJIPPY\numberToWords($week);
 						}
 
 						//add the first two letters of the weekday of the startdate as capitals (FR)

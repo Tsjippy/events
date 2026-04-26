@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,7 +23,7 @@ function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search){
 
 add_filter('asl_cpt_query_add_where', __NAMESPACE__.'\excludePersonalEventsFromSearchWhereClause');
 function excludePersonalEventsFromSearchWhereClause($where){
-    $family	= new SIM\FAMILY\Family();
+    $family	= new TSJIPPY\FAMILY\Family();
     $userId = get_current_user_id();
     
     if($userId === 0){

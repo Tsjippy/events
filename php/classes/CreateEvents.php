@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -153,7 +153,7 @@ class CreateEvents extends Events{
 						$firstWeek	= Date('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
 
 						// The weeknumber of this week in the month
-						$targetWeek	= SIM\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
+						$targetWeek	= TSJIPPY\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
 
 						$dayName	= Date('l', $baseStartDate);
 
@@ -302,7 +302,7 @@ class CreateEvents extends Events{
 	 * @param	string		$metaValue	the meta value, should be a date string
 	*/
 	public function createCelebrationEvent($type, $user, $oldValue, $newValue){
-		$family			= new SIM\FAMILY\Family();
+		$family			= new TSJIPPY\FAMILY\Family();
 
 		if(is_numeric($user)){
 			$user = get_userdata($user);

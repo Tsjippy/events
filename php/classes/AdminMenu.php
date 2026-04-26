@@ -1,10 +1,10 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
-use SIM\ADMIN;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
+use TSJIPPY\ADMIN;
 
-use function SIM\addElement;
-use function SIM\addRawHtml;
+use function TSJIPPY\addElement;
+use function TSJIPPY\addRawHtml;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -68,7 +68,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     public function data($parent=''){
-        $family					= new SIM\FAMILY\Family();
+        $family					= new TSJIPPY\FAMILY\Family();
 
         /**
          * Get all aniversary events
@@ -379,14 +379,14 @@ class AdminMenu extends ADMIN\SubAdminMenu{
      *
     */
     public function postSettingsSave(){
-        SIM\scheduleTask('anniversary_check_action', 'daily');
-        SIM\scheduleTask('remove_old_schedules_action', 'daily');
-        SIM\scheduleTask('add_repeated_events_action', 'yearly');
+        TSJIPPY\scheduleTask('anniversary_check_action', 'daily');
+        TSJIPPY\scheduleTask('remove_old_schedules_action', 'daily');
+        TSJIPPY\scheduleTask('add_repeated_events_action', 'yearly');
 
         $freq   = SETTINGS['freq'] ?? false;
 
         if($freq){
-            SIM\scheduleTask('remove_old_events_action', $freq);
+            TSJIPPY\scheduleTask('remove_old_events_action', $freq);
         }
     }
 }

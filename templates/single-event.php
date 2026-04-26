@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -23,7 +23,7 @@ if(!isset($skipHeader) || !$skipHeader){
 			endwhile;
 			?>
 		</main>
-		<?php SIM\showComments(); ?>
+		<?php TSJIPPY\showComments(); ?>
 	</div>
 
 <?php

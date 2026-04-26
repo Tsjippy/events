@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,7 +42,7 @@ function getAnniversaries(){
 		
 		if(!empty($startYear) && $startYear != date('Y-m-d')){
 			$title		= $event->post_title;
-			$age		= SIM\getAge($startYear);
+			$age		= TSJIPPY\getAge($startYear);
 
 			if($age == "zero"){
 				continue;
@@ -121,7 +121,7 @@ function getCoupleString($user, $partner=''){
 		$user	= get_userdata($user);
 	}
 
-	$family		= new SIM\FAMILY\Family();
+	$family		= new TSJIPPY\FAMILY\Family();
 	$lastName	= $user->last_name;
 	$familyName	= $family->getFamilyMeta($user, 'family_name');
 	if(!empty($familyName)){
@@ -140,7 +140,7 @@ function getCoupleString($user, $partner=''){
 }
 
 function replaceCoupleString($string, $replaceString, $user, $partner=''){
-	$family	= new SIM\FAMILY\Family();
+	$family	= new TSJIPPY\FAMILY\Family();
 	if(is_numeric($user)){
 		$user	= get_userdata($user);
 	}
@@ -167,7 +167,7 @@ function replaceCoupleString($string, $replaceString, $user, $partner=''){
  *
  */
 function anniversaryMessages(){
-	$family					= new SIM\FAMILY\Family();
+	$family					= new TSJIPPY\FAMILY\Family();
 	$currentUser			= wp_get_current_user();
 	$anniversaryMessages 	= getAnniversaries();
 
@@ -201,7 +201,7 @@ function anniversaryMessages(){
 			$addImage	= false;
 		}else{
 			//Get the url of the user page
-			$url		= SIM\maybeGetUserPageUrl($userId);
+			$url		= TSJIPPY\maybeGetUserPageUrl($userId);
 
 			$coupleString	= getCoupleString($userdata, $partner);
 			$coupleLink		= "of <a href=\"$url\">$coupleString</a>";
@@ -214,7 +214,7 @@ function anniversaryMessages(){
 			// Add family picture if needed
 			if($newMessage != $message && $addImage){
 				$message	= $newMessage;
-				$family		= new SIM\FAMILY\Family();
+				$family		= new TSJIPPY\FAMILY\Family();
 				$picture	= $family->getFamilyMeta($userId, 'family_picture');
 
 				if(is_numeric($picture)){
@@ -262,7 +262,7 @@ function anniversaryMessages(){
  *
 */
 function arrivingUsersMessage(){
-	$family			= new SIM\FAMILY\Family();
+	$family			= new TSJIPPY\FAMILY\Family();
 	$arrivingUsers	= getArrivingUsers();
 	$html			= '';
 
@@ -275,7 +275,7 @@ function arrivingUsersMessage(){
 		
 				if(count($arrivingUsers)==1){
 					//Get the url of the user page
-					$url	 = SIM\maybeGetUserPageUrl($arrivingUsers[0]->ID);
+					$url	 = TSJIPPY\maybeGetUserPageUrl($arrivingUsers[0]->ID);
 					$html	.= "<a href='$url'>{$arrivingUsers[0]->display_name}</a> arrives today!";
 				}else{
 					$html 	.= 'The following people arrive today:<br><br>';
@@ -292,7 +292,7 @@ function arrivingUsersMessage(){
 						if($partnerId){
 							$skip[]		= $partnerId;
 						}
-						$url 	 = SIM\maybeGetUserPageUrl($user->ID);
+						$url 	 = TSJIPPY\maybeGetUserPageUrl($user->ID);
 						$html 	.= "<a href='$url'>$name</a><br>";
 					}
 				}

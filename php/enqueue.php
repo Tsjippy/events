@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,20 +60,20 @@ function loadAssets(){
         return;
     }
 
-    wp_register_script('tsjippy_frontend_events_script', SIM\pathToUrl(PLUGINPATH.'js/frontend-event.min.js'), [], PLUGINVERSION, true);
+    wp_register_script('tsjippy_frontend_events_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/frontend-event.min.js'), [], PLUGINVERSION, true);
     add_filter('tsjippy-frontend-content-js', __NAMESPACE__.'\addDependable');
 
     //css
-    wp_register_style('tsjippy_schedules_css', SIM\pathToUrl(PLUGINPATH.'css/schedules.min.css'), array(), PLUGINVERSION);
-    wp_register_style('tsjippy_events_css', SIM\pathToUrl(PLUGINPATH.'css/events.min.css'), array(), PLUGINVERSION);
+    wp_register_style('tsjippy_schedules_css', TSJIPPY\pathToUrl(PLUGINPATH.'css/schedules.min.css'), array(), PLUGINVERSION);
+    wp_register_style('tsjippy_events_css', TSJIPPY\pathToUrl(PLUGINPATH.'css/events.min.css'), array(), PLUGINVERSION);
         
     //js
-    wp_register_script('tsjippy_event_script', SIM\pathToUrl(PLUGINPATH.'js/events.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION,true);
+    wp_register_script('tsjippy_event_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/events.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION,true);
 
     if(wp_is_mobile()){
-        wp_register_script('tsjippy_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/mobile-schedule.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
+        wp_register_script('tsjippy_schedules_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/mobile-schedule.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }else{
-        wp_register_script('tsjippy_schedules_script', SIM\pathToUrl(PLUGINPATH.'js/desktop-schedule.min.js'), array('tsjippy_table_script','selectable','tsjippy_formsubmit_script'), PLUGINVERSION, true);
+        wp_register_script('tsjippy_schedules_script', TSJIPPY\pathToUrl(PLUGINPATH.'js/desktop-schedule.min.js'), array('tsjippy_table_script','selectable','tsjippy_formsubmit_script'), PLUGINVERSION, true);
     }
 
     $schedulePages         = SETTINGS['schedule-pages'] ?? [];

@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -68,7 +68,7 @@ class CreateSchedule extends Schedules{
 	 * @param	bool	$addPartner		Whether to add an event for the schedule target partner as well. Default true
 	*/
 	protected function addScheduleEvents($addHostPartner=true, $addPartner=true){
-		$family							= new SIM\FAMILY\Family();
+		$family							= new TSJIPPY\FAMILY\Family();
 		$event							= [];
 		$event['startdate']				= $this->date;
 		$event['starttime']				= $this->startTime;
@@ -240,7 +240,7 @@ class CreateSchedule extends Schedules{
 	*/
 	protected function updateScheduleEvents($addHostPartner=true, $addPartner=true){
 		global $wpdb;
-		$family		= new SIM\FAMILY\Family();
+		$family		= new TSJIPPY\FAMILY\Family();
 
 		$updated	= false;
 
@@ -523,7 +523,7 @@ class CreateSchedule extends Schedules{
 	*/
 	public function publishSchedule(){
 		global $wpdb;
-		$family		= new SIM\FAMILY\Family();
+		$family		= new TSJIPPY\FAMILY\Family();
 		
 		$scheduleId	= $_POST['schedule-id'];
 
@@ -552,7 +552,7 @@ class CreateSchedule extends Schedules{
 	public function removeSchedule($scheduleId){
 		global $wpdb;
 
-		$family	= new SIM\FAMILY\Family();
+		$family	= new TSJIPPY\FAMILY\Family();
 
 		if(!is_numeric($scheduleId)){
 			return new WP_Error('schedules', 'Schedule id should be numeric');
@@ -616,7 +616,7 @@ class CreateSchedule extends Schedules{
 	 * @return string	success message and new cell html
 	*/
 	public function addHost($date){
-		$family				= new SIM\FAMILY\Family();
+		$family				= new TSJIPPY\FAMILY\Family();
 		$message			= '';
 		$this->scheduleId	= $_POST['schedule-id'];
 		$this->startTime	= $_POST['starttime'];
@@ -725,7 +725,7 @@ class CreateSchedule extends Schedules{
 	 * @return string	success message
 	*/
 	public function removeHost($sessionId){
-		$family					= new SIM\FAMILY\Family();
+		$family					= new TSJIPPY\FAMILY\Family();
 
 		$this->currentSession	= $this->getSessionEvent($sessionId);
 

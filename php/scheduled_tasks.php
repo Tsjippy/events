@@ -1,6 +1,6 @@
 <?php
-namespace SIM\EVENTS;
-use SIM;
+namespace TSJIPPY\EVENTS;
+use TSJIPPY;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,7 +46,7 @@ function removeOldEvents(){
 */
 function anniversaryCheck(){
 	$events		= new DisplayEvents();
-	$family		= new SIM\FAMILY\Family();
+	$family		= new TSJIPPY\FAMILY\Family();
 
 	// Get all the events of today
 	$events->retrieveEvents(date('Y-m-d'), date('Y-m-d'));
@@ -67,7 +67,7 @@ function anniversaryCheck(){
 			
 			$eventTitle	= trim(str_replace($userData->display_name, "", $eventTitle));
 
-			$age	= SIM\getAge($startYear);
+			$age	= TSJIPPY\getAge($startYear);
 
 			do_action(
 				'tsjippy-events-anniversary-message',
