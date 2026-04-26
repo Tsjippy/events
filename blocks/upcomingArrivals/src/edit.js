@@ -17,7 +17,7 @@ const Edit = ({attributes, setAttributes}) => {
 				setHtml( <>Loading < Spinner /></> );
 
 				const response = await apiFetch({
-					path: sim.restApiPrefix+'/events/upcoming_arrivals',
+					path: tsjippy.restApiPrefix+'/events/upcoming_arrivals',
 					method: 'POST',
 					data: { 
 						title: title,
@@ -44,7 +44,7 @@ const Edit = ({attributes, setAttributes}) => {
 							onChange	= { (val) => setAttributes({title: val}) }
 						/>
 						<NumberControl
-							label		= { __("Timespan in months", "sim") }
+							label		= { __("Timespan in months", "tsjippy") }
 							value		= { months || 2 }
 							onChange	= { (val) => setAttributes({months: parseInt(val)}) }
 							min			= { 1 }

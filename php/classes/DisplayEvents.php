@@ -135,7 +135,7 @@ class DisplayEvents extends Events{
 				<?php
 			}
 			?>
-			<a class='calendar button' href="<?php echo SITEURL;?>/events" class="button sim">
+			<a class='calendar button' href="<?php echo SITEURL;?>/events" class="button tsjippy">
 				Calendar
 			</a>
 		</div>
@@ -357,7 +357,7 @@ class DisplayEvents extends Events{
 			$enddt		= $endDate."T".gmdate('His',strtotime($event->endtime)).'Z';
 		}
 
-		$gmail			= "https://calendar.google.com/calendar/render?action=TEMPLATE&text=$title&dates={$startdt}/{$enddt}&details={$description}&location={$location}&ctz=Africa/Lagos&sprop=website:".SITEURLWITHOUTSCHEME."&sprop=name:SIM";
+		$gmail			= "https://calendar.google.com/calendar/render?action=TEMPLATE&text=$title&dates={$startdt}/{$enddt}&details={$description}&location={$location}&ctz=Africa/Lagos&sprop=website:".SITEURLWITHOUTSCHEME."&sprop=name:TSJIPPY";
  		if(!empty($eventMeta['isrepeated'])){
 			$gmail		.= "&recur=RRULE:FREQ=".strtoupper($eventMeta['repeat']['type']).";INTERVAL=".$eventMeta['repeat']['interval'].';';
 			$weeks 		= $eventMeta['repeat']['weeks'];
@@ -397,15 +397,15 @@ class DisplayEvents extends Events{
 		$startTime		= urlencode($event->starttime.':00');
 		$endTime		= urlencode($event->endtime.':00');
 
-		$sim			= "https://outlook.office.com/calendar/0/deeplink/compose/?path=/calendar/action/compose/&body={$description}&startdt={$event->startdate}T{$startTime}&enddt={$event->enddate}T{$endTime}&location={$location}&rru=addevent&subject=$title";
+		$outlook			= "https://outlook.office.com/calendar/0/deeplink/compose/?path=/calendar/action/compose/&body={$description}&startdt={$event->startdate}T{$startTime}&enddt={$event->enddate}T{$endTime}&location={$location}&rru=addevent&subject=$title";
 		if($event->allday){
-			$sim .= '&amp;allday=true';
+			$outlook .= '&amp;allday=true';
 		}
 
 		$html = "<div class='event-export'>";
 			$html .= "<a class='button agenda-export' href='$gmail' target='_blank'>Add to Google Calendar</a>";
 			$html .= "<br>";
-			$html .= "<a class='button agenda-export' href='$sim' target='_blank'>Add to your SIM agenda</a>";
+			$html .= "<a class='button agenda-export' href='$outlook' target='_blank'>Add to your Outlook agenda</a>";
 		$html	.= '</div>';
 
 		return $html;

@@ -202,7 +202,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 		}
 	
 		if ( ! locations?.length ) {
-			return <div> {__(`No location found`, 'sim')}</div>;
+			return <div> {__(`No location found`, 'tsjippy')}</div>;
 		}
 
 		let options	= locations.map( c => (
@@ -235,7 +235,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 		}
 	
 		if ( ! users?.length ) {
-			return <div> {__(`No user found`, 'sim')}</div>;
+			return <div> {__(`No user found`, 'tsjippy')}</div>;
 		}
 
 		let options	= users.map( c => (
@@ -535,7 +535,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 		return (
 			<>
 
-			<i>{__('Use searchbox below to search for a location', 'sim')}</i>
+			<i>{__('Use searchbox below to search for a location', 'tsjippy')}</i>
             < SearchControl 
 				onChange={ setLocationSearchTerm } 
 				value={ locationSearchTerm } 
@@ -543,7 +543,7 @@ const Edit = ({ setAttributes, attributes } ) => {
             < BuildLocationRadioControls />
 			<br></br>
 
-			<i>{__('Use searchbox below to search for an user to add as organizer', 'sim')}</i>
+			<i>{__('Use searchbox below to search for an user to add as organizer', 'tsjippy')}</i>
             < SearchControl 
 				onChange={ setUserSearchTerm } 
 				value={ userSearchTerm } 
@@ -575,7 +575,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 			return (
 				<>
 					<div>
-						<span class='center'>{__('Start time', 'sim')}</span>
+						<span class='center'>{__('Start time', 'tsjippy')}</span>
 						<TimePicker
 							currentTime={"1986-10-18T"+startTime}
 							onChange={ (value) => updateMetaValue('starttime', value) }
@@ -584,7 +584,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 						/>
 					</div>
 					<div>
-						<span class='center'>{__('End time', 'sim')}</span>
+						<span class='center'>{__('End time', 'tsjippy')}</span>
 						<TimePicker
 							currentTime={"1986-10-18T"+endTime}
 							onChange={ (value) => updateMetaValue('endtime', value) }
@@ -615,7 +615,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 			<h2>{__('Event Details')}</h2>
 			<div class='date-pickers flex'>
 				<div>
-					<span class='center'>{__('Start date', 'sim')}</span>
+					<span class='center'>{__('Start date', 'tsjippy')}</span>
 					<DatePicker
 						currentDate={ eventData['startdate']?eventData['startdate']:null }
 						onChange={ (value) => updateMetaValue('startdate', value) }
@@ -626,7 +626,7 @@ const Edit = ({ setAttributes, attributes } ) => {
 				</div>
 
 				<div>
-					<span class='center'>{__('End date', 'sim')}</span>
+					<span class='center'>{__('End date', 'tsjippy')}</span>
 					<DatePicker
 						currentDate={ eventData['enddate']?eventData['enddate']:null }
 						onChange={ (value) => updateMetaValue('enddate', value) }

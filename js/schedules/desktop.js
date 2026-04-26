@@ -248,7 +248,7 @@ async function checkIfValidSelection(target, selected, e){
 
 					Swal.fire(options);
 
-					e.target.closest('.sim-table')._selectable.clear();
+					e.target.closest('.tsjippy.table')._selectable.clear();
 					return;
 				}
 			}
@@ -342,7 +342,7 @@ function hideRows() {
 	if (window.innerWidth > 800) return false;
 	
 	//Loop over all tables
-	document.querySelectorAll('.sim-table tr').forEach(function(tr){
+	document.querySelectorAll('.tsjippy.table tr').forEach(function(tr){
 		var emptyRow = true;
 		
 		//DO not hide lunch or dinner rows
@@ -365,7 +365,7 @@ function hideRows() {
 
 function addSelectable(){
 	//loop over all the schedule tables
-	document.querySelectorAll('.sim-table.schedule').forEach(function(table){
+	document.querySelectorAll('.tsjippy.table.schedule').forEach(function(table){
 		//Add selectable on non-mobile devices
 		if(!Main.isMobileDevice() || table.rows.length < 7){
 			if(table._selectable != undefined){

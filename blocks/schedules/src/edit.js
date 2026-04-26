@@ -12,7 +12,7 @@ const Edit = () => {
 		() => {
 			async function getHtml(){
 				setHtml( < Spinner /> );
-				const response = await apiFetch({path: sim.restApiPrefix+'/events/show_schedules'});
+				const response = await apiFetch({path: tsjippy.restApiPrefix+'/events/show_schedules'});
 				setHtml( response );
 			}
 			getHtml();

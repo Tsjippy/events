@@ -33,8 +33,8 @@ class IcalFeed{
 		$icalStart		 = "BEGIN:VCALENDAR\r\n";
 		$icalStart		.= "VERSION:2.0\r\n";
 		$icalStart		.= "METHOD:PUBLISH\r\n";
-		$icalStart		.= "PRODID:-//sim//website//EN\r\n";
-		$icalStart		.= "X-WR-CALNAME: SIM events\r\n";
+		$icalStart		.= "PRODID:-//tsjippy//website//EN\r\n";
+		$icalStart		.= "X-WR-CALNAME: Events\r\n";
 		$icalEvents	 = '';
 		
 		foreach($events as $event){

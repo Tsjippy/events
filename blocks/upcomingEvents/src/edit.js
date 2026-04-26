@@ -68,7 +68,7 @@ const Edit = ({attributes, setAttributes}) => {
 			for (const key in categories) {param += key+','}
 		}
 		
-		let fetchedEvents = await apiFetch({path: `sim/v2/events/upcoming_events${param}`});
+		let fetchedEvents = await apiFetch({path: `tsjippy/v2/events/upcoming_events${param}`});
 
 		if(!fetchedEvents){
 			fetchedEvents	= [];
@@ -122,14 +122,14 @@ const Edit = ({attributes, setAttributes}) => {
 						Select an category you want to exclude from the list
 						{cats}
 						<NumberControl
-							label		= {__("Select the maximum amount of events", "sim")}
+							label		= {__("Select the maximum amount of events", "tsjippy")}
 							value		= {items || 10}
 							onChange	= {(val) => setAttributes({items: parseInt(val)})}
 							min			= {1}
 							max			= {20}
 						/>
 						<NumberControl
-							label		= {__("Select the range in months we will retrieve", "sim")}
+							label		= {__("Select the range in months we will retrieve", "tsjippy")}
 							value		= {months || 2}
 							onChange	= {(val) => setAttributes({months: parseInt(val)})}
 							min			= {1}
@@ -144,7 +144,7 @@ const Edit = ({attributes, setAttributes}) => {
 					<div className="upcomingevents_wrapper">
 						{buildHtml()}
 					</div>
-					<a className='calendar button sim' href="./events">
+					<a className='calendar button tsjippy' href="./events">
 						Calendar
 					</a>
 				</aside>

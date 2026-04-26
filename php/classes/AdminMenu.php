@@ -237,7 +237,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     
         ?>
         <h4>Missing Events</h4>
-        <table class='sim table'>
+        <table class='tsjippy table'>
             <thead>
                 <th>Type</th>
                 <th>Link</th>
@@ -260,7 +260,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
 
     private function tableBody($data){
         ?>
-        <table class='sim table'>
+        <table class='tsjippy table'>
             <thead>
                 <th>User</th>
                 <th>Event Date</th>

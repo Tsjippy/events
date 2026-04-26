@@ -271,7 +271,7 @@ function loadHostFormdata(target){
 	if(host != null){
 		formData.append('host-id', host);
 	}else{
-		formData.append('host-id', sim.userId);
+		formData.append('host-id', tsjippy.userId);
 	}
 	
 	formData.append('starttime', startTime);

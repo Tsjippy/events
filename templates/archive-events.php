@@ -1,6 +1,6 @@
 <?php
 /**
- * The layout specific for the page with the slug 'event' i.e. sim.org/event.
+ * The layout specific for the page with the slug 'event' i.e. tsjippy.com/event.
  * Displays all the post of the event type
  * 
  */
@@ -62,7 +62,7 @@ function showCalendar(){
 		<button id='add-calendar' class='button small'>Add this calendar to your personal agenda</button>
 		<div id='calendaraddingoptions' class='hidden'>
 			<p>
-				To add the calendar to your sim.org calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">email.sim.org</a>.<br>
+				To add the calendar to your outlook calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">outlook.office.com/mail</a>.<br>
 				Then add <code class='calendarurl'>webcal://<?php echo SITEURLWITHOUTSCHEME;?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code> in the 'subscribe via internet' screen
 			</p>
 			<p>
