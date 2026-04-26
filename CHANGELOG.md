@@ -10,6 +10,7 @@
 - sim prefix to tsjippy prefix
 - base namespace to TSJIPPY
 - filternames to include tsjippy
+- block apt to version 3
 
 ### Fixed
 
