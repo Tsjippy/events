@@ -30,7 +30,7 @@ $pluginData = get_plugin_data(__FILE__, false, false);
 define(__NAMESPACE__ .'\PLUGIN', plugin_basename(__FILE__));
 define(__NAMESPACE__ .'\PLUGINPATH', __DIR__.'/');
 define(__NAMESPACE__ .'\PLUGINVERSION', $pluginData['Version']);
-define(__NAMESPACE__ .'\PLUGINSLUG', basename(__FILE__, '.php'));
+define(__NAMESPACE__ .'\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FILE__, '.php')));
 define(__NAMESPACE__ .'\SETTINGS', get_option('tsjippy_events_settings', []));
 
 // run on activation
@@ -41,7 +41,8 @@ register_activation_hook( __FILE__, function(){// Create the dbs
 	$schedules	= new Schedules();
 	$schedules->createDbTable();
 
-	$settings	= TSJIPPY\ADMIN\createDefaultPage(SETTINGS, 'schedules-pages', 'Schedules', '[schedules]', SETTINGS);
+	$settings					= SETTINGS;
+	$settings['schedules-page']	= TSJIPPY\ADMIN\createDefaultPage('Schedules', '[schedules]');
 
     update_option('tsjippy_events_settings', $settings);
 });
