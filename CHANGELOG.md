@@ -13,6 +13,7 @@
 - block apt to version 3
 - PLUGINCONSTANT value
 - lib updates
+- table columns
 
 ### Fixed
 
