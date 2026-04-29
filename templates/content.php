@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $events		= new DisplayEvents();
 $event		= $events->retrieveSingleEvent(get_the_ID());
-if(!empty($event->onlyfor) && $event->onlyfor != wp_get_current_user()->ID){
+if(!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID){
 	?>
 	<div class='error'>
 		This event is not ment for you to see, sorry.
@@ -172,8 +172,8 @@ function displayEventMeta(){
 								}
 							}
 							echo ucfirst($type);
-							if(!empty($meta['repeat']['enddate'])){
-								echo " until ".date('j F Y',strtotime($meta['repeat']['enddate']));
+							if(!empty($meta['repeat']['end_date'])){
+								echo " until ".date('j F Y',strtotime($meta['repeat']['end_date']));
 							}
 							if(!empty($meta['repeat']['amount'])){
 								$repeatAmount = $meta['repeat']['amount'];

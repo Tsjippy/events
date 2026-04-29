@@ -38,8 +38,8 @@ class IcalFeed{
 		$icalEvents	 = '';
 		
 		foreach($events as $event){
-			// sometimes onlyfor has a false or true value keep only the numbers
-			$onlyFor		= array_filter((array)get_post_meta($event->ID, 'onlyfor', true), 'is_numeric');
+			// sometimes only_for has a false or true value keep only the numbers
+			$onlyFor		= array_filter((array)get_post_meta($event->ID, 'only_for', true), 'is_numeric');
 
 			//do not show events which are not meant for us
 			if(!empty($onlyFor) && !in_array($userId, $onlyFor)){
@@ -88,19 +88,19 @@ class IcalFeed{
 
 		//between times
 		if(empty($meta['allday'])){
-			$start			= get_gmt_from_date($meta['startdate'].' '.$meta['starttime'], $this->icalFormat);
-			$end			= get_gmt_from_date($meta['enddate'].' '.$meta['endtime'], $this->icalFormat);
+			$start			= get_gmt_from_date($meta['start_date'].' '.$meta['start_time'], $this->icalFormat);
+			$end			= get_gmt_from_date($meta['end_date'].' '.$meta['end_time'], $this->icalFormat);
 			$start			= "DTSTART:$start\r\n";
 			$end			= "DTEND:$end\r\n";
 		//all day
 		}else{
-			$start			= strtotime($meta['startdate']);
+			$start			= strtotime($meta['start_date']);
 			$startDate		= date('Ymd', $start);
 
-			if($meta['startdate'] == $meta['enddate']){
+			if($meta['start_date'] == $meta['end_date']){
 				$endDate		= date('Ymd', strtotime('+1 day', $start));
 			}else{
-				$endDate		= date('Ymd', strtotime($meta['enddate']));
+				$endDate		= date('Ymd', strtotime($meta['end_date']));
 			}
 			$start				="DTSTART;VALUE=DATE:$startDate\r\n";
 			$end				="DTEND;VALUE=DATE:$endDate\r\n";
@@ -146,8 +146,8 @@ class IcalFeed{
 			$icalEvent	.= "RRULE:FREQ=$freq;INTERVAL=$intval;";
 
 			if($freq == 'YEARLY' || $meta['repeat']['datetype'] == 'samedate'){
-				$month	= date('m', strtotime($meta['startdate']));
-				$day	= date('d', strtotime($meta['startdate']));
+				$month	= date('m', strtotime($meta['start_date']));
+				$day	= date('d', strtotime($meta['start_date']));
 				if($freq == 'YEARLY'){
 					$icalEvent	.="BYMONTH=$month;";
 				}
@@ -168,9 +168,9 @@ class IcalFeed{
 							$icalEvent	.= TSJIPPY\numberToWords($week);
 						}
 
-						//add the first two letters of the weekday of the startdate as capitals (FR)
+						//add the first two letters of the weekday of the start_date as capitals (FR)
 						if(empty($weekDays[$index])){
-							$icalEvent	.= strtoupper(substr(date('D', strtotime($meta['startdate'])), 0, 2));
+							$icalEvent	.= strtoupper(substr(date('D', strtotime($meta['start_date'])), 0, 2));
 						//add the first two letters as capitals (FR)
 						}else{
 							$icalEvent	.= strtoupper(substr($weekDays[$index], 0, 2));
@@ -181,8 +181,8 @@ class IcalFeed{
 				}
 			}
 
-			if(!empty($meta['repeat']['enddate'])){
-				$endDate		 = date($this->icalFormat,strtotime($meta['repeat']['enddate']));
+			if(!empty($meta['repeat']['end_date'])){
+				$endDate		 = date($this->icalFormat,strtotime($meta['repeat']['end_date']));
 				$icalEvent		.="UNTIL=$endDate;";
 			}elseif(is_numeric($meta['repeat']['amount'])){
 				$icalEvent		.="COUNT={$meta['repeat']['amount']};";
@@ -215,8 +215,8 @@ class IcalFeed{
 		$extraIcalEvents	= '';
 		foreach($meta['repeat']['includedates'] as $date){
 			$extraIcalEvents	.= "END:VEVENT\r\n";
-			$newStart			 = date($this->icalFormat, strtotime("$date ".$meta['starttime']));
-			$newEnd			 	 = date($this->icalFormat, strtotime("$date ".$meta['endtime']));
+			$newStart			 = date($this->icalFormat, strtotime("$date ".$meta['start_time']));
+			$newEnd			 	 = date($this->icalFormat, strtotime("$date ".$meta['end_time']));
 			$newStart			 = "DTSTART:$newStart\r\n";
 			$newEnd			 	 = "DTEND:$newEnd\r\n";
 	

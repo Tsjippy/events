@@ -31,7 +31,7 @@ function removeOldEvents(){
 
 	$events		= new CreateEvents();
 
-	$query		= "DELETE FROM {$events->tableName} WHERE startdate<'".date('Y-m-d', strtotime("- $maxAge"))."'";
+	$query		= "DELETE FROM {$events->tableName} WHERE start_date<'".date('Y-m-d', strtotime("- $maxAge"))."'";
 
 	$expiredEvents	= $wpdb->get_results( $query);
 	foreach($expiredEvents as $event){
@@ -88,14 +88,14 @@ function anniversaryCheck(){
 }
 
 /**
- * Get all schedules with an enddate in the past and deletes them
+ * Get all schedules with an end_date in the past and deletes them
 */
 function removeOldSchedules(){
 	$schedules	= new CreateSchedule();
 	$schedules->getSchedules();
 
 	foreach($schedules->schedules as $schedule){
-		if($schedule->enddate < date('Y-m-d')){
+		if($schedule->end_date < date('Y-m-d')){
 			$schedules->removeSchedule($schedule->id);
 		}
 	}

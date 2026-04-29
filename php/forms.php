@@ -17,13 +17,13 @@ add_filter('tsjippy-family-meta-keys', function($metaKeys){
 //create  events
 add_filter('tsjippy_before_inserting_formdata', __NAMESPACE__.'\beforeSavingFormData', 10, 2);
 function beforeSavingFormData($submission, $object){
-	if($object->formData->name == 'user_generics' || $object->formData->name == 'child_generic'){
+	if($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic'){
 		$events	= new CreateEvents();
 		$events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), $_POST['birthday']);
 		$events->createCelebrationEvent(SITENAME.' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), $_POST['arrival-date']);
 	}
 
-	if($object->formData->name == 'user_family'){
+	if($object->formData->slug == 'user_family'){
 		$family = new TSJIPPY\FAMILY\Family();
 
 		// Then the weddingdate

@@ -56,16 +56,16 @@ function eventSpecificFields($frontEndContent){
 			All day event
 		</label>
 	
-		<label name="startdate-label">
+		<label name="start_date-label">
 			<h4>Startdate</h4>
-			<input type='date'						name='event[startdate]' value='<?php if(isset($eventDetails['startdate'])){echo $eventDetails['startdate'];} ?>' required>
-			<input type='time' class='eventtime<?php if(!empty($eventDetails['starttime'])){echo " hidden";}?>'	name='event[starttime]' value='<?php echo $eventDetails['starttime']; ?>' required>
+			<input type='date'						name='event[start_date]' value='<?php if(isset($eventDetails['start_date'])){echo $eventDetails['start_date'];} ?>' required>
+			<input type='time' class='eventtime<?php if(!empty($eventDetails['start_time'])){echo " hidden";}?>'	name='event[start_time]' value='<?php echo $eventDetails['start_time']; ?>' required>
 		</label>
 		
-		<label name="enddate-label" <?php if(!empty($eventDetails['allday'])){echo "class='hidden'";}?>>
+		<label name="end_date-label" <?php if(!empty($eventDetails['allday'])){echo "class='hidden'";}?>>
 			<h4>Enddate</h4>
-			<input type='date'						name='event[enddate]' value='<?php if(isset($eventDetails['enddate'])){echo $eventDetails['enddate'];} ?>' required>
-			<input type='time' class='eventtime'	name='event[endtime]' value='<?php if(isset($eventDetails['endtime'])){echo $eventDetails['endtime'];} ?>' required>
+			<input type='date'						name='event[end_date]' value='<?php if(isset($eventDetails['end_date'])){echo $eventDetails['end_date'];} ?>' required>
+			<input type='time' class='eventtime'	name='event[end_time]' value='<?php if(isset($eventDetails['end_time'])){echo $eventDetails['end_time'];} ?>' required>
 		</label>
 
 		<label name="location">
@@ -135,8 +135,8 @@ function displayRepetitionParameters($eventDetails){
 	$dayName	= 'monday';
 	$occurence	= 'first';
 	if(!empty($eventDetails)){
-		$dayName	= strtolower(date('l', strtotime($eventDetails['startdate'])));
-		$dayNum		= explode('-', $eventDetails['startdate'])[2];
+		$dayName	= strtolower(date('l', strtotime($eventDetails['start_date'])));
+		$dayNum		= explode('-', $eventDetails['start_date'])[2];
 		$occurence	= 1;
 		while($dayNum - 7 >= 0){
 			$occurence++;
@@ -149,10 +149,10 @@ function displayRepetitionParameters($eventDetails){
 		$hideLastDay	= 'hidden';
 
 		// Selected date is the last day of the week of the month
-		if(!empty($eventDetails['startdate']) && strtotime("last $dayName of this month") == strtotime($eventDetails['startdate'])){
+		if(!empty($eventDetails['start_date']) && strtotime("last $dayName of this month") == strtotime($eventDetails['start_date'])){
 			$hideLast	= '';
 
-			if(strtotime($eventDetails['startdate']) == strtotime("last day of this month")){
+			if(strtotime($eventDetails['start_date']) == strtotime("last day of this month")){
 				$hideLastDay	= '';
 			}
 		}
@@ -244,7 +244,7 @@ function displayRepetitionParameters($eventDetails){
 			</label><br>
 			
 			<label class='repeat-type-option-specifics <?php if(empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'date'){echo 'hidden';}?>'>
-				<input type='date' name='event[repeat][enddate]' value='<?php if(!empty($eventDetails['repeat']['enddate'])){echo $eventDetails['repeat']['enddate'];}?>'>
+				<input type='date' name='event[repeat][end_date]' value='<?php if(!empty($eventDetails['repeat']['end_date'])){echo $eventDetails['repeat']['end_date'];}?>'>
 			</label>
 		</div>
 
@@ -368,16 +368,16 @@ function postNotification($excerpt, $post){
 	if($post->post_type == 'event'){
 		$events		= new DisplayEvents();
 		$event		= $events->retrieveSingleEvent($post->ID);
-		$startDate	= date(DATEFORMAT, strtotime($event->startdate));
-		if($event->startdate == $event->enddate){
+		$startDate	= date(DATEFORMAT, strtotime($event->start_date));
+		if($event->start_date == $event->end_date){
 			$excerpt .= "\n\nDate: $startDate";
 		}else{
-			$enddate	 = date(DATEFORMAT, strtotime($event->enddate));
+			$end_date	 = date(DATEFORMAT, strtotime($event->end_date));
 			$excerpt 	.= "\n\nStart date: $startDate";
-			$excerpt 	.= "\nEnd date: $enddate";
+			$excerpt 	.= "\nEnd date: $end_date";
 		}
-		if(!empty($event->starttime) && !empty($event->endtime)){
-			$excerpt .= "\nTime: $event->starttime till $event->endtime";
+		if(!empty($event->start_time) && !empty($event->end_time)){
+			$excerpt .= "\nTime: $event->start_time till $event->end_time";
 		}
 
 		if(!empty($event->location)){

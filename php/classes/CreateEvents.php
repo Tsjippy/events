@@ -40,14 +40,14 @@ class CreateEvents extends Events{
 	public function createEvents(){
 		global $wpdb;
 
-		$baseStartDateStr	= $this->eventData['startdate'];
+		$baseStartDateStr	= $this->eventData['start_date'];
 		$baseStartDate		= strtotime($baseStartDateStr);
 
 		// Startdate is in the past
 		if($baseStartDate < strtotime(date('Y-m-d', time()))){
 			// in the past and not repeated
 			if( empty($this->eventData['isrepeated']) ){
-				return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['startdate']}");
+				return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['start_date']}");
 			}
 		}
 
@@ -56,19 +56,19 @@ class CreateEvents extends Events{
 			$baseStartDate	= $this->createRepeatedEvents($baseStartDate);
 		}
 
-		$baseEndDate		= $this->eventData['enddate'];
+		$baseEndDate		= $this->eventData['end_date'];
 		$dayDiff 			= ((new \DateTime($baseStartDateStr))->diff((new \DateTime($baseEndDate))))->d;
 		
 		foreach($this->startDates as $startDate){
-			$enddate	= date('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
+			$end_date	= date('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
 			$this->maybeCreateRow($startDate);
 
 			$args	= [
-				'enddate'	=> $enddate
+				'end_date'	=> $end_date
 			];
 
 			// only add the data where there is a column for it
-			foreach(['id', 'post_id', 'starttime', 'endtime', 'location', 'organizer', 'location_id', 'organizer_id', 'atendees', 'onlyfor'] as $column){
+			foreach(['id', 'post_id', 'start_time', 'end_time', 'location', 'organizer', 'location_id', 'organizer_id', 'atendees', 'only_for'] as $column){
 				if(isset($this->eventData[$column])){
 					$args[$column]	= $this->eventData[$column];
 				}
@@ -79,7 +79,7 @@ class CreateEvents extends Events{
 				$args,
 				array(
 					'post_id'		=> $this->postId,
-					'startdate'		=> $startDate
+					'start_date'		=> $startDate
 				),
 			);
 			
@@ -210,7 +210,7 @@ class CreateEvents extends Events{
 			// Add one day/week/month/year
 			$baseStartDate		= strtotime("+1 $type", $baseStartDate);
 
-			//re-adjust the startdate string
+			//re-adjust the start_date string
 			$this->startDates	= [date('Y-m-d', $baseStartDate)];
 		}
 		
@@ -222,7 +222,7 @@ class CreateEvents extends Events{
 
 		// calculate repetition end date
 		if($repeatStop == 'date'){
-			$repEnddate	= strtotime($repeatParam['enddate']);
+			$repEnddate	= strtotime($repeatParam['end_date']);
 		}else{
 			$repEnddate	= strtotime("+5 year", $baseStartDate);
 		}
@@ -283,7 +283,7 @@ class CreateEvents extends Events{
 		
 		$existingEvent	= $this->retrieveSingleEvent($postId);
 		if(
-			date('-m-d', strtotime($existingEvent->startdate)) == date('-m-d', strtotime($date)) &&
+			date('-m-d', strtotime($existingEvent->start_date)) == date('-m-d', strtotime($date)) &&
 			$title == $existingEvent->post_title
 		){
 			return false; //nothing changed
@@ -359,15 +359,15 @@ class CreateEvents extends Events{
 
 	protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey){
 		//Get the upcoming celebration date
-		$startdate								= date(date('Y').'-m-d', strtotime($metaValue));
+		$start_date								= date(date('Y').'-m-d', strtotime($metaValue));
 
-		$this->eventData['startdate']			= $startdate;
-		$this->eventData['enddate']				= $startdate;
+		$this->eventData['start_date']			= $start_date;
+		$this->eventData['end_date']				= $start_date;
 		$this->eventData['location']			= '';
 		$this->eventData['organizer']			= $user->display_name;
 		$this->eventData['organizer-id']		= $user->ID;
-		$this->eventData['starttime']			= '00:00';
-		$this->eventData['endtime']				= '23:59';
+		$this->eventData['start_time']			= '00:00';
+		$this->eventData['end_time']				= '23:59';
 		$this->eventData['allday']				= true;
 		$this->eventData['isrepeated']			= 'Yes';
 		$this->eventData['repeat']['interval']	= 1;
@@ -430,19 +430,19 @@ class CreateEvents extends Events{
 	
 		$event							= $_POST['event'];
 		$event['allday']				= sanitize_text_field($event['allday']);
-		$event['startdate']				= sanitize_text_field($event['startdate']);
-		$event['starttime']				= sanitize_text_field($event['starttime']);
-		$event['enddate']				= sanitize_text_field($event['enddate']);
-		$event['endtime']				= sanitize_text_field($event['endtime']);
+		$event['start_date']				= sanitize_text_field($event['start_date']);
+		$event['start_time']				= sanitize_text_field($event['start_time']);
+		$event['end_date']				= sanitize_text_field($event['end_date']);
+		$event['end_time']				= sanitize_text_field($event['end_time']);
 
-		if(empty($event['startdate']) || empty($event['enddate'])){
+		if(empty($event['start_date']) || empty($event['end_date'])){
 			return;
 		}
 
 		$event['repeat']['type']		= sanitize_text_field($event['repeat']['type']);
 		$event['repeat']['interval']	= sanitize_text_field($event['repeat']['interval']);
 		$event['repeat']['stop']		= sanitize_text_field($event['repeat']['stop']);
-		$event['repeat']['enddate']		= sanitize_text_field($event['repeat']['enddate']);
+		$event['repeat']['end_date']		= sanitize_text_field($event['repeat']['end_date']);
 		$event['repeat']['amount']		= sanitize_text_field($event['repeat']['amount']);
 		$event['location']				= sanitize_text_field($event['location']);
 		$event['location_id']			= sanitize_text_field($event['location-id']);
@@ -474,18 +474,18 @@ class CreateEvents extends Events{
 
 	/**
 	 * Creatres a new event in db if it does not exist already
-	 * @param  	string  $startdate		The startdate of the event
+	 * @param  	string  $start_date		The start_date of the event
 	*/
-	protected function maybeCreateRow($startdate){
+	protected function maybeCreateRow($start_date){
 		global $wpdb;
 		
 		//check if form row already exists
-		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post_id` = '{$this->postId}' AND startdate = '$startdate'")){
+		if(!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post_id` = '{$this->postId}' AND start_date = '$start_date'")){
 			$wpdb->insert(
 				$this->tableName,
 				array(
 					'post_id'			=> $this->postId,
-					'startdate'			=> $startdate
+					'start_date'			=> $start_date
 				)
 			);
 		}

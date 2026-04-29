@@ -81,14 +81,14 @@ class Schedules{
 			lunch boolean NOT NULL,
 			diner boolean NOT NULL,
 			orientation boolean NOT NULL,
-			startdate date NOT NULL,
-			enddate date NOT NULL,
-			starttime varchar(80) NOT NULL,
-			endtime varchar(80) NOT NULL,
+			start_date date NOT NULL,
+			end_date date NOT NULL,
+			start_time varchar(80) NOT NULL,
+			end_time varchar(80) NOT NULL,
 			timeslot_size mediumint(9) NOT NULL,
 			fixed_timeslot_size boolean NOT NULL,
 			subject longtext NOT NULL,
-			hidenames boolean NOT NULL,
+			hide_names boolean NOT NULL,
 			admin_roles varchar(80),
 			view_roles varchar(80),
 			PRIMARY KEY  (id)
@@ -151,7 +151,7 @@ class Schedules{
 
 		$this->defaultSubject		= $this->currentSchedule->subject;
 
-		$this->hideNames	= $this->currentSchedule->hidenames;
+		$this->hideNames	= $this->currentSchedule->hide_names;
 
 		// Parse admin rights
 		$this->admin		= false;
@@ -256,10 +256,10 @@ class Schedules{
 		}
 
 		// Do not show dates in the past
-		$this->currentSchedule->startdate	= max([date('Y-m-d'), $this->currentSchedule->startdate]);
+		$this->currentSchedule->start_date	= max([date('Y-m-d'), $this->currentSchedule->start_date]);
 		
 		?>
-		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hidenames="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
+		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hide_names="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
 			<div class="modal publish-schedule hidden">
 				<div class="modal-content">
 					<span id="modal-close" class="close">&times;</span>
@@ -334,7 +334,7 @@ class Schedules{
 						<tr>
 							<th class='sticky'>Dates</th>
 							<?php
-							$date		= $this->currentSchedule->startdate;
+							$date		= $this->currentSchedule->start_date;
 							while(true){
 								$dateStr		= date('d F Y', strtotime($date));
 								$dateTime		= strtotime($date);
@@ -342,7 +342,7 @@ class Schedules{
 								$formatedDate	= date(DATEFORMAT, $dateTime);
 								echo "<th data-date='$dateStr' data-isodate='$date'>$dayName<br>$formatedDate</th>";
 
-								if ($date == $this->currentSchedule->enddate) {
+								if ($date == $this->currentSchedule->end_date) {
 									break;
 								}
 
@@ -397,11 +397,11 @@ class Schedules{
 						</label>
 						<br>
 						<label >
-							<input type='radio' id='lunch' name='starttime' value='12:00'>
+							<input type='radio' id='lunch' name='start_time' value='12:00'>
 							Lunch
 						</label>
 						<label>
-							<input type='radio' id='diner' name='starttime' value='18:00'>
+							<input type='radio' id='diner' name='start_time' value='18:00'>
 							Diner
 						</label>
 						<br>
@@ -409,10 +409,10 @@ class Schedules{
 						<?php
 					}else{
 						?>
-						<input type='hidden' class='no-reset' name='starttime' value='18:00'>
+						<input type='hidden' class='no-reset' name='start_time' value='18:00'>
 						<?php
 					}
-					$date				= $this->currentSchedule->startdate;
+					$date				= $this->currentSchedule->start_date;
 					$availableLunches	= [];
 					$availableDiners	= [];
 
@@ -431,7 +431,7 @@ class Schedules{
 							$availableDiners[]	= $date;
 						}
 
-						if ($date == $this->currentSchedule->enddate) {
+						if ($date == $this->currentSchedule->end_date) {
 							break;
 						}
 						$date			= date('Y-m-d', strtotime('+1 day', $dateTime) );
@@ -496,12 +496,12 @@ class Schedules{
 		</div>
 		<?php
 
-		$date		= $this->currentSchedule->startdate;
+		$date		= $this->currentSchedule->start_date;
 		while(true){
 			$html			= $this->getMobileDay($date);
 			echo $html.'<br>';
 
-			if ($date == $this->currentSchedule->enddate) {
+			if ($date == $this->currentSchedule->end_date) {
 				break;
 			}
 
@@ -568,13 +568,13 @@ class Schedules{
 			}else{
 				$this->parsePostsAndEvents($result);
 
-				$date				= $result->events[0]->startdate;
-				$starttime			= $result->events[0]->starttime;
+				$date				= $result->events[0]->start_date;
+				$start_time			= $result->events[0]->start_time;
 
 				if(!isset($this->currentSchedule->sessions[$date])){
 					$this->currentSchedule->sessions[$date]	= [];
 				}
-				$this->currentSchedule->sessions[$date][$starttime]	= $result;
+				$this->currentSchedule->sessions[$date][$start_time]	= $result;
 			}
 		}
 
@@ -649,21 +649,21 @@ class Schedules{
 
 		global $wpdb;
 
-		$query	= "SELECT * FROM {$this->events->tableName} WHERE onlyfor={$this->user->ID}";
+		$query	= "SELECT * FROM {$this->events->tableName} WHERE only_for={$this->user->ID}";
 		if($this->currentSchedule->lunch){
-			$query	.= " AND starttime != '$this->lunchStartTime'";
+			$query	.= " AND start_time != '$this->lunchStartTime'";
 		}
 
 		if($this->currentSchedule->diner){
-			$query	.= " AND starttime != '$this->dinerTime'";
+			$query	.= " AND start_time != '$this->dinerTime'";
 		}
 
 		$events	= $wpdb->get_results($query);
 
 		if(!empty($events)){
 			foreach($events as $event){
-				if(isset($this->currentSchedule->sessions[$event->startdate][$event->starttime])){	// there is a session on the date and time of this event
-					foreach($this->currentSchedule->sessions[$event->startdate][$event->starttime]->events as $ev){
+				if(isset($this->currentSchedule->sessions[$event->start_date][$event->start_time])){	// there is a session on the date and time of this event
+					foreach($this->currentSchedule->sessions[$event->start_date][$event->start_time]->events as $ev){
 						// The found event belongs to this schedule
 						if($ev->id == $event->id){
 							return true;
@@ -716,8 +716,8 @@ class Schedules{
 				$title			= $data->posts[0]->post_title;
 				$url			= get_permalink($data->posts[0]->ID);
 				$cellText		= "<a href='$url'>$title</a>";
-				$date			= $data->events[0]->startdate;
-				$startTime		= $data->events[0]->starttime;
+				$date			= $data->events[0]->start_date;
+				$startTime		= $data->events[0]->start_time;
 				if(is_numeric($hostId)){
 					$hostData	.= " data-host=$hostId data-session-id='$data->id'";
 				}
@@ -740,7 +740,7 @@ class Schedules{
 				$dateStr	= date(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
-				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host-id='$hostId' data-isodate='$date'>";
+				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
 					$cellText .= 'Available   ';
 					$cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
 				$cellText .= "</span>";
@@ -790,7 +790,7 @@ class Schedules{
 			$event						= $this->currentSession->events[0];
 
 			$hostId			= $event->organizer-id;
-			$dataset	= "data-starttime='{$event->starttime}' data-endtime='{$event->endtime}' data-session-id='{$this->currentSession->id}'";
+			$dataset	= "data-start_time='{$event->start_time}' data-end_time='{$event->end_time}' data-session-id='{$this->currentSession->id}'";
 			if (is_numeric($hostId)) {
 				$dataset	.= " data-host='".get_userdata($hostId)->display_name."' data-host-id='$hostId'";
 			}
@@ -820,7 +820,7 @@ class Schedules{
 				$dataset	.= " data-reminders='".json_encode($reminders)."'";
 			}
 
-			$endTime	= $event->endtime;
+			$endTime	= $event->end_time;
 			$class 		.= ' selected';
 			$partnerId 	= $family->getPartner($this->user->ID);
 			if($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId){
@@ -829,7 +829,7 @@ class Schedules{
 				$baseTitle	= $this->getBaseTitle();
 				$dataset	.= " data-subject='$baseTitle'";
 				$url		= get_permalink($event->post_id);
-				$date		= $event->startdate;
+				$date		= $event->start_date;
 				$cellText	= "<span class='subject' data-user-id='$hostId'><a href='$url'>{$this->currentSession->posts[0]->post_title}</a></span><br>";
 			}
 			
@@ -846,8 +846,8 @@ class Schedules{
 
 			if(!$this->mobile){
 				//check how many rows this event should span
-				$toTime		= new \DateTime($event->endtime);
-				$fromTime	= new \DateTime($event->starttime);
+				$toTime		= new \DateTime($event->end_time);
+				$fromTime	= new \DateTime($event->start_time);
 				$interval	= $toTime->diff($fromTime);
 				$value		= ($interval->h * 60 + $interval->i) / $this->timeSlotSize;
 				$rowSpan	= "rowspan='$value'";
@@ -859,7 +859,7 @@ class Schedules{
 				$dateStr	= date(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
-				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-starttime='$startTime' data-host-id='$hostId' data-isodate='$date'>";
+				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
 					$cellText .= 'Available   ';
 					$cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
 				$cellText .= "</span>";
@@ -894,7 +894,7 @@ class Schedules{
 			$this->getSessionEvent($_REQUEST['session']);
 
 			// we requested the current session
-			if($this->currentSession->events[0]->startdate == $date && $this->currentSession->events[0]->starttime == $startTime){
+			if($this->currentSession->events[0]->start_date == $date && $this->currentSession->events[0]->start_time == $startTime){
 				$class	.= ' active';
 			}
 		}
@@ -915,9 +915,9 @@ class Schedules{
 		$this->nextStartTimes	= [];
 
 		//loop over the rows
-		$startTime	= $this->currentSchedule->starttime;
+		$startTime	= $this->currentSchedule->start_time;
 
-		//loop until we are at the endtime
+		//loop until we are at the end_time
 		while(true){
 			//If we do not have an orientation schedule, go strait to the dinner row
 			if(
@@ -928,7 +928,7 @@ class Schedules{
 				$startTime = $this->dinerTime;
 			}
 			
-			$date				= $this->currentSchedule->startdate;
+			$date				= $this->currentSchedule->start_date;
 			$mealScheduleRow	= true;
 			$endTime			= date('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
 			$extra				= '';
@@ -971,7 +971,7 @@ class Schedules{
 					}
 				}
 
-				if($date >= $this->currentSchedule->enddate){
+				if($date >= $this->currentSchedule->end_date){
 					break;
 				}
 
@@ -980,13 +980,13 @@ class Schedules{
 			
 			//Show the row if we can see all rows or the row is a mealschedule row
 			if (!$this->onlyMeals || $mealScheduleRow || !empty($this->defaultSubject)) {
-				$html  .= "<tr class='table-row' data-starttime='$startTime' data-endtime='$endTime'>";
+				$html  .= "<tr class='table-row' data-start_time='$startTime' data-end_time='$endTime'>";
 					$html 	.= "<td $extra class='sticky' label=''><strong>$description</strong></td>";
 					$html	.= $cells;
 				$html .= "</tr>";
 			}
 
-			if($startTime >= $this->currentSchedule->endtime){
+			if($startTime >= $this->currentSchedule->end_time){
 				break;
 			}
 			$startTime		= $endTime;
@@ -1011,9 +1011,9 @@ class Schedules{
 			$html 	.= "<strong>$dayName $formatedDate</strong><br>";
 
 			//loop over the rows
-			$startTime	= $this->currentSchedule->starttime;
+			$startTime	= $this->currentSchedule->start_time;
 
-			//loop until we are at the endtime
+			//loop until we are at the end_time
 			while(true){
 				$isMeal	= false;
 
@@ -1057,7 +1057,7 @@ class Schedules{
 					}elseif(!$this->onlyMeals || !empty($this->defaultSubject)){
 						$data			= $this->writeOrientationCell($date, $startTime, true);
 						if($data['event']){
-							$description	.=	' - '.$data['event']->endtime;
+							$description	.=	' - '.$data['event']->end_time;
 						}
 					}
 					$content	= $data['text'];
@@ -1122,7 +1122,7 @@ class Schedules{
 					}
 				}
 
-				if($startTime == $this->currentSchedule->endtime){
+				if($startTime == $this->currentSchedule->end_time){
 					break;
 				}
 				$startTime		= $endTime;
@@ -1156,8 +1156,8 @@ class Schedules{
 					<input type='hidden' class='no-reset' name='schedule-id'>
 					<input type='hidden' class='no-reset' name='session-id'>
 					<input type='hidden' class='no-reset' name='host-id'>
-					<input type='hidden' class='no-reset' name='starttime'>
-					<input type='hidden' class='no-reset' name='endtime'>
+					<input type='hidden' class='no-reset' name='start_time'>
+					<input type='hidden' class='no-reset' name='end_time'>
 					<input type='hidden' class='no-reset' name='date'>
 						<?php
 					if($this->admin){
@@ -1185,7 +1185,7 @@ class Schedules{
 				<form action="" method="post">
 					<input type='hidden' class='no-reset' name='schedule-id'>
 					<input type='hidden' class='no-reset' name='date'>
-					<input type='hidden' class='no-reset' name='starttime'>
+					<input type='hidden' class='no-reset' name='start_time'>
 					
 					<p>Enter one or two keywords for the meal you are planning to serve<br>
 					For instance 'pasta', 'rice', 'Nigerian', 'salad'</p>
@@ -1223,9 +1223,9 @@ class Schedules{
 			$schdeuleId		= $_REQUEST['schedule'];
 			$sessionId		= $_REQUEST['session'];
 			$hostId			= $session->events[0]->organizer-id;
-			$date			= $session->events[0]->startdate;
-			$startTime		= $session->events[0]->starttime;
-			$endTime		= $session->events[0]->endtime;
+			$date			= $session->events[0]->start_date;
+			$startTime		= $session->events[0]->start_time;
+			$endTime		= $session->events[0]->end_time;
 			$subject		= $this->getBaseTitle();
 			$location		= $session->events[0]->location;
 			$host			= $session->events[0]->organizer;
@@ -1262,12 +1262,12 @@ class Schedules{
 
 					<label>
 						<h4>Select a start time:</h4>
-						<input type="time" name="starttime" class="time wide"  value='<?php echo $startTime;?>' step="900" min="08:00" max="18:00" required>
+						<input type="time" name="start_time" class="time wide"  value='<?php echo $startTime;?>' step="900" min="08:00" max="18:00" required>
 					</label>
 					
 					<label>
 						<h4>Select an end time:</h4>
-						<input type="time" name="endtime" class="time wide" value='<?php echo $endTime;?>' step="900" min="08:00" max="18:00" required>
+						<input type="time" name="end_time" class="time wide" value='<?php echo $endTime;?>' step="900" min="08:00" max="18:00" required>
 					</label>
 					
 					<label>
@@ -1383,12 +1383,12 @@ class Schedules{
 			
 			<label>
 				<h4>Date the schedule should start</h4>
-				<input type='date' class='wide' name='startdate' required>
+				<input type='date' class='wide' name='start_date' required>
 			</label>
 			
 			<label>
 				<h4>Date the schedule should end</h4>
-				<input type='date' class='wide' name='enddate' required>
+				<input type='date' class='wide' name='end_date' required>
 			</label>
 			
 			<label>
@@ -1421,7 +1421,7 @@ class Schedules{
 				<label>
 					<h4>Privacy</h4>
 					<label>
-						<input type='checkbox' name='hidenames'>
+						<input type='checkbox' name='hide_names'>
 						Hide names in the schedule
 					</label>
 				</label>

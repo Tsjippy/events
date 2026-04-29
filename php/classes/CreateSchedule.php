@@ -48,7 +48,7 @@ class CreateSchedule extends Schedules{
 		//Create event warning
 		if(isset($_POST['reminders'])){
 			foreach($_POST['reminders'] as $minutes){
-				$start	= new \DateTime($event['startdate'].' '.$event['starttime'], new \DateTimeZone(wp_timezone_string()));
+				$start	= new \DateTime($event['start_date'].' '.$event['start_time'], new \DateTimeZone(wp_timezone_string()));
 
 				//Warn minutes in advance
 				$start	= $start->getTimestamp() - $minutes * MINUTE_IN_SECONDS;
@@ -70,10 +70,10 @@ class CreateSchedule extends Schedules{
 	protected function addScheduleEvents($addHostPartner=true, $addPartner=true){
 		$family							= new TSJIPPY\FAMILY\Family();
 		$event							= [];
-		$event['startdate']				= $this->date;
-		$event['starttime']				= $this->startTime;
-		$event['enddate']				= $this->date;
-		$event['endtime']				= $this->endTime;
+		$event['start_date']				= $this->date;
+		$event['start_time']				= $this->startTime;
+		$event['end_date']				= $this->date;
+		$event['end_time']				= $this->endTime;
 		$event['location']				= $this->location;
 		$event['organizer-id']			= $this->hostId;
 		if(empty($_POST['others'])){
@@ -123,12 +123,12 @@ class CreateSchedule extends Schedules{
 		$eventArray		= [
 			[
 				'title'		=> $ownTitle,
-				'onlyfor'	=> [$this->currentSchedule->target]
+				'only_for'	=> [$this->currentSchedule->target]
 			]
 		];
 
 		if($partnerId){
-			$eventArray[0]['onlyfor'][]	= $partnerId;
+			$eventArray[0]['only_for'][]	= $partnerId;
 		}
 
 		if(is_numeric($this->hostId)){
@@ -141,7 +141,7 @@ class CreateSchedule extends Schedules{
 			$eventArray[] =
 			[
 				'title'		=>	$titleString,
-				'onlyfor'	=>[$this->hostId, $hostPartner]
+				'only_for'	=>[$this->hostId, $hostPartner]
 			];
 		}
 
@@ -150,7 +150,7 @@ class CreateSchedule extends Schedules{
 				$eventArray[] =
 				[
 					'title'		=>"Attending $title with {$this->name}",
-					'onlyfor'	=>[$attendee]
+					'only_for'	=>[$attendee]
 				];
 			}
 		}
@@ -180,7 +180,7 @@ class CreateSchedule extends Schedules{
 	/**
 	 * Creates posts and events from an array
 	 *
-	 * @param	array	$eventArray		Array containin a title and a onlyfor key
+	 * @param	array	$eventArray		Array containin a title and a only_for key
 	 * @param	object	$event			Object with the event details
 	 *
 	 * @return	array					Array containing the created post and event ids
@@ -205,16 +205,16 @@ class CreateSchedule extends Schedules{
 
 			$postIds[]	= $postId;
 			update_post_meta($postId, 'eventdetails', json_encode($event));
-			update_post_meta($postId, 'onlyfor', $a['onlyfor']);
+			update_post_meta($postId, 'only_for', $a['only_for']);
 			update_post_meta($postId, 'reminders', $_POST['reminders']);
 
 			// setting the eventdetails meta value also creates the event. Remove it
 			$events = new CreateEvents();
 			$events->removeDbRows($postId);
 
-			foreach($a['onlyfor'] as $userId){
+			foreach($a['only_for'] as $userId){
 				if(is_numeric($userId)){
-					$event['onlyfor']	= $userId;
+					$event['only_for']	= $userId;
 					$event['post-id']	= $postId;
 					$eventId 			= $this->addEventToDb($event);
 
@@ -264,19 +264,19 @@ class CreateSchedule extends Schedules{
 		foreach($this->currentSession->events as $event){
 			$event->atendees	= maybe_unserialize($event->atendees);
 
-			if($event->startdate != $this->date){
-				$args['startdate']	= $this->date;
-				$args['enddate']	= $this->date;
+			if($event->start_date != $this->date){
+				$args['start_date']	= $this->date;
+				$args['end_date']	= $this->date;
 				$updated			= true;
 			}
 
-			if($event->starttime != $this->startTime){
-				$args['starttime']	= $this->startTime;
+			if($event->start_time != $this->startTime){
+				$args['start_time']	= $this->startTime;
 				$updated			= true;
 			}
 
-			if($event->endtime != $this->endTime){
-				$args['endtime']	= $this->endTime;
+			if($event->end_time != $this->endTime){
+				$args['end_time']	= $this->endTime;
 				$updated			= true;
 			}
 
@@ -351,9 +351,9 @@ class CreateSchedule extends Schedules{
 		foreach($this->currentSession->events as $i=>$ev){
 
 			if(
-				$ev->onlyfor != $this->currentSchedule->target 	&& 		// not an event for the target of the schedule
-				$ev->onlyfor != $event->organizer-id				&&		// not organizer of the event
-				!in_array($ev->onlyfor, $_POST['others'])				// and not one of the atendees
+				$ev->only_for != $this->currentSchedule->target 	&& 		// not an event for the target of the schedule
+				$ev->only_for != $event->organizer-id				&&		// not organizer of the event
+				!in_array($ev->only_for, $_POST['others'])				// and not one of the atendees
 			){
 				// remove the event and all posts related to it
 				$this->currentSession->event_ids		= array_diff($this->currentSession->event_ids, [$event->id]);
@@ -376,7 +376,7 @@ class CreateSchedule extends Schedules{
 			if(is_numeric($atendee) && !in_array($atendee, (array)$event->atendees)){
 				$eventArray[] = [
 					'title'		=>"Attending {$this->title} with {$this->name}",
-					'onlyfor'	=>[$atendee]
+					'only_for'	=>[$atendee]
 				];
 			}
 		}
@@ -438,9 +438,9 @@ class CreateSchedule extends Schedules{
 			$orientation	= false;
 		}
 
-		$startDateStr	= $_POST['startdate'];
+		$startDateStr	= $_POST['start_date'];
 		$startDate		= strtotime($startDateStr);
-		$endDateStr		= $_POST['enddate'];
+		$endDateStr		= $_POST['end_date'];
 		$endDate		= strtotime($endDateStr);
 
 		if($orientation){
@@ -477,13 +477,13 @@ class CreateSchedule extends Schedules{
 			'lunch'					=> $lunch,
 			'diner'					=> $diner,
 			'orientation'			=> $orientation,
-			'startdate'				=> $startDateStr,
-			'enddate'				=> $endDateStr,
-			'starttime'				=> $startTime,
-			'endtime'				=> $this->dinerTime,
+			'start_date'				=> $startDateStr,
+			'end_date'				=> $endDateStr,
+			'start_time'				=> $startTime,
+			'end_time'				=> $this->dinerTime,
 			'timeslot_size'			=> $_POST['timeslotsize'],
 			'fixed_timeslot_size'	=> $fixedTimeslotSize,
-			'hidenames'				=> isset($_POST['hidenames']),
+			'hide_names'				=> isset($_POST['hide_names']),
 			'admin_roles'			=> maybe_serialize($_POST['admin-roles']),
 			'view_roles'			=> maybe_serialize($_POST['view-roles']),
 			'subject'				=> $subject,
@@ -619,7 +619,7 @@ class CreateSchedule extends Schedules{
 		$family				= new TSJIPPY\FAMILY\Family();
 		$message			= '';
 		$this->scheduleId	= $_POST['schedule-id'];
-		$this->startTime	= $_POST['starttime'];
+		$this->startTime	= $_POST['start_time'];
 		$schedule			= $this->getScheduleById($this->scheduleId);
 
 		// check if available
@@ -671,10 +671,10 @@ class CreateSchedule extends Schedules{
 		}else{
 			$this->title		= sanitize_text_field($_POST['subject']);
 			$this->location		= sanitize_text_field($_POST['location']);
-			if(empty($_POST['endtime'])){
+			if(empty($_POST['end_time'])){
 				$this->endTime	= date('H:i', strtotime("+$this->timeSlotSize minutes", strtotime( $this->startTime)));
 			}else{
-				$this->endTime		= $_POST['endtime'];
+				$this->endTime		= $_POST['end_time'];
 			}
 		}
 
@@ -731,8 +731,8 @@ class CreateSchedule extends Schedules{
 
 		$this->getScheduleById($this->currentSession->schedule_id);
 
-		$date				= $this->currentSession->events[0]->startdate;
-		$startTime			= $this->currentSession->events[0]->starttime;
+		$date				= $this->currentSession->events[0]->start_date;
+		$startTime			= $this->currentSession->events[0]->start_time;
 
 		$hostId				= $this->currentSession->events[0]->organizer-id;
 
@@ -781,7 +781,7 @@ class CreateSchedule extends Schedules{
 
 		$date			= sanitize_text_field($_POST['date']);
 
-		$startTime		= sanitize_text_field($_POST['starttime']);
+		$startTime		= sanitize_text_field($_POST['start_time']);
 
 		$menu			= sanitize_text_field($_POST['recipe-keyword']);
 

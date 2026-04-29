@@ -30,10 +30,10 @@ function schedulesRestApiInit() {
 				'target-name'		=> array(
 					'required'	=> true
 				),
-				'startdate'		=> array(
+				'start_date'		=> array(
 					'required'	=> true,
 				),
-				'enddate'		=> array(
+				'end_date'		=> array(
 					'required'	=> true
 				),
 			)
@@ -154,7 +154,7 @@ function schedulesRestApiInit() {
 						return TSJIPPY\isDate($param);
 					}
 				),
-				'starttime'		=> array(
+				'start_time'		=> array(
 					'required'	=> true,
 					'validate_callback' => function($param){
 						return TSJIPPY\isTime($param);
@@ -210,7 +210,7 @@ function schedulesRestApiInit() {
 						return TSJIPPY\isDate($param);
 					}
 				),
-				'starttime'		=> array(
+				'start_time'		=> array(
 					'required'	=> true
 				),
 				'recipe-keyword'		=> array(

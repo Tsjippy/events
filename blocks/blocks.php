@@ -118,8 +118,8 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue ){
 	// Do not create events for the past
 	if(
 		!empty($metaValue) &&
-		!empty($metaValue['startdate']) &&
-		$metaValue['startdate'] < date('Y-m-d')
+		!empty($metaValue['start_date']) &&
+		$metaValue['start_date'] < date('Y-m-d')
 	){
 		return;
 	}

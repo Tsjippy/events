@@ -41,12 +41,12 @@ class DisplayEvents extends Events{
 		
 		//start date is greater than or the requested date falls in between a multiday event
 		if(!empty($startDate)){
-			$query	.= " AND(`{$this->tableName}`.`startdate` >= '$startDate' OR '$startDate' BETWEEN `{$this->tableName}`.startdate and `{$this->tableName}`.enddate)";
+			$query	.= " AND(`{$this->tableName}`.`start_date` >= '$startDate' OR '$startDate' BETWEEN `{$this->tableName}`.start_date and `{$this->tableName}`.end_date)";
 		}
 		
-		//any event who starts before the enddate
+		//any event who starts before the end_date
 		if(!empty($endDate)){
-			$query		.= " AND `{$this->tableName}`.`startdate` <= '$endDate'";
+			$query		.= " AND `{$this->tableName}`.`start_date` <= '$endDate'";
 		}
 
 		//get events with a specific category
@@ -62,10 +62,10 @@ class DisplayEvents extends Events{
 		
 		//exclude private events which are not ours
 		$userId	 = get_current_user_id();
-		$query	.= " AND (`{$this->tableName}`.`onlyfor` IS NULL OR `{$this->tableName}`.`onlyfor`='$userId')";
+		$query	.= " AND (`{$this->tableName}`.`only_for` IS NULL OR `{$this->tableName}`.`only_for`='$userId')";
 
-		//sort on startdate
-		$query	.= " ORDER BY `{$this->tableName}`.`startdate`, `{$this->tableName}`.`starttime` ASC";
+		//sort on start_date
+		$query	.= " ORDER BY `{$this->tableName}`.`start_date`, `{$this->tableName}`.`start_time` ASC";
 
 		//LIMIT must be the very last
 		if(is_numeric($amount)){
@@ -149,7 +149,7 @@ class DisplayEvents extends Events{
 
 		foreach($this->events as $key=>$event){
 			// do not keep events who already happened
-			if($event->startdate == date("Y-m-d") && $event->endtime < date('H:i', current_time('U'))){
+			if($event->start_date == date("Y-m-d") && $event->end_time < date('H:i', current_time('U'))){
 				unset($this->events[$key]);
 			}
 		}
@@ -160,12 +160,12 @@ class DisplayEvents extends Events{
 
 		$events	= [];
 		foreach($this->events as $event){
-			$startDate		= strtotime($event->startdate);
+			$startDate		= strtotime($event->start_date);
 			$eventDayNr		= date('d', $startDate);
 			$eventDay		= date('l', $startDate);
 			$eventMonth		= date('M', $startDate);
 			$eventTitle		= get_the_title($event->post_id);
-			$endDateStr		= date('d M', strtotime(($event->enddate)));
+			$endDateStr		= date('d M', strtotime(($event->end_date)));
 
 			$userId = get_post_meta($event->post_id, 'user', true);
 
@@ -178,14 +178,14 @@ class DisplayEvents extends Events{
 				'title'			=> $eventTitle
 			];
 
-			if($event->startdate == $event->enddate){
-				if($event->starttime == $this->dayStartTime && $event->endtime == $this->dayEndTime){
+			if($event->start_date == $event->end_date){
+				if($event->start_time == $this->dayStartTime && $event->end_time == $this->dayEndTime){
 					$e['time']	= 'All day';
 				}else{
-					$e['time']	= "$eventDay {$event->starttime}";
+					$e['time']	= "$eventDay {$event->start_time}";
 				}
 			}else{
-				$e['time']	= "Until $endDateStr {$event->endtime}";
+				$e['time']	= "Until $endDateStr {$event->end_time}";
 			}
 
 			$events[]	= $e;
@@ -201,13 +201,13 @@ class DisplayEvents extends Events{
 	 * @return	string					The date of the event. Startdate and end date in case of an multiday event
 	*/
 	public function getDate(object $event){
-		if(empty($event->enddate)){
-			$event->enddate	= $event->startdate;
+		if(empty($event->end_date)){
+			$event->end_date	= $event->start_date;
 		}
-		if($event->startdate != $event->enddate){
-			$date		= date(DATEFORMAT, strtotime($event->startdate)).' - '.date(DATEFORMAT, strtotime($event->enddate));
+		if($event->start_date != $event->end_date){
+			$date		= date(DATEFORMAT, strtotime($event->start_date)).' - '.date(DATEFORMAT, strtotime($event->end_date));
 		}else{
-			$date		= date(DATEFORMAT, strtotime($event->startdate));
+			$date		= date(DATEFORMAT, strtotime($event->start_date));
 		}
 
 		return $date;
@@ -221,14 +221,14 @@ class DisplayEvents extends Events{
 	 * @return	string					The time of the event. Start time and end time in case of an multiday event
 	*/
 	public function getTime($event){
-		if($event->startdate == $event->enddate){
-			if($event->allday || ($event->starttime == $this->dayStartTime && $event->endtime == $this->dayEndTime)){
+		if($event->start_date == $event->end_date){
+			if($event->allday || ($event->start_time == $this->dayStartTime && $event->end_time == $this->dayEndTime)){
 				$time			= 'ALL DAY';
 			}else{
-				$time			= $event->starttime.' - '.$event->endtime;
+				$time			= $event->start_time.' - '.$event->end_time;
 			}
 		}else{
-			$time			= date(DATEFORMAT, strtotime($event->startdate)).' - '.$event->starttime.' - '.date(DATEFORMAT, strtotime($event->enddate)).' - '.$event->endtime;
+			$time			= date(DATEFORMAT, strtotime($event->start_date)).' - '.$event->start_time.' - '.date(DATEFORMAT, strtotime($event->end_date)).' - '.$event->end_time;
 		}
 
 		return $time;
@@ -306,12 +306,12 @@ class DisplayEvents extends Events{
 
 		if($meta['repeat']['type'] == 'weekly' && !empty($meta['repeat']['weeks'])){
 			$when	= strtolower(implode(' and ', $meta['repeat']['weeks']));
-			$day	= strtolower(Date('l', strtotime($meta['startdate'])));
+			$day	= strtolower(Date('l', strtotime($meta['start_date'])));
 			$html	.= " on the $when $day of the month";
 		}
 
-		if(!empty($meta['repeat']['enddate'])){
-			$html	.= " until ".date('j F Y',strtotime($meta['repeat']['enddate']));
+		if(!empty($meta['repeat']['end_date'])){
+			$html	.= " until ".date('j F Y',strtotime($meta['repeat']['end_date']));
 		}
 
 		if(!empty($meta['repeat']['amount'])){
@@ -347,14 +347,14 @@ class DisplayEvents extends Events{
 		$title			= urlencode($event->post_title);
 		$description	= urlencode("<a href='".get_permalink($event->post_id)."'>Read more on ".SITEURLWITHOUTSCHEME."</a>");
 		$location		= urlencode($event->location);
-		$startDate		= date('Ymd', strtotime($event->startdate));
-		$endDate		= date('Ymd', strtotime($event->enddate));
+		$startDate		= date('Ymd', strtotime($event->start_date));
+		$endDate		= date('Ymd', strtotime($event->end_date));
 
 		if($event->allday){
-			$enddt		= date('Ymd',strtotime('+1 day', $event->enddate));
+			$enddt		= date('Ymd',strtotime('+1 day', $event->end_date));
 		}else{
-			$startdt	= $startDate."T".gmdate('His',strtotime($event->starttime)).'Z';
-			$enddt		= $endDate."T".gmdate('His',strtotime($event->endtime)).'Z';
+			$startdt	= $startDate."T".gmdate('His',strtotime($event->start_time)).'Z';
+			$enddt		= $endDate."T".gmdate('His',strtotime($event->end_time)).'Z';
 		}
 
 		$gmail			= "https://calendar.google.com/calendar/render?action=TEMPLATE&text=$title&dates={$startdt}/{$enddt}&details={$description}&location={$location}&ctz=Africa/Lagos&sprop=website:".SITEURLWITHOUTSCHEME."&sprop=name:TSJIPPY";
@@ -394,10 +394,10 @@ class DisplayEvents extends Events{
 			}
 		}
 
-		$startTime		= urlencode($event->starttime.':00');
-		$endTime		= urlencode($event->endtime.':00');
+		$startTime		= urlencode($event->start_time.':00');
+		$endTime		= urlencode($event->end_time.':00');
 
-		$outlook			= "https://outlook.office.com/calendar/0/deeplink/compose/?path=/calendar/action/compose/&body={$description}&startdt={$event->startdate}T{$startTime}&enddt={$event->enddate}T{$endTime}&location={$location}&rru=addevent&subject=$title";
+		$outlook			= "https://outlook.office.com/calendar/0/deeplink/compose/?path=/calendar/action/compose/&body={$description}&startdt={$event->start_date}T{$startTime}&enddt={$event->end_date}T{$endTime}&location={$location}&rru=addevent&subject=$title";
 		if($event->allday){
 			$outlook .= '&amp;allday=true';
 		}
@@ -648,11 +648,11 @@ class DisplayEvents extends Events{
 			$url	= get_permalink($event->ID);
 
 			//do not re-add event details for a multiday event in the same week
-			if($event->startdate != $event->enddate && $event->startdate != $workingDateStr && date('w', $workingDate)>0){
+			if($event->start_date != $event->end_date && $event->start_date != $workingDateStr && date('w', $workingDate)>0){
 				continue;
 			}
 
-			$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->startdate))."' data-starttime='{$event->starttime}'>";
+			$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->start_date))."' data-start_time='{$event->start_time}'>";
 				$detailHtml .= "<article class='event-article'>";
 					if(has_post_thumbnail($event->post_id)){
 						$detailHtml .= "<div class='event-image'>";
@@ -722,8 +722,8 @@ class DisplayEvents extends Events{
 
 		// Add each event
 		foreach($this->events as $event){
-			$startTime			= $event->starttime;
-			$endTime			= $event->endtime;
+			$startTime			= $event->start_time;
+			$endTime			= $event->end_time;
 
 			if(empty($startTime) || empty($endTime)){
 				continue;
@@ -732,10 +732,10 @@ class DisplayEvents extends Events{
 			$timeIndex			= date('H', strtotime($startTime)) * 2; //index is amount of hours times 2
 
 			//multi day event
-			if($event->startdate != $event->enddate){
-				if($event->startdate == $dateStr){
+			if($event->start_date != $event->end_date){
+				if($event->start_date == $dateStr){
 					$endTime	= $this->dayEndTime;
-				}elseif($event->enddate == $dateStr){
+				}elseif($event->end_date == $dateStr){
 					$startTime	= $this->dayStartTime;
 				}else{
 					$startTime	= $this->dayStartTime;
@@ -752,17 +752,17 @@ class DisplayEvents extends Events{
 			if(
 				$startTime == $this->dayStartTime		&&
 				$endTime == $this->dayEndTime			&&
-				$event->startdate == $event->enddate
+				$event->start_date == $event->end_date
 			){
 				$this->calendarRows['allday'][$weekDay][]	= $event->post_title;
 			}else{
 				$duration	= strtotime($endTime) - strtotime($startTime);
 				$halfHours	= round($duration/60/30);
 				$endIndex	= (int)round($duration/60/30) + $timeIndex;
-				$dateString	= date('Ymd', strtotime($event->startdate));
+				$dateString	= date('Ymd', strtotime($event->start_date));
 
 				//add the event
-				$td =  "<td rowspan='$halfHours' class='calendar-hour has-event' data-date='$dateString' data-starttime='{$event->starttime}'>";
+				$td =  "<td rowspan='$halfHours' class='calendar-hour has-event' data-date='$dateString' data-start_time='{$event->start_time}'>";
 					$td	.= $event->post_title;
 				$td	.= "</td>";
 
@@ -920,7 +920,7 @@ class DisplayEvents extends Events{
 											$colspan	= " colspan='{$colSizes[$day]}'";
 										}
 
-										echo "<td class='calendar-hour$class' data-date='$dateString' data-starttime='$this->dayStartTime'$colspan>";
+										echo "<td class='calendar-hour$class' data-date='$dateString' data-start_time='$this->dayStartTime'$colspan>";
 											foreach($this->calendarRows['allday'][$day] as $event){
 												echo "$event<br>";
 											}
@@ -1099,23 +1099,23 @@ class DisplayEvents extends Events{
 
 		$event	= $results[0];
 
-		if(is_numeric($event->onlyfor)){
+		if(is_numeric($event->only_for)){
 			$today	= date('Y-m-d');
-			$tomorrow	= date('Y-m-d', strtotime('+1 day', strtotime($event->startdate)));
+			$tomorrow	= date('Y-m-d', strtotime('+1 day', strtotime($event->start_date)));
 
-			if($today == $event->startdate){
-				$timeString	= "starts at $event->starttime";
-			}elseif($tomorrow == $event->startdate){
-				$timeString	= "starts tomorrow at $event->starttime";
-			}elseif(strtotime($event->startdate) > time()){
-				$date	= date('d F', strtotime($event->startdate));
-				$timeString	= "starts $date at $event->starttime";
+			if($today == $event->start_date){
+				$timeString	= "starts at $event->start_time";
+			}elseif($tomorrow == $event->start_date){
+				$timeString	= "starts tomorrow at $event->start_time";
+			}elseif(strtotime($event->start_date) > time()){
+				$date	= date('d F', strtotime($event->start_date));
+				$timeString	= "starts $date at $event->start_time";
 			}else{
 				$timeString	= "is already started";
 			}
 			$title	= get_the_title($event->post_id);
 
-			do_action('tsjippy-events-event-reminder', "'$title' is about to start\nIt $timeString", $event->onlyfor);
+			do_action('tsjippy-events-event-reminder', "'$title' is about to start\nIt $timeString", $event->only_for);
 		}
 
 		return true;

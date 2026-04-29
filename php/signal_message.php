@@ -19,8 +19,8 @@ function afterBotPrayer($args){
         $startYear	= get_post_meta($event->ID, 'celebrationdate', true);
 
         //only add events which are not a celebration and start today after curent time
-        if(empty($startYear) && $event->startdate == date('Y-m-d') && $event->starttime > date('H:i', current_time('U'))){
-            $args['message']    .= "\n\n".$event->post_title.' starts today at '.$event->starttime;
+        if(empty($startYear) && $event->start_date == date('Y-m-d') && $event->start_time > date('H:i', current_time('U'))){
+            $args['message']    .= "\n\n".$event->post_title.' starts today at '.$event->start_time;
             if(!empty($event->location)){
                 $args['message']    .= "\nIt takes place at $event->location";
             }

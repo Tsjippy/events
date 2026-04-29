@@ -340,8 +340,8 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                     ?>
                     <tr>
                         <th><?php echo $orphan->post_title;?></th>
-                        <th><?php echo $orphan->startdate;?></th>
-                        <th><?php echo $orphan->starttime;?></th>
+                        <th><?php echo $orphan->start_date;?></th>
+                        <th><?php echo $orphan->start_time;?></th>
                     </tr>
                     <?php
                 }
