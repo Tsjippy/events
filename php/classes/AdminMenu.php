@@ -17,9 +17,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
     }
 
     public function settings($parent){
-        addElement('label', $parent, ['for' => 'freq'], __('How often should we check for expired events?'));
-
-        $this->recurrenceSelector('freq', $this->settings['freq'] ?? '', $parent);
+        $this->recurrenceSelector('freq', $this->settings['freq'] ?? '', 'How often should we check for expired events?', $parent);
 
         addElement('br', $parent);
 
