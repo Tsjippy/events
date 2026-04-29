@@ -15,6 +15,7 @@
 - PLUGINCONSTANT value
 - lib updates
 - table columns
+- recurrence selector code
 
 ### Fixed
 
