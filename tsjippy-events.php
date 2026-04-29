@@ -58,3 +58,10 @@ register_deactivation_hook( __FILE__, function(){
 	wp_clear_scheduled_hook( 'add_repeated_events_action' );
 	wp_clear_scheduled_hook( 'remove_old_events_action' );
 } );
+
+add_action( 'activated_plugin', function($plugin){
+	// Redirect to settings page after plugin activation
+    if($plugin == PLUGIN && wp_safe_redirect( esc_url(admin_url('admin.php?page=tsjippy-'.PLUGINSLUG) )  ) ){
+		exit();
+	}
+});
