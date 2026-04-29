@@ -3,6 +3,7 @@
 
 ### Added
 - trailing slash to pluginpath connstant
+- redirection to settings page on plugin activation
 
 ### Changed
 - main plugin name from sim-base to tsjippy-shared-functionality
