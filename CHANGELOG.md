@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.0.0] - 2026-05-01
+
+
+### Added
 - trailing slash to pluginpath connstant
 - redirection to settings page on plugin activation
 
@@ -18,10 +29,6 @@
 - recurrence selector code
 - exclude .vscode from releases
 - updated github workflow versions
-
-### Fixed
-
-### Updated
 
 ## [8.3.5] - 2026-03-04
 
