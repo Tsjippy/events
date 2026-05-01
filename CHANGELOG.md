@@ -16,6 +16,7 @@
 - lib updates
 - table columns
 - recurrence selector code
+- exclude .vscode from releases
 
 ### Fixed
 
