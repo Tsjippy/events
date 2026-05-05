@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- page description filter
 
 ### Updated
 
