@@ -6,9 +6,11 @@
 ### Changed
 
 ### Fixed
-- page description filter
 
 ### Updated
+
+## [10.0.2] - 2026-05-05
+
 
 ## [10.0.1] - 2026-05-03
 
