@@ -5,7 +5,7 @@ use TSJIPPY;
 /**
  * Plugin Name:  		Tsjippy Events
  * Description:  		This plugin adds a custom posttype named event. This creates a possibility to add a post with a date, time, location and organizer. It also allows the creation of birthdays and anniversaries. A calendar displaying all events is accessible at /events. It also adds the possibility for schedules: a mealschedule or orientantion schedule or other. Add it to any page using the shortcode <code>[schedules]</code>
- * Version:      		10.0.2
+ * Version:      		10.0.3
  * Author:       		Ewald Harmsen
  * AuthorURI:			harmseninnigeria.nl
  * Requires at least:	6.3
