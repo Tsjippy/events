@@ -329,7 +329,7 @@ class Schedules{
 				}
 
 				?>
-				<table class="tsjippy-table schedule" <?php echo $dataSet;?>>
+				<table class="tsjippy table schedule" <?php echo $dataSet;?>>
 					<thead>
 						<tr>
 							<th class='sticky'>Dates</th>
