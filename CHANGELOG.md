@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- changed tsjippy-table class to tsjippy table
 
 ### Fixed
 
 ### Updated
+
+## [10.0.4] - 2026-05-06
+
+
+### Changed
+- changed tsjippy-table class to tsjippy table
 
 ## [10.0.3] - 2026-05-06
 
