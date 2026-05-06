@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- changed tsjippy-table class to tsjippy table
 
 ### Fixed
 
