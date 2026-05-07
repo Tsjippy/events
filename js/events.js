@@ -257,18 +257,13 @@ document.addEventListener("click", function(event) {
         event.stopPropagation();
         if(target.textContent != ''){
             navigator.clipboard.writeText(target.textContent);
-            let options = {
-                icon: 'success',
-                title: 'Copied '+target.textContent,
-                showConfirmButton: false,
-                timer: 1500
+
+            let options	= {
+                title: 'Success',
+                timer: 1500, 
             };
 
-            if(document.fullscreenElement != null){
-                options['target']	= document.fullscreenElement;
-            }
-
-            Swal.fire(options);
+            new Main.Alert(`Copied ${target.textContent}`, 'success', options);
         }
     }else{
         return;

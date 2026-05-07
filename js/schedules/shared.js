@@ -221,21 +221,15 @@ export function showTimeslotModal(selected=''){
 export async function editTimeSlot(target, date){
 	let options	= {
 		title: 'What do you want to do?',
-		text: "Do you want to edit or remove this timeslot?",
-		showDenyButton: true,
-		showCancelButton: true,
-		confirmButtonText: 'Edit timeslot',
-		denyButtonText: 'Remove timeslot',
-	}
+		timer: 1500,
+		ConfirmButtonText: 'Edit timeslot',
+		CustomButtonText: 'Remove timeslot'
+	};
 
-	if(document.fullscreenElement != null){
-		options['target']	= document.fullscreenElement;
-	}
-
-	var answer = await Swal.fire(options);
+	let response = await new Main.Alert(`Do you want to edit or remove this timeslot?`, 'question', options);
 
 	//swap and/or
-	if (answer.isConfirmed) {
+	if (response == 'confirm') {
 		// Show modal and prefill the default fields
 		showTimeslotModal(target, date, target.dataset.starttime, target.dataset.endtime);
 		
@@ -243,8 +237,8 @@ export async function editTimeSlot(target, date){
 		var modal 			= document.querySelector('[name="add-session"]');
 		modal.querySelector('[name="add-timeslot"]').textContent	= 'Update time slot';
 	//add new rule after this one
-	}else if (answer.isDenied) {
-		return answer.isDenied;
+	}else if (response == 'custom') {
+		return true;
 	}
 }
 
@@ -283,23 +277,15 @@ function loadHostFormdata(target){
 }
 
 export async function checkConfirmation(text, target){
-	let options = {
+	let options	= {
 		title: 'Are you sure?',
-		text: text+"?",
-		icon: 'warning',
-		showCancelButton: true,
-		confirmButtonColor: "#bd2919",
-		cancelButtonColor: '#d33',
-		confirmButtonText: 'Yes'
+		timer: 1500,
+		ConfirmButtonText: 'Yes'
 	};
 
-	if(document.fullscreenElement != null){
-		options['target']	= document.fullscreenElement;
-	}
-
-	var result = await Swal.fire(options);
+	let response = await new Main.Alert(text+"?", 'warning', options);
 	
-	if (result.isConfirmed) {
+	if (response == 'confirm') {
 		document.querySelectorAll('.modal:not(.hidden)').forEach(modal=>modal.classList.add('hidden'));
 		//display loading gif
 		Main.showLoader(target.firstChild);

@@ -236,17 +236,11 @@ async function checkIfValidSelection(target, selected, e){
 
 			for (const selection of selected){
 				if(columnNr != selection.node.cellIndex){
-					let options = {
-						icon: 'error',
-						title: "You can not select times on multiple days!",
-						confirmButtonColor: "#bd2919",
+					let options	= {
+						title: 'Error' 
 					};
 
-					if(document.fullscreenElement != null){
-						options['target']	= document.fullscreenElement;
-					}
-
-					Swal.fire(options);
+					new Main.Alert(`You can not select times on multiple days!`, 'error', options);
 
 					e.target.closest('.tsjippy.table')._selectable.clear();
 					return;
