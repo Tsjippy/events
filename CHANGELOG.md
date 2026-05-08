@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- cancel button in popup
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.0.6] - 2026-05-08
+
+
+### Added
+- cancel button in popup
 
 ## [10.0.5] - 2026-05-07
 
