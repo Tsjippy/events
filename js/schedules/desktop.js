@@ -55,14 +55,14 @@ async function publishSchedule(target){
 
 // Removes an existing schedule
 async function removeSchedule(target){
-	var scheduleId		= target.dataset["schedule_id"];
-	var text 			= "Are you sure you want to remove this schedule";
-	var formData 		= new FormData();
+	let scheduleId		= target.dataset["schedule_id"];
+	let text 			= "Are you sure you want to remove this schedule";
+	let formData 		= new FormData();
 	formData.append('schedule_id', scheduleId);
 
-	var confirmed		= await checkConfirmation(text, target.closest('.schedules-div'));
+	let confirmed		= await checkConfirmation(text, target.closest('.schedules-div'));
 	if(confirmed){
-		var response	= await FormSubmit.fetchRestApi('events/remove_schedule', formData);
+		let response	= await FormSubmit.fetchRestApi('events/remove_schedule', formData);
 
 		if(response){
 			Main.displayMessage(response);

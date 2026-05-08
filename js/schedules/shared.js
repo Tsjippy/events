@@ -280,7 +280,8 @@ export async function checkConfirmation(text, target){
 	let options	= {
 		title: 'Are you sure?',
 		timer: 1500,
-		ConfirmButtonText: 'Yes'
+		ConfirmButtonText: 'Yes',
+		CancelButtonText: 'Cancel'
 	};
 
 	let response = await new Main.Alert(text+"?", 'warning', options);
