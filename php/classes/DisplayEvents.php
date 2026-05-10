@@ -281,7 +281,7 @@ class DisplayEvents extends Events{
 
 			$html	= "<href='$url'>{$event->location}</a><br>";
 			if(!empty($location['address'])){
-				$html	.="<br><a onclick='Main.getRoute(this,{$location['latitude']},{$location['longitude']})'>{$location['address']}</a>";
+				$html	.="<br><a onclick='Locations.getRoute(this,{$location['latitude']},{$location['longitude']})'>{$location['address']}</a>";
 			}
 			return $html;
 		}
