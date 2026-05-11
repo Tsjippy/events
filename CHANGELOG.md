@@ -4,9 +4,16 @@
 ### Added
 
 ### Changed
-- added permission_callback
 
 ### Fixed
+
+### Updated
+
+## [10.0.7] - 2026-05-11
+
+
+### Changed
+- added permission_callback
 
 ### Updated
 - js
