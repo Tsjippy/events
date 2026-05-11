@@ -96,51 +96,8 @@ function schedulesRestApiInit() {
 		'/add_host',
 		array(
 			'methods' 				=> 'POST',
-			'callback' 				=> function(){
-				$schedules		= new CreateSchedule();
-
-				if(is_array($_POST['date'])){
-					$schedule		= $schedules->getScheduleById($schedules->scheduleId);
-
-					$succesFull		= '';
-					$unSuccesFull	= '';
-					$html			= [];
-					foreach($_POST['date'] as $date){
-						$result	= $schedules->addHost($date);
-
-						if(is_wp_error($result)){
-							if(!empty($unSuccesFull)){
-								$unSuccesFull		.= ' and ';
-							}
-							$unSuccesFull	.= date(DATEFORMAT, strtotime($date));
-						}else{
-							if(!empty($succesFull)){
-								$succesFull		.= ' and ';
-							}
-							$succesFull	.= date(DATEFORMAT, strtotime($date));
-
-							$html[$date]	= $result['html'];
-
-							$succes		= explode(" as a host for $schedule->name on", $result['message'])[0]." as a host for $schedule->name on";
-						}
-					}
-
-					$msg	= '';
-					if(!empty($succesFull)){
-						$msg	.= "$succes $succesFull";
-					}
-					if(!empty($unSuccesFull)){
-						$msg	.= "Existing bookings where found on $unSuccesFull";
-					}
-
-					return [
-						'message'	=> $msg,
-						'html'		=> $html
-					];
-				}
-				return $schedules->addHost($_POST['date']);
-			},
-			'permission_callback' 	=> '__return_true',
+			'callback' 				=> __NAMESPACE__.'\addHost',
+			'permission_callback' 	=> function(){return current_user_can('read');},
 			'args'					=> array(
 				'schedule-id'		=> array(
 					'required'	=> true,
@@ -174,7 +131,7 @@ function schedulesRestApiInit() {
 				$schedule				= new CreateSchedule();
 				return $schedule->removeHost($_POST['session-id']);
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){return current_user_can('read');}	,
 			'args'					=> array(
 				'session-id'		=> array(
 					'required'			=> true,
@@ -196,7 +153,7 @@ function schedulesRestApiInit() {
 				$schedule		= new CreateSchedule();
 				return $schedule->addMenu();
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function(){return current_user_can('read');},
 			'args'					=> array(
 				'schedule-id'		=> array(
 					'required'	=> true,
@@ -219,4 +176,50 @@ function schedulesRestApiInit() {
 			)
 		)
 	);
+}
+
+function addHost($param){
+	$schedules		= new CreateSchedule();
+
+	if(is_array($_POST['date'])){
+		$schedule		= $schedules->getScheduleById($schedules->scheduleId);
+
+		$succesFull		= '';
+		$succes		= '';
+		$unSuccesFull	= '';
+		$html			= [];
+		foreach($_POST['date'] as $date){
+			$result	= $schedules->addHost($date);
+
+			if(is_wp_error($result)){
+				if(!empty($unSuccesFull)){
+					$unSuccesFull		.= ' and ';
+				}
+				$unSuccesFull	.= date(DATEFORMAT, strtotime($date));
+			}else{
+				if(!empty($succesFull)){
+					$succesFull		.= ' and ';
+				}
+				$succesFull	.= date(DATEFORMAT, strtotime($date));
+
+				$html[$date]	= $result['html'];
+
+				$succes		= explode(" as a host for $schedule->name on", $result['message'])[0]." as a host for $schedule->name on";
+			}
+		}
+
+		$msg	= '';
+		if(!empty($succesFull)){
+			$msg	.= "$succes $succesFull";
+		}
+		if(!empty($unSuccesFull)){
+			$msg	.= "Existing bookings where found on $unSuccesFull";
+		}
+
+		return [
+			'message'	=> $msg,
+			'html'		=> $html
+		];
+	}
+	return $schedules->addHost($_POST['date']);
 }

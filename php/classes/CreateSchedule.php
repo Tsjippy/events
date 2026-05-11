@@ -8,15 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class CreateSchedule extends Schedules{
-	public $date;
-	public $startTime;
-	public $endTime;
-	public $location;
-	public $hostId;
-	public $scheduleId;
-	public $name;
-	public $title;
-	public $sessionAtendeesUpdated;
+	public string $date;
+	public string $startTime;
+	public string $endTime;
+	public string $location;
+	public int $hostId;
+	public int $scheduleId;
+	public string $name;
+	public string $title;
+	public bool $sessionAtendeesUpdated;
 
 	public function __construct(){
 		parent::__construct();
@@ -62,8 +62,7 @@ class CreateSchedule extends Schedules{
 
 	/**
 	 * Add new events to the db when a new activity is scheduled
-	 *
-	 * @param	string	$title			the title of the event
+	 * 
 	 * @param	bool	$addHostPartner	Whether to add an event for the host partner as well. Default true
 	 * @param	bool	$addPartner		Whether to add an event for the schedule target partner as well. Default true
 	*/
@@ -131,6 +130,7 @@ class CreateSchedule extends Schedules{
 			$eventArray[0]['only_for'][]	= $partnerId;
 		}
 
+		$title	= '';
 		if(is_numeric($this->hostId)){
 			if(empty($this->defaultSubject)){
 				$titleString	= "Hosting {$this->name} for $title";
@@ -155,7 +155,8 @@ class CreateSchedule extends Schedules{
 			}
 		}
 		
-		extract($this->createPostsAndEvents($eventArray, $event), EXTR_OVERWRITE);
+		$events	= $this->createPostsAndEvents($eventArray, $event);
+		extract($events, EXTR_OVERWRITE);
 
 		// store the event and post ids in db
 		global $wpdb;
@@ -612,8 +613,10 @@ class CreateSchedule extends Schedules{
 
 	/**
 	 * Add a new host for a session
+	 * 
+	 * @param string $date	The date of the session to add a host for
 	 *
-	 * @return string	success message and new cell html
+	 * @return array	success message and new cell html
 	*/
 	public function addHost($date){
 		$family				= new TSJIPPY\FAMILY\Family();
@@ -678,7 +681,6 @@ class CreateSchedule extends Schedules{
 			}
 		}
 
-
 		if(!empty($_POST['session-id'])){
 			$message	= "Succesfully updated this entry";
 		}elseif($this->admin && $hostName != $this->user->display_name){
@@ -697,12 +699,12 @@ class CreateSchedule extends Schedules{
 
 		if($session){
 			$result	= $this->updateScheduleEvents($isMeal);
-		}else{
-			$result	= $this->addScheduleEvents($isMeal);
-		}
 
-		if(is_wp_error($result)){
-			return $result;
+			if(is_wp_error($result)){
+				return $result;
+			}
+		}else{
+			$this->addScheduleEvents($isMeal);
 		}
 
 		if($this->mobile){
@@ -721,8 +723,10 @@ class CreateSchedule extends Schedules{
 
 	/**
 	 * Removes a host for a session
+	 * 
+	 * @param int $sessionId	The id of the session to remove the host from
 	 *
-	 * @return string	success message
+	 * @return array	success message and new cell html
 	*/
 	public function removeHost($sessionId){
 		$family					= new TSJIPPY\FAMILY\Family();

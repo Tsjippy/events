@@ -11,7 +11,9 @@ function blockRestApiInit() {
 		array(
 			'methods' 				=> 'GET',
 			'callback' 				=> __NAMESPACE__.'\showSchedules',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function($rest){
+				return current_user_can('read');
+			},
 		)
 	);
 
@@ -22,7 +24,9 @@ function blockRestApiInit() {
 		array(
 			'methods' 				=> 'POST',
 			'callback' 				=> __NAMESPACE__.'\upcomingArrivals',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function($rest){
+				return current_user_can('read');
+			},
 		)
 	);
 
@@ -33,7 +37,9 @@ function blockRestApiInit() {
 		array(
 			'methods' 				=> 'GET',
 			'callback' 				=> __NAMESPACE__.'\upcomingEvents',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> function($rest){
+				return current_user_can('read');
+			},
 		)
 	);
 }
@@ -43,10 +49,16 @@ function showSchedules(){
 	return $schedule->showSchedules();
 }
 
+/**
+ * Show the upcoming arrivals block
+ * 
+ * @param \WP_REST_Request|array $param	The parameters for the block, either as an array or as a WP_REST_Request object
+ */
 function upcomingArrivals($param){
 	if(!is_array($param)){
 		$param	= $param->get_Params();
 	}
+
 	return upcomingArrivalsBlock($param);
 }
 
@@ -56,6 +68,7 @@ function upcomingEvents(){
 	$items	= 10;
 	$months	= 3;
 	$cats	= [];
+	$include	= [];
 
 	if(!empty($_GET['items']) && is_numeric($_GET['items'])){
 		$items	= $_GET['items'];
@@ -75,14 +88,12 @@ function upcomingEvents(){
 	
 		$exclude	= $cats;
 	
-		$include	= [];
-	
 		foreach($categories as $category){
 			if(!in_array($category->term_id, $exclude)){
 				$include[]	= $category->term_id;
 			}
 		}
-
 	}
+
 	return $events->upcomingEventsArray($items, $months, $include);
 }

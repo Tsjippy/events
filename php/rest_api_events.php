@@ -18,7 +18,7 @@ function restApiInit() {
 				$events		= new DisplayEvents();
 				return $events->monthCalendar();
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',				// Allow public access
 			'args'					=> array(
 				'month'		=> array(
 					'required'	=> true,
@@ -46,7 +46,7 @@ function restApiInit() {
 				$events		= new DisplayEvents();
 				return $events->weekCalendar();
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',				// Allow public access
 			'args'					=> array(
 				'wknr'		=> array(
 					'required'	=> true,
@@ -74,7 +74,7 @@ function restApiInit() {
 				$events		= new DisplayEvents();
 				return $events->listCalendar();
 			},
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',				// Allow public access
 			'args'					=> array(
 				'offset'		=> array(
 					'required'	=> true,
