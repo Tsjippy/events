@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- added permission_callback
 
 ### Fixed
 
