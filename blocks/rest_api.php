@@ -37,9 +37,7 @@ function blockRestApiInit() {
 		array(
 			'methods' 				=> 'GET',
 			'callback' 				=> __NAMESPACE__.'\upcomingEvents',
-			'permission_callback' 	=> function($rest){
-				return current_user_can('read');
-			},
+			'permission_callback' 	=> '__return_true',
 		)
 	);
 }
@@ -62,7 +60,7 @@ function upcomingArrivals($param){
 	return upcomingArrivalsBlock($param);
 }
 
-function upcomingEvents(){
+function upcomingEvents($rest){
 	$events		= new DisplayEvents();
 
 	$items	= 10;
