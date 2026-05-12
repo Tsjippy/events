@@ -37,7 +37,7 @@ function blockRestApiInit() {
 		array(
 			'methods' 				=> 'GET',
 			'callback' 				=> __NAMESPACE__.'\upcomingEvents',
-			'permission_callback' 	=> '__return_true',
+			'permission_callback' 	=> '__return_true',						// allow public access for public events
 		)
 	);
 }
