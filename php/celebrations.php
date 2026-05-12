@@ -76,6 +76,11 @@ function getAnniversaries(){
 }
 
 add_action('delete_user', __NAMESPACE__.'\deleteUser');
+/**
+ * Deletes a user and their associated events
+ *
+ * @param	int	$userId	The user ID to delete
+ */
 function deleteUser($userId){
 	$events = new CreateEvents();
 
@@ -99,6 +104,13 @@ function deleteUser($userId){
  *
 **/
 add_filter('tsjippy_prayer_message', __NAMESPACE__.'\prayerMessage');
+/**
+ * Adds the birthday and arrining users message to the prayer message
+ * 
+ * @param	string	$html	the original prayer message
+ * 
+ * @return	string	the prayer message with the birthday and arrining users message
+ */
 function prayerMessage($html){
 	
 	$html	.= anniversaryMessages();
@@ -139,6 +151,16 @@ function getCoupleString($user, $partner=''){
 	return "$user->first_name & $partner->first_name $lastName";
 }
 
+/**
+ * Replaces the couple string in a message
+ *
+ * @param	string	$string		The original message
+ * @param	string	$replaceString	The string to replace with
+ * @param	int|object				$user		The user or user id
+ * @param	int|object|string		$partner	The user object of the users partner. default empty
+ *
+ * @return	string					The modified message
+ */
 function replaceCoupleString($string, $replaceString, $user, $partner=''){
 	$family	= new TSJIPPY\FAMILY\Family();
 	if(is_numeric($user)){
@@ -178,7 +200,7 @@ function anniversaryMessages(){
 	$messageString	= '';
 
 	//Loop over the anniversary_messages
-	foreach($anniversaryMessages as $userId=>$message){
+	foreach($anniversaryMessages as $userId => $message){
 		if(!empty($messageString)){
 			$messageString .= " and the ";
 		}
@@ -286,6 +308,8 @@ function arrivingUsersMessage(){
 						if(in_array($user->ID, $skip)){
 							continue;
 						}
+
+						$partnerId	= false;
 
 						$name		= $family->getFamilyName($user, false, $partnerId);
 
