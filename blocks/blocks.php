@@ -119,7 +119,7 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue ){
 	if(
 		!empty($metaValue) &&
 		!empty($metaValue['start_date']) &&
-		$metaValue['start_date'] < date('Y-m-d')
+		$metaValue['start_date'] < gmdate('Y-m-d')
 	){
 		return;
 	}
@@ -153,13 +153,13 @@ function upcomingArrivalsBlock($attributes){
 			'relation' => 'AND',
 			array(
 				'key'     => 'arrival_date',
-				'value'   => date("Y-m-d"),
+				'value'   => gmdate("Y-m-d"),
 				'compare' => '>=',
 				'type'    => 'DATE'
 			),
 			array(
 				'key'     => 'arrival_date',
-				'value'   => date("Y-m-d", strtotime("+{$args['months']} month", time())),
+				'value'   => gmdate("Y-m-d", strtotime("+{$args['months']} month", time())),
 				'compare' => '<=',
 				'type'    => 'DATE'
 			)
@@ -184,7 +184,7 @@ function upcomingArrivalsBlock($attributes){
 
 		$url 	= TSJIPPY\maybeGetUserPageUrl($user->ID);
 
-		$dateString	= date(DATEFORMAT, strtotime(get_user_meta($user->ID, 'arrival_date', true)));
+		$dateString	= gmdate(DATEFORMAT, strtotime(get_user_meta($user->ID, 'arrival_date', true)));
 
 		// Add to an existing date, multiple people arrive on the same date
 		if(isset($dates[$dateString])){

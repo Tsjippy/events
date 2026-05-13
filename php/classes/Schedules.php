@@ -336,17 +336,17 @@ class Schedules{
 							<?php
 							$date		= $this->currentSchedule->start_date;
 							while(true){
-								$dateStr		= date('d F Y', strtotime($date));
+								$dateStr		= gmdate('d F Y', strtotime($date));
 								$dateTime		= strtotime($date);
-								$dayName		= date('l', $dateTime);
-								$formatedDate	= date(DATEFORMAT, $dateTime);
+								$dayName		= gmdate('l', $dateTime);
+								$formatedDate	= gmdate(DATEFORMAT, $dateTime);
 								echo "<th data-date='$dateStr' data-isodate='$date'>$dayName<br>$formatedDate</th>";
 
 								if ($date == $this->currentSchedule->end_date) {
 									break;
 								}
 
-								$date	= date('Y-m-d', strtotime('+1 day', $dateTime) );
+								$date	= gmdate('Y-m-d', strtotime('+1 day', $dateTime) );
 							}
 							?>
 						</tr>
@@ -434,7 +434,7 @@ class Schedules{
 						if ($date == $this->currentSchedule->end_date) {
 							break;
 						}
-						$date			= date('Y-m-d', strtotime('+1 day', $dateTime) );
+						$date			= gmdate('Y-m-d', strtotime('+1 day', $dateTime) );
 					}
 
 					$nameString	= $this->currentSchedule->name;
@@ -444,7 +444,7 @@ class Schedules{
 					?>
 					<div class='lunch select-wrapper hidden'>
 						<label>
-							Select the date(s) to host <?php echo $nameString;?> for lunch
+							Select the gmdate(s) to host <?php echo $nameString;?> for lunch
 						</label>
 						<br>
 
@@ -453,7 +453,7 @@ class Schedules{
 							?>
 							<label class='date'>
 								<input type='checkbox' name='date[]' value='<?php echo $availableLunch;?>'>
-								<?php echo date('l j F', strtotime($availableLunch));?>
+								<?php echo gmdate('l j F', strtotime($availableLunch));?>
 							</label>
 							<br>
 							<?php
@@ -462,7 +462,7 @@ class Schedules{
 					</div>
 					<div class='diner select-wrapper <?php if($this->currentSchedule->lunch){echo 'hidden';}?>'>
 						<label>
-							Select the date(s) to host <?php echo $nameString;?> for diner
+							Select the gmdate(s) to host <?php echo $nameString;?> for diner
 						</label>
 						<br>
 						<?php
@@ -470,7 +470,7 @@ class Schedules{
 							?>
 							<label class='date'>
 								<input type='checkbox' name='date[]' value='<?php echo $availableDiner;?>'>
-								<?php echo date('l j F', strtotime($availableDiner));?>
+								<?php echo gmdate('l j F', strtotime($availableDiner));?>
 							</label>
 							<br>
 							<?php
@@ -505,7 +505,7 @@ class Schedules{
 				break;
 			}
 
-			$date	= date('Y-m-d', strtotime('+1 day', strtotime($date)) );
+			$date	= gmdate('Y-m-d', strtotime('+1 day', strtotime($date)) );
 		}
 
 		if($this->onlyMeals){
@@ -737,7 +737,7 @@ class Schedules{
 			}
 		} else {
 			if($this->mobile){
-				$dateStr	= date(DATEFORMAT, strtotime($date));
+				$dateStr	= gmdate(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
 				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
@@ -856,7 +856,7 @@ class Schedules{
 			$this->nextStartTimes[$date] = $endTime;
 		}else{
 			if($this->mobile){
-				$dateStr	= date(DATEFORMAT, strtotime($date));
+				$dateStr	= gmdate(DATEFORMAT, strtotime($date));
 				$hostId		= get_current_user_id();
 
 				$cellText	= "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
@@ -899,7 +899,7 @@ class Schedules{
 			}
 		}
 
-		$label	= date(DATEFORMAT, strtotime($date));
+		$label	= gmdate(DATEFORMAT, strtotime($date));
 		
 		return "<td class='$class' $rowSpan $dataset label='$label'>$cellText</td>";
 	}
@@ -930,7 +930,7 @@ class Schedules{
 			
 			$date				= $this->currentSchedule->start_date;
 			$mealScheduleRow	= true;
-			$endTime			= date('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
+			$endTime			= gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
 			$extra				= '';
 			
 			if(
@@ -975,7 +975,7 @@ class Schedules{
 					break;
 				}
 
-				$date	= date('Y-m-d', strtotime('+1 day', strtotime($date)));
+				$date	= gmdate('Y-m-d', strtotime('+1 day', strtotime($date)));
 			}
 			
 			//Show the row if we can see all rows or the row is a mealschedule row
@@ -1004,8 +1004,8 @@ class Schedules{
 	*/
 	public function getMobileDay($date){
 		$dateTime		= strtotime($date);
-		$dayName		= date('l', $dateTime);
-		$formatedDate	= date(DATEFORMAT, $dateTime);
+		$dayName		= gmdate('l', $dateTime);
+		$formatedDate	= gmdate(DATEFORMAT, $dateTime);
 
 		$html 	= "<div class='day-wrapper-mobile' data-isodate='$date'>";
 			$html 	.= "<strong>$dayName $formatedDate</strong><br>";
@@ -1027,7 +1027,7 @@ class Schedules{
 				}
 				
 				$mealScheduleRow	= true;
-				$endTime			= date('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
+				$endTime			= gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
 				
 				if(
 					$startTime >= $this->lunchStartTime	&&		// Time is past the start lunch time
@@ -1112,7 +1112,7 @@ class Schedules{
 								}
 								
 								if(!empty($icon)){
-									$dateStr	= date(DATEFORMAT, strtotime($date));
+									$dateStr	= gmdate(DATEFORMAT, strtotime($date));
 									$html 	.= "<div class='$class' {$data['data']} data-date='$dateStr' data-isodate='$date' style='margin-left: auto;'>";
 										$html 	.= $icon;
 									$html 	.= "</div>";

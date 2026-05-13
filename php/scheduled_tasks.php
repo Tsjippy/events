@@ -49,7 +49,7 @@ function anniversaryCheck(){
 	$family		= new TSJIPPY\FAMILY\Family();
 
 	// Get all the events of today
-	$events->retrieveEvents(date('Y-m-d'), date('Y-m-d'));
+	$events->retrieveEvents(date('Y-m-d'), gmdate('Y-m-d'));
 
 	foreach($events->events as $event){
 		$startYear	= get_post_meta($event->ID, 'celebrationdate', true);
@@ -95,7 +95,7 @@ function removeOldSchedules(){
 	$schedules->getSchedules();
 
 	foreach($schedules->schedules as $schedule){
-		if($schedule->end_date < date('Y-m-d')){
+		if($schedule->end_date < gmdate('Y-m-d')){
 			$schedules->removeSchedule($schedule->id);
 		}
 	}

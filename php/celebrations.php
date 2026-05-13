@@ -29,7 +29,7 @@ function getAnniversaries(){
 	$messages = [];
 
 	$events = new DisplayEvents();
-	$events->retrieveEvents(date('Y-m-d'), date('Y-m-d'));
+	$events->retrieveEvents(date('Y-m-d'), gmdate('Y-m-d'));
 
 	foreach($events->events as $event){
 		$startYear	= get_post_meta($event->ID, 'celebrationdate', true);
@@ -40,7 +40,7 @@ function getAnniversaries(){
 			$startYear	= array_values($startYear)[0];
 		}
 		
-		if(!empty($startYear) && $startYear != date('Y-m-d')){
+		if(!empty($startYear) && $startYear != gmdate('Y-m-d')){
 			$title		= $event->post_title;
 			$age		= TSJIPPY\getAge($startYear);
 

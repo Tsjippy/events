@@ -60,7 +60,7 @@ class CreateEvents extends Events{
 		$dayDiff 			= ((new \DateTime($baseStartDateStr))->diff((new \DateTime($baseEndDate))))->d;
 		
 		foreach($this->startDates as $startDate){
-			$end_date	= date('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
+			$end_date	= gmdate('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
 			$this->maybeCreateRow($startDate);
 
 			$args	= [
@@ -113,12 +113,12 @@ class CreateEvents extends Events{
 				$startDate		= strtotime("+{$index} week", $baseStartDate);
 				$monthWeek		= $this->monthWeek($startDate);
 
-				$firstWeek		= date('m', $startDate) != date('m', strtotime('-1 week', $startDate));
+				$firstWeek		= gmdate('m', $startDate) != gmdate('m', strtotime('-1 week', $startDate));
 				if($firstWeek && in_array('First', $weeks)){
 					$monthWeek	= 'First';
 				}
 
-				$lastWeek		= date('m', $startDate) != date('m', strtotime('+1 week', $startDate));
+				$lastWeek		= gmdate('m', $startDate) != gmdate('m', strtotime('+1 week', $startDate));
 				if($lastWeek && in_array('Last', $weeks)){
 					$monthWeek	= 'Last';
 				}
@@ -140,22 +140,22 @@ class CreateEvents extends Events{
 				if(!empty($repeatParam['datetype'])){
 					if($repeatParam['datetype'] == 'samedate'){
 						// The new month does not have this date
-						if(Date('t', $startDate) < Date('d', $baseStartDate)){
+						if(Date('t', $startDate) < gmdate('d', $baseStartDate)){
 							return false;
 						}
 
-						$day		= Date('d', $baseStartDate)-1;
+						$day		= gmdate('d', $baseStartDate)-1;
 						$startDate	= strtotime("+$day days", $startDate);
 					}
 					// Same week and day i.e. first friday
 					elseif($repeatParam['datetype'] == 'patterned'){
 						// The weeknumber of the first week of the month
-						$firstWeek	= Date('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
+						$firstWeek	= gmdate('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
 
 						// The weeknumber of this week in the month
 						$targetWeek	= TSJIPPY\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
 
-						$dayName	= Date('l', $baseStartDate);
+						$dayName	= gmdate('l', $baseStartDate);
 
 						$startDate	= strtotime("$targetWeek $dayName of +{$index} $recurrenceString", $baseStartDate);
 					}
@@ -165,7 +165,7 @@ class CreateEvents extends Events{
 					}
 					// Same last day i.e. last Friday
 					else{
-						$dayName	= Date('l', $baseStartDate);
+						$dayName	= gmdate('l', $baseStartDate);
 						$startDate	= strtotime("last $dayName of +{$index} $recurrenceString", $baseStartDate);
 					}
 				}
@@ -193,7 +193,7 @@ class CreateEvents extends Events{
 		if($repeatParam['type'] == 'custom_days'){
 			foreach($repeatParam['includedates'] as $date){
 				// not yet included and not in the past
-				if(!in_array($date, $this->startDates) && $date > date('Y-m-d')){
+				if(!in_array($date, $this->startDates) && $date > gmdate('Y-m-d')){
 					$this->startDates[]	= $date;
 				}
 			}
@@ -245,7 +245,7 @@ class CreateEvents extends Events{
 			if($repeatParam['type'] == 'custom_days'){
 				$startDateStr	= $includeDates[$i];
 			}elseif($startDate){
-				$startDateStr	= date('Y-m-d', $startDate);
+				$startDateStr	= gmdate('Y-m-d', $startDate);
 			}
 
 			if(!$startDate || in_array($startDateStr, $excludeDates)){
@@ -283,7 +283,7 @@ class CreateEvents extends Events{
 		
 		$existingEvent	= $this->retrieveSingleEvent($postId);
 		if(
-			date('-m-d', strtotime($existingEvent->start_date)) == date('-m-d', strtotime($date)) &&
+			date('-m-d', strtotime($existingEvent->start_date)) == gmdate('-m-d', strtotime($date)) &&
 			$title == $existingEvent->post_title
 		){
 			return false; //nothing changed
@@ -330,8 +330,8 @@ class CreateEvents extends Events{
 			$newTime	= strtotime($newValue);
 
 			if(
-				Date('Y', $oldTime) != Date('Y', $newTime) && 
-				Date('m-d', $oldTime) == Date('m-d', $newTime)
+				Date('Y', $oldTime) != gmdate('Y', $newTime) && 
+				Date('m-d', $oldTime) == gmdate('m-d', $newTime)
 			){
 				// no need to create new events, just update the meta value
 				$postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
@@ -359,7 +359,7 @@ class CreateEvents extends Events{
 
 	protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey){
 		//Get the upcoming celebration date
-		$start_date								= date(date('Y').'-m-d', strtotime($metaValue));
+		$start_date								= gmdate(date('Y').'-m-d', strtotime($metaValue));
 
 		$this->eventData['start_date']			= $start_date;
 		$this->eventData['end_date']				= $start_date;

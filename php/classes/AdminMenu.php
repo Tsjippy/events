@@ -106,11 +106,11 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             }
 
             if ( !empty($celDate)){
-                $celDate    = date(DATEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
 
                 $arrivalDate    = get_user_meta($post->post_author, 'arrival_date', true);
                 if(!empty($arrivalDate)){
-                    $arrivalDate    = date(DATEFORMAT, strtotime($arrivalDate));
+                    $arrivalDate    = gmdate(DATEFORMAT, strtotime($arrivalDate));
                 }
                 if($celDate != $arrivalDate){
                     // this is a rogue event
@@ -128,7 +128,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 }
 
                 $weddingDate    = $family->getWeddingDate($post->post_author);
-                $weddingDate    = date(DATEFORMAT, strtotime($weddingDate));
+                $weddingDate    = gmdate(DATEFORMAT, strtotime($weddingDate));
                 if( $celDate != $weddingDate){
                     // this is a rogue event
                     if( get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID ){
@@ -172,7 +172,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
 
             $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
             if(!empty($celDate)){
-                $celDate    = date(DATEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
             }
 
             $author     = get_user_by('id', $post->post_author);
@@ -184,7 +184,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             if (!empty($celDate)){
                 $birthday   = get_user_meta($post->post_author, 'birthday', true);
                 if(!empty($birthday)){
-                    $birthday    = date(DATEFORMAT, strtotime($birthday));
+                    $birthday    = gmdate(DATEFORMAT, strtotime($birthday));
                 }
 
                 if($celDate != $birthday){

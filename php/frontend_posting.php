@@ -368,11 +368,11 @@ function postNotification($excerpt, $post){
 	if($post->post_type == 'event'){
 		$events		= new DisplayEvents();
 		$event		= $events->retrieveSingleEvent($post->ID);
-		$startDate	= date(DATEFORMAT, strtotime($event->start_date));
+		$startDate	= gmdate(DATEFORMAT, strtotime($event->start_date));
 		if($event->start_date == $event->end_date){
 			$excerpt .= "\n\nDate: $startDate";
 		}else{
-			$end_date	 = date(DATEFORMAT, strtotime($event->end_date));
+			$end_date	 = gmdate(DATEFORMAT, strtotime($event->end_date));
 			$excerpt 	.= "\n\nStart date: $startDate";
 			$excerpt 	.= "\nEnd date: $end_date";
 		}

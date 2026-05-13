@@ -195,12 +195,12 @@ function addHost($param){
 				if(!empty($unSuccesFull)){
 					$unSuccesFull		.= ' and ';
 				}
-				$unSuccesFull	.= date(DATEFORMAT, strtotime($date));
+				$unSuccesFull	.= gmdate(DATEFORMAT, strtotime($date));
 			}else{
 				if(!empty($succesFull)){
 					$succesFull		.= ' and ';
 				}
-				$succesFull	.= date(DATEFORMAT, strtotime($date));
+				$succesFull	.= gmdate(DATEFORMAT, strtotime($date));
 
 				$html[$date]	= $result['html'];
 

@@ -168,7 +168,7 @@ function displayEventMeta(){
 							if($meta['repeat']['type'] == 'custom_days'){
 								$type	= '';
 								foreach($meta['repeat']['includedates'] as $date){
-									$type	.= date('j F Y', strtotime($date)).'<br>';
+									$type	.= gmdate('j F Y', strtotime($date)).'<br>';
 								}
 							}
 							echo ucfirst($type);

@@ -659,7 +659,7 @@ class CreateSchedule extends Schedules{
 
 		$this->name			= $schedule->name;
 		$this->date			= $date;
-		$dateStr			= date('d F Y',strtotime($this->date));
+		$dateStr			= gmdate('d F Y',strtotime($this->date));
 		$isMeal				= false;
 		if($this->startTime == $this->lunchStartTime && $schedule->lunch){
 			$this->endTime		= $this->lunchEndTime;
@@ -675,7 +675,7 @@ class CreateSchedule extends Schedules{
 			$this->title		= sanitize_text_field($_POST['subject']);
 			$this->location		= sanitize_text_field($_POST['location']);
 			if(empty($_POST['end_time'])){
-				$this->endTime	= date('H:i', strtotime("+$this->timeSlotSize minutes", strtotime( $this->startTime)));
+				$this->endTime	= gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime( $this->startTime)));
 			}else{
 				$this->endTime		= $_POST['end_time'];
 			}
@@ -752,7 +752,7 @@ class CreateSchedule extends Schedules{
 		//Remove the session
 		$this->removeSession();
 
-		$dateStr		= date(get_option( 'date_format' ), strtotime($date));
+		$dateStr		= gmdate(get_option( 'date_format' ), strtotime($date));
 
 		if($this->admin){
 			$hostName	= $this->currentSession->events[0]->organizer;

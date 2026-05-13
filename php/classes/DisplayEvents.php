@@ -145,11 +145,11 @@ class DisplayEvents extends Events{
 
 	public function upcomingEventsArray($max, $months, $include){
 
-		$this->retrieveEvents(date("Y-m-d"), date('Y-m-d', strtotime("+$months month")), $max, "", '', $include);
+		$this->retrieveEvents(date("Y-m-d"), gmdate('Y-m-d', strtotime("+$months month")), $max, "", '', $include);
 
 		foreach($this->events as $key=>$event){
 			// do not keep events who already happened
-			if($event->start_date == date("Y-m-d") && $event->end_time < date('H:i', current_time('U'))){
+			if($event->start_date == gmdate("Y-m-d") && $event->end_time < gmdate('H:i', current_time('U'))){
 				unset($this->events[$key]);
 			}
 		}
@@ -161,11 +161,11 @@ class DisplayEvents extends Events{
 		$events	= [];
 		foreach($this->events as $event){
 			$startDate		= strtotime($event->start_date);
-			$eventDayNr		= date('d', $startDate);
-			$eventDay		= date('l', $startDate);
-			$eventMonth		= date('M', $startDate);
+			$eventDayNr		= gmdate('d', $startDate);
+			$eventDay		= gmdate('l', $startDate);
+			$eventMonth		= gmdate('M', $startDate);
 			$eventTitle		= get_the_title($event->post_id);
-			$endDateStr		= date('d M', strtotime(($event->end_date)));
+			$endDateStr		= gmdate('d M', strtotime(($event->end_date)));
 
 			$userId = get_post_meta($event->post_id, 'user', true);
 
@@ -205,9 +205,9 @@ class DisplayEvents extends Events{
 			$event->end_date	= $event->start_date;
 		}
 		if($event->start_date != $event->end_date){
-			$date		= date(DATEFORMAT, strtotime($event->start_date)).' - '.date(DATEFORMAT, strtotime($event->end_date));
+			$date		= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.date(DATEFORMAT, strtotime($event->end_date));
 		}else{
-			$date		= date(DATEFORMAT, strtotime($event->start_date));
+			$date		= gmdate(DATEFORMAT, strtotime($event->start_date));
 		}
 
 		return $date;
@@ -228,7 +228,7 @@ class DisplayEvents extends Events{
 				$time			= $event->start_time.' - '.$event->end_time;
 			}
 		}else{
-			$time			= date(DATEFORMAT, strtotime($event->start_date)).' - '.$event->start_time.' - '.date(DATEFORMAT, strtotime($event->end_date)).' - '.$event->end_time;
+			$time			= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.$event->start_time.' - '.date(DATEFORMAT, strtotime($event->end_date)).' - '.$event->end_time;
 		}
 
 		return $time;
@@ -299,7 +299,7 @@ class DisplayEvents extends Events{
 		if($meta['repeat']['type'] == 'custom_days'){
 			$type	= '';
 			foreach($meta['repeat']['includedates'] as $date){
-				$type	.= date('j F Y', strtotime($date)).'<br>';
+				$type	.= gmdate('j F Y', strtotime($date)).'<br>';
 			}
 		}
 		$html = "Repeats $type";
@@ -347,11 +347,11 @@ class DisplayEvents extends Events{
 		$title			= urlencode($event->post_title);
 		$description	= urlencode("<a href='".get_permalink($event->post_id)."'>Read more on ".SITEURLWITHOUTSCHEME."</a>");
 		$location		= urlencode($event->location);
-		$startDate		= date('Ymd', strtotime($event->start_date));
-		$endDate		= date('Ymd', strtotime($event->end_date));
+		$startDate		= gmdate('Ymd', strtotime($event->start_date));
+		$endDate		= gmdate('Ymd', strtotime($event->end_date));
 
 		if($event->allday){
-			$enddt		= date('Ymd',strtotime('+1 day', $event->end_date));
+			$enddt		= gmdate('Ymd',strtotime('+1 day', $event->end_date));
 		}else{
 			$startdt	= $startDate."T".gmdate('His',strtotime($event->start_time)).'Z';
 			$enddt		= $endDate."T".gmdate('His',strtotime($event->end_time)).'Z';
@@ -425,30 +425,30 @@ class DisplayEvents extends Events{
 			$dateStr	= "$year-$month-01";
 		}else{
 			//events
-			$day	= date('d');
+			$day	= gmdate('d');
 			$month	= $_GET['month'];
 			$year	= $_GET['yr'];
 			if(!is_numeric($month) || strlen($month)!=2){
-				$month	= date('m');
+				$month	= gmdate('m');
 			}
 			if(!is_numeric($year) || strlen($year)!=4){
-				$year	= date('Y');
+				$year	= gmdate('Y');
 			}
 			$dateStr	= "$year-$month-$day";
 		}
 		ob_start();
 		
 		$date			= strtotime($dateStr);
-		$monthStr		= date('m', $date);
-		$yearStr		= date('Y', $date);
+		$monthStr		= gmdate('m', $date);
+		$yearStr		= gmdate('Y', $date);
 		$minusMonth		= strtotime('first day of last month', $date);
-		$minusMonthStr	= date('m', $minusMonth);
-		$minusYearStr	= date('Y', $minusMonth);
+		$minusMonthStr	= gmdate('m', $minusMonth);
+		$minusYearStr	= gmdate('Y', $minusMonth);
 		$plusMonth		= strtotime('first day of next month', $date);
-		$plusMonthStr	= date('m', $plusMonth);
-		$plusYearStr	= date('Y', $plusMonth);
+		$plusMonthStr	= gmdate('m', $plusMonth);
+		$plusYearStr	= gmdate('Y', $plusMonth);
 
-		$weekDay		= date("w", strtotime(date('Y-m-01', $date)));
+		$weekDay		= gmdate("w", strtotime(date('Y-m-01', $date)));
 		$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
 
 		$calendarRows	= '';
@@ -462,18 +462,18 @@ class DisplayEvents extends Events{
 
 			//loop over all days of a week
 			while(true){
-				$monthName			= date('F', $workingDate);
-				$workingDateStr		= date('Y-m-d', $workingDate);
-				$month				= date('m', $workingDate);
-				$day				= date('j', $workingDate);
+				$monthName			= gmdate('F', $workingDate);
+				$workingDateStr		= gmdate('Y-m-d', $workingDate);
+				$month				= gmdate('m', $workingDate);
+				$day				= gmdate('j', $workingDate);
 				
 				//get the events for this day
 				$this->retrieveEvents($workingDateStr, $workingDateStr, '', '', '', $cat);
 
 				if(
-					$workingDateStr == date('Y-m-d') ||			// date is today
+					$workingDateStr == gmdate('Y-m-d') ||			// date is today
 					(
-						$monthStr != date('m') &&						// We are requesting another mont than this month
+						$monthStr != gmdate('m') &&						// We are requesting another mont than this month
 						date('j', $workingDate) == 1 &&				// This is the first day of the month
 						date('m', $workingDate) == $monthStr			// We are in the requested month
 					)
@@ -485,7 +485,7 @@ class DisplayEvents extends Events{
 					$hidden = 'hidden';
 				}
 
-				if($month != date('m',$date)){
+				if($month != gmdate('m',$date)){
 					$class.= ' nullday';
 				}
 
@@ -570,7 +570,7 @@ class DisplayEvents extends Events{
 			$calendarRows .= '</dl>';
 
 			//stop if next month
-			if($month != date('m', $date)){
+			if($month != gmdate('m', $date)){
 				break;
 			}
 		}
@@ -581,15 +581,15 @@ class DisplayEvents extends Events{
 				<div class="navigator">
 					<div class="prev">
 						<a href="#" class="prevnext" data-month="<?php echo $minusMonthStr;?>" data-year="<?php echo $minusYearStr;?>">
-							<span><</span> <?php echo date('F', $minusMonth);?>
+							<span><</span> <?php echo gmdate('F', $minusMonth);?>
 						</a>
 					</div>
 					<div class="current">
-						<?php echo date('F Y', $date);?>
+						<?php echo gmdate('F Y', $date);?>
 					</div>
 					<div class="next">
 						<a href="#" class="prevnext" data-month="<?php echo $plusMonthStr;?>" data-year="<?php echo $plusYearStr;?>">
-							<?php echo date('F', $plusMonth);?> <span>></span>
+							<?php echo gmdate('F', $plusMonth);?> <span>></span>
 						</a>
 					</div>
 				</div>
@@ -599,7 +599,7 @@ class DisplayEvents extends Events{
 							<?php
 							$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
 							for ($y = 0; $y <= 6; $y++) {
-								$name	= date('D', $workingDate);
+								$name	= gmdate('D', $workingDate);
 								echo "<dt class='calendar-day-head'>$name</dt>";
 								$workingDate	= strtotime("+1 days",$workingDate);
 							}
@@ -648,7 +648,7 @@ class DisplayEvents extends Events{
 			$url	= get_permalink($event->ID);
 
 			//do not re-add event details for a multiday event in the same week
-			if($event->start_date != $event->end_date && $event->start_date != $workingDateStr && date('w', $workingDate)>0){
+			if($event->start_date != $event->end_date && $event->start_date != $workingDateStr && gmdate('w', $workingDate)>0){
 				continue;
 			}
 
@@ -717,8 +717,8 @@ class DisplayEvents extends Events{
 			return;
 		}
 
-		$weekDay		= date('w', $weekDayTimestamp);
-		$dateStr		= date('Y-m-d', $weekDayTimestamp);
+		$weekDay		= gmdate('w', $weekDayTimestamp);
+		$dateStr		= gmdate('Y-m-d', $weekDayTimestamp);
 
 		// Add each event
 		foreach($this->events as $event){
@@ -729,7 +729,7 @@ class DisplayEvents extends Events{
 				continue;
 			}
 			
-			$timeIndex			= date('H', strtotime($startTime)) * 2; //index is amount of hours times 2
+			$timeIndex			= gmdate('H', strtotime($startTime)) * 2; //index is amount of hours times 2
 
 			//multi day event
 			if($event->start_date != $event->end_date){
@@ -759,7 +759,7 @@ class DisplayEvents extends Events{
 				$duration	= strtotime($endTime) - strtotime($startTime);
 				$halfHours	= round($duration/60/30);
 				$endIndex	= (int)round($duration/60/30) + $timeIndex;
-				$dateString	= date('Ymd', strtotime($event->start_date));
+				$dateString	= gmdate('Ymd', strtotime($event->start_date));
 
 				//add the event
 				$td =  "<td rowspan='$halfHours' class='calendar-hour has-event' data-date='$dateString' data-start_time='{$event->start_time}'>";
@@ -782,7 +782,7 @@ class DisplayEvents extends Events{
 
 		//loop over all days of a week
 		while(true){
-			$weekDayStr		= date('Y-m-d', $weekDayTimestamp);
+			$weekDayStr		= gmdate('Y-m-d', $weekDayTimestamp);
 
 			//get the events for this day
 			$this->retrieveEvents($weekDayStr, $weekDayStr, '', '', '', $cat);
@@ -811,8 +811,8 @@ class DisplayEvents extends Events{
 	 * @return	string				Html of the calendar
 	*/
 	public function weekCalendar($cat=[]){
-		$weekNr	= date('W');
-		$year	= date('Y');
+		$weekNr	= gmdate('W');
+		$year	= gmdate('Y');
 
 		if(defined('REST_REQUEST')){
 			$weekNr		= $_POST['wknr'];
@@ -832,7 +832,7 @@ class DisplayEvents extends Events{
 		$this->prepareWeekTable();
 
 		$date			= strtotime($dateStr);
-		$weekNr			= date('W', $date);
+		$weekNr			= gmdate('W', $date);
 		$dateTime		= new \DateTime();
 
 		// Get the date of the first day of this week
@@ -840,7 +840,7 @@ class DisplayEvents extends Events{
 
 		$detailHtml		= $this->getCalendarRows($firstWeekDay, $cat);
 
-		$year			= date('Y', $firstWeekDay);
+		$year			= gmdate('Y', $firstWeekDay);
 		$prevWeekNr		= strftime("%U", strtotime("-1 week", $firstWeekDay));
 		$nextWeekNr		= strftime("%U", strtotime("+1 week", $firstWeekDay));
 
@@ -884,8 +884,8 @@ class DisplayEvents extends Events{
 							<?php
 							$weekDayTimestamp	= $firstWeekDay;
 							for ($day = 0; $day <= 6; $day++) {
-								$name		= date('D', $weekDayTimestamp);
-								$nr			= date('d', $weekDayTimestamp);
+								$name		= gmdate('D', $weekDayTimestamp);
+								$nr			= gmdate('d', $weekDayTimestamp);
 								$colspan	= '';
 
 								if($colSizes[$day] > 1){
@@ -907,7 +907,7 @@ class DisplayEvents extends Events{
 									$weekDayTimestamp	= $firstWeekDay;
 									for ($day = 0; $day <= 6; $day++) {
 										$content	= $this->calendarRows['allday'][$day];
-										$dateString	= date('Ymd', $weekDayTimestamp);
+										$dateString	= gmdate('Ymd', $weekDayTimestamp);
 
 										if(empty($content)){
 											$class = '';
@@ -1007,13 +1007,13 @@ class DisplayEvents extends Events{
 		}
 
 		if(!is_numeric($month) || strlen($month)!=2){
-			$month	= date('m');
+			$month	= gmdate('m');
 		}
 		if(!is_numeric($year) || strlen($year)!=4){
-			$year	= date('Y');
+			$year	= gmdate('Y');
 		}
 		
-		$day	= date('d');
+		$day	= gmdate('d');
 		$dateStr	= "$year-$month-$day";
 
 		$this->retrieveEvents($dateStr, '', 10, '', $offset, $cat);
@@ -1100,15 +1100,15 @@ class DisplayEvents extends Events{
 		$event	= $results[0];
 
 		if(is_numeric($event->only_for)){
-			$today	= date('Y-m-d');
-			$tomorrow	= date('Y-m-d', strtotime('+1 day', strtotime($event->start_date)));
+			$today	= gmdate('Y-m-d');
+			$tomorrow	= gmdate('Y-m-d', strtotime('+1 day', strtotime($event->start_date)));
 
 			if($today == $event->start_date){
 				$timeString	= "starts at $event->start_time";
 			}elseif($tomorrow == $event->start_date){
 				$timeString	= "starts tomorrow at $event->start_time";
 			}elseif(strtotime($event->start_date) > time()){
-				$date	= date('d F', strtotime($event->start_date));
+				$date	= gmdate('d F', strtotime($event->start_date));
 				$timeString	= "starts $date at $event->start_time";
 			}else{
 				$timeString	= "is already started";

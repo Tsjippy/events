@@ -84,7 +84,7 @@ function showCalendar(){
 					<select class='month-selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">
 						<?php
 						for ($m=1; $m<13; $m++){
-							$monthName	= date("F", mktime(0, 0, 0, $m, 10));
+							$monthName	= gmdate("F", mktime(0, 0, 0, $m, 10));
 							$monthNum	= sprintf("%02d", $m);
 							if(isset($_GET['month']) && $_GET['month'] == $m){
 								$selected	= ' selected=selected';
@@ -109,8 +109,8 @@ function showCalendar(){
 					</select>
 					<select class="year-selector" placeholder="Select year">
 						<?php
-						$start 	= date('Y');
-						$end	= date("Y",strtotime('+10 year'));
+						$start 	= gmdate('Y');
+						$end	= gmdate("Y",strtotime('+10 year'));
 						for ($y=$start;$y<$end;$y++){
 							if($y == $_GET['year']){
 								$selected = 'selected=selected';
