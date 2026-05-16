@@ -11,7 +11,7 @@ class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
 
         TSJIPPY\printArray('Running update actions');
 
-        if(version_compare('10.0.3', $oldVersion)){
+        if(version_compare($oldVersion, '10.0.3') === 1){
             /**
              * Rename tables to tsjippy_
              */
