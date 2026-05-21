@@ -176,6 +176,7 @@ function upcomingArrivalsBlock($attributes){
 			continue;
 		}
 
+		$partnerId	= false;
 		$name		= $family->getFamilyName($user, false, $partnerId);
 
 		if($partnerId){
