@@ -96,7 +96,9 @@ function eventSpecificFields($frontEndContent){
 			<datalist id="users">
 				<?php
 				foreach(TSJIPPY\getUserAccounts(false, true, true) as $user){
-					echo "<option data-value='{$user->ID}' value='{$user->display_name}'></option>";
+					?>
+					<option data-value='<?php echo esc_attr($user->ID);?>' value='<?php echo esc_attr($user->display_name);?>'></option>
+					<?php
 				}
 				?>
 			</datalist>
@@ -134,6 +136,9 @@ function displayRepetitionParameters($eventDetails){
 
 	$dayName	= 'monday';
 	$occurence	= 'first';
+	$hideLast	= '';
+	$hideLastDay= '';
+	
 	if(!empty($eventDetails)){
 		$dayName	= strtolower(date('l', strtotime($eventDetails['start_date'])));
 		$dayNum		= explode('-', $eventDetails['start_date'])[2];
