@@ -58,7 +58,7 @@ function eventSpecificFields($frontEndContent){
 	
 		<label name="start_date-label">
 			<h4>Startdate</h4>
-			<input type='date'						name='event[start_date]' value='<?php if(isset($eventDetails['start_date'])){echo $eventDetails['start_date'];} ?>' required>
+			<input type='date' name='event[start_date]' value='<?php if(isset($eventDetails['start_date'])){echo $eventDetails['start_date'];} ?>' required>
 			<input type='time' class='eventtime<?php if(!empty($eventDetails['start_time'])){echo " hidden";}?>'	name='event[start_time]' value='<?php echo $eventDetails['start_time']; ?>' required>
 		</label>
 		

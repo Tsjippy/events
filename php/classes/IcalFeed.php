@@ -86,6 +86,10 @@ class IcalFeed{
 	public function createIcalEvent($meta, $event){
 		$icalEvent	= "BEGIN:VEVENT\r\n";
 
+		if(!isset($meta['start_date']) || !isset($meta['end_date'])){
+			return '';
+		}
+
 		//between times
 		if(empty($meta['allday'])){
 			$start			= get_gmt_from_date($meta['start_date'].' '.$meta['start_time'], $this->icalFormat);
@@ -120,7 +124,7 @@ class IcalFeed{
 
 		$moddate		 = gmdate($this->icalFormat, strtotime($event->post_modified_gmt));
 		$icalEvent		.="LAST-MODIFIED:$moddate\r\n";
-		$icalEvent		.="LOCATION:{$meta['location']}\r\n";
+		$icalEvent		.="LOCATION:".$meta['location'] ?? ''."\r\n";
 
 		$icalEvent	.= trim(chunk_split("URL:$url",74,"\r\n "))."\r\n";
 
@@ -145,7 +149,7 @@ class IcalFeed{
 
 			$icalEvent	.= "RRULE:FREQ=$freq;INTERVAL=$intval;";
 
-			if($freq == 'YEARLY' || $meta['repeat']['datetype'] == 'samedate'){
+			if($freq == 'YEARLY' || $meta['repeat']['datetype'] ?? '' == 'samedate'){
 				$month	= gmdate('m', strtotime($meta['start_date']));
 				$day	= gmdate('d', strtotime($meta['start_date']));
 				if($freq == 'YEARLY'){
