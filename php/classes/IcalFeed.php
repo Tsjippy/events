@@ -138,6 +138,9 @@ class IcalFeed{
 	}
 
 	public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent){
+		if(empty($meta['repeat'])){
+			return $icalEvent;
+		}
 		$freq			 = strtoupper($meta['repeat']['type']);
 
 		if($freq == 'CUSTOM_DAYS'){
@@ -149,7 +152,13 @@ class IcalFeed{
 
 			$icalEvent	.= "RRULE:FREQ=$freq;INTERVAL=$intval;";
 
-			if($freq == 'YEARLY' || $meta['repeat']['datetype'] ?? '' == 'samedate'){
+			if(
+				$freq == 'YEARLY' || 
+				(
+					//!empty($meta['repeat']['datetype']) &&
+					$meta['repeat']['datetype'] ?? '' == 'samedate'
+				)
+			){
 				$month	= gmdate('m', strtotime($meta['start_date']));
 				$day	= gmdate('d', strtotime($meta['start_date']));
 				if($freq == 'YEARLY'){
