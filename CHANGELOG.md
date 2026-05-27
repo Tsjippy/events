@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- empty array bugs
 
 ### Updated
+
+## [10.1.7] - 2026-05-27
+
+
+### Fixed
+- empty array bugs
 
 ## [10.1.6] - 2026-05-24
 
