@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- empty array bugs
 
 ### Updated
 
