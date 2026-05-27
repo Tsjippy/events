@@ -58,20 +58,20 @@ function eventSpecificFields($frontEndContent){
 	
 		<label name="start_date-label">
 			<h4>Startdate</h4>
-			<input type='date' name='event[start_date]' value='<?php if(isset($eventDetails['start_date'])){echo $eventDetails['start_date'];} ?>' required>
-			<input type='time' class='eventtime<?php if(!empty($eventDetails['start_time'])){echo " hidden";}?>'	name='event[start_time]' value='<?php echo $eventDetails['start_time']; ?>' required>
+			<input type='date' name='event[start_date]' value='<?php echo esc_attr($eventDetails['start_date'] ?? ''); ?>' required>
+			<input type='time' class='eventtime<?php if(!empty($eventDetails['start_time'])){echo " hidden";}?>'	name='event[start_time]' value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>' required>
 		</label>
 		
 		<label name="end_date-label" <?php if(!empty($eventDetails['allday'])){echo "class='hidden'";}?>>
 			<h4>Enddate</h4>
-			<input type='date'						name='event[end_date]' value='<?php if(isset($eventDetails['end_date'])){echo $eventDetails['end_date'];} ?>' required>
-			<input type='time' class='eventtime'	name='event[end_time]' value='<?php if(isset($eventDetails['end_time'])){echo $eventDetails['end_time'];} ?>' required>
+			<input type='date'						name='event[end_date]' value='<?php echo esc_attr($eventDetails['end_date'] ?? '');?>' required>
+			<input type='time' class='eventtime'	name='event[end_time]' value='<?php echo esc_attr($eventDetails['end_time'] ?? ''); ?>' required>
 		</label>
 
 		<label name="location">
 			<h4>Location</h4>
-			<input type='hidden' class='no-reset' class='datalistvalue'	name='event[location-id]' 	value='<?php if(isset($eventDetails['location-id'])){echo $eventDetails['location-id'];} ?>'>
-			<input type='text'											name='event[location]' 		value='<?php if(isset($eventDetails['location'])){echo $eventDetails['location'];} ?>' list="locations">
+			<input type='hidden' class='no-reset' class='datalistvalue'	name='event[location-id]' 	value='<?php echo esc_attr($eventDetails['location-id'] ?? ''); ?>'>
+			<input type='text'											name='event[location]' 		value='<?php echo esc_attr($eventDetails['location'] ?? ''); ?>' list="locations">
 			<datalist id="locations">
 				<?php
 				$locations = get_posts(
@@ -83,7 +83,9 @@ function eventSpecificFields($frontEndContent){
 					)
 				);
 				foreach($locations as $location){
-					echo "<option data-value='{$location->ID}' value='{$location->post_title}'></option>";
+					?>
+					<option data-value='<?php echo esc_attr($location->ID);?>' value='<?php echo esc_attr($location->post_title);?>'></option>
+					<?php
 				}
 				?>
 			</datalist>
@@ -91,11 +93,11 @@ function eventSpecificFields($frontEndContent){
 
 		<label name="organizer">
 			<h4>Organizer</h4>
-			<input type='hidden' class='no-reset' class='datalistvalue'	name='event[organizer-id]'	value='<?php if(isset($eventDetails['organizer-id'])){echo $eventDetails['organizer-id'];} ?>'>
-			<input type='text'							name='event[organizer]'		value='<?php if(isset($eventDetails['organizer'])){echo $eventDetails['organizer'];} ?>' list="users">
+			<input type='hidden' class='no-reset' class='datalistvalue'	name='event[organizer-id]'	value='<?php echo esc_attr($eventDetails['organizer-id'] ?? ''); ?>'>
+			<input type='text'											name='event[organizer]'		value='<?php echo esc_attr($eventDetails['organizer'] ?? ''); ?>' list="users">
 			<datalist id="users">
 				<?php
-				foreach(TSJIPPY\getUserAccounts(false, true, true) as $user){
+				foreach(TSJIPPY\getUserAccounts(false, true) as $user){
 					?>
 					<option data-value='<?php echo esc_attr($user->ID);?>' value='<?php echo esc_attr($user->display_name);?>'></option>
 					<?php
@@ -108,7 +110,7 @@ function eventSpecificFields($frontEndContent){
 			<button class='button' type='button' name='enable-event-repeat'>
 				Repeat this event
 			</button>
-			<input type='hidden' class='no-reset' name='event[isrepeated]' value='<?php if(isset($eventDetails['isrepeated'])){echo $eventDetails['isrepeated'];}?>'>
+			<input type='hidden' class='no-reset' name='event[isrepeated]' value='<?php echo esc_attr($eventDetails['isrepeated'] ?? '');?>'>
 		</label>
 		
 		<?php
