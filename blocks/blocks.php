@@ -183,7 +183,7 @@ function upcomingArrivalsBlock($attributes){
 			$skip[]		= $partnerId;
 		}
 
-		$url 	= TSJIPPY\maybeGetUserPageUrl($user->ID);
+		$url 		= TSJIPPY\maybeGetUserPageUrl($user->ID);
 
 		$dateString	= gmdate(DATEFORMAT, strtotime(get_user_meta($user->ID, 'arrival_date', true)));
 
