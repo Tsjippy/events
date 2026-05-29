@@ -3,6 +3,7 @@
 
 ### Added
 - wp_unslash
+- wp_unslash
 
 ### Changed
 
