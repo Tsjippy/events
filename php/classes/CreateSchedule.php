@@ -100,7 +100,7 @@ class CreateSchedule extends Schedules{
 
 		//clean title
 		if(!empty($_POST['subject'])){
-			$title	= sanitize_text_field($_POST['subject']);
+			$title	= sanitize_text_field( wp_unslash( $_POST['subject']));
 		}
 
 		if(!empty($event['organizer']) && empty($this->defaultSubject)){
@@ -418,14 +418,14 @@ class CreateSchedule extends Schedules{
 	public function addSchedule($update=false){
 		global $wpdb;
 	
-		$name		= sanitize_text_field($_POST['target-name']);
+		$name		= sanitize_text_field( wp_unslash( $_POST['target-name']));
 
 		//check if schedule already exists
 		if(!$update && $wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `name` = '$name'") != null){
 			return new WP_Error('schedule', "A schedule for $name already exists!");
 		}
 
-		$info		= sanitize_text_field($_POST['schedule-info']);
+		$info		= sanitize_text_field( wp_unslash( $_POST['schedule-info']));
 
 		if(empty($_POST['skiplunch'])){
 			$lunch	= true;
@@ -672,8 +672,8 @@ class CreateSchedule extends Schedules{
 			$this->location		= "House of $hostName";
 			$isMeal				= true;
 		}else{
-			$this->title		= sanitize_text_field($_POST['subject']);
-			$this->location		= sanitize_text_field($_POST['location']);
+			$this->title		= sanitize_text_field( wp_unslash( $_POST['subject']));
+			$this->location		= sanitize_text_field( wp_unslash( $_POST['location']));
 			if(empty($_POST['end_time'])){
 				$this->endTime	= gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime( $this->startTime)));
 			}else{
@@ -783,11 +783,11 @@ class CreateSchedule extends Schedules{
 	public function addMenu(){
 		$scheduleId		= $_POST['schedule-id'];
 
-		$date			= sanitize_text_field($_POST['date']);
+		$date			= sanitize_text_field( wp_unslash( $_POST['date']));
 
-		$startTime		= sanitize_text_field($_POST['start_time']);
+		$startTime		= sanitize_text_field( wp_unslash( $_POST['start_time']));
 
-		$menu			= sanitize_text_field($_POST['recipe-keyword']);
+		$menu			= sanitize_text_field( wp_unslash( $_POST['recipe-keyword']));
 
 		$events			= $this->getScheduleSession($date, $startTime);
 

@@ -429,25 +429,25 @@ class CreateEvents extends Events{
 		$this->postId					= $post->ID;
 	
 		$event							= $_POST['event'];
-		$event['allday']				= sanitize_text_field($event['allday']);
-		$event['start_date']				= sanitize_text_field($event['start_date']);
-		$event['start_time']				= sanitize_text_field($event['start_time']);
-		$event['end_date']				= sanitize_text_field($event['end_date']);
-		$event['end_time']				= sanitize_text_field($event['end_time']);
+		$event['allday']				= sanitize_text_field( wp_unslash( $event['allday']));
+		$event['start_date']				= sanitize_text_field( wp_unslash( $event['start_date']));
+		$event['start_time']				= sanitize_text_field( wp_unslash( $event['start_time']));
+		$event['end_date']				= sanitize_text_field( wp_unslash( $event['end_date']));
+		$event['end_time']				= sanitize_text_field( wp_unslash( $event['end_time']));
 
 		if(empty($event['start_date']) || empty($event['end_date'])){
 			return;
 		}
 
-		$event['repeat']['type']		= sanitize_text_field($event['repeat']['type']);
-		$event['repeat']['interval']	= sanitize_text_field($event['repeat']['interval']);
-		$event['repeat']['stop']		= sanitize_text_field($event['repeat']['stop']);
-		$event['repeat']['end_date']		= sanitize_text_field($event['repeat']['end_date']);
-		$event['repeat']['amount']		= sanitize_text_field($event['repeat']['amount']);
-		$event['location']				= sanitize_text_field($event['location']);
-		$event['location_id']			= sanitize_text_field($event['location-id']);
-		$event['organizer']				= sanitize_text_field($event['organizer']);
-		$event['organizer-id']			= sanitize_text_field($event['organizer-id']);
+		$event['repeat']['type']		= sanitize_text_field( wp_unslash( $event['repeat']['type']));
+		$event['repeat']['interval']	= sanitize_text_field( wp_unslash( $event['repeat']['interval']));
+		$event['repeat']['stop']		= sanitize_text_field( wp_unslash( $event['repeat']['stop']));
+		$event['repeat']['end_date']		= sanitize_text_field( wp_unslash( $event['repeat']['end_date']));
+		$event['repeat']['amount']		= sanitize_text_field( wp_unslash( $event['repeat']['amount']));
+		$event['location']				= sanitize_text_field( wp_unslash( $event['location']));
+		$event['location_id']			= sanitize_text_field( wp_unslash( $event['location-id']));
+		$event['organizer']				= sanitize_text_field( wp_unslash( $event['organizer']));
+		$event['organizer-id']			= sanitize_text_field( wp_unslash( $event['organizer-id']));
 	
 		//check if anything has changed
 		$oldMeta	= get_post_meta($this->postId, 'eventdetails', true);
