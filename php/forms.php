@@ -27,7 +27,7 @@ function beforeSavingFormData($submission, $object){
 		$family = new TSJIPPY\FAMILY\Family();
 
 		// Then the weddingdate
-		$newDate	= sanitize_text_field($_POST['weddingdate']);
+		$newDate	= sanitize_text_field( wp_unslash( $_POST['weddingdate']));
 		$oldDate	= $family->getWeddingDate($object->userId);
 		if($newDate != $oldDate){
 			$events		= new CreateEvents();
