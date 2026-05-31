@@ -270,7 +270,7 @@ class Schedules{
 							The schedule will show up on the dashboard of these persons after publish.
 						</p>
 						<?php
-						echo TSJIPPY\userSelect('', true, true, '', 'schedule-target', $args);
+						TSJIPPY\userSelect(onlyAdults:true, families:true, id:'schedule-target', args:$args, echo: true);
 						echo TSJIPPY\addSaveButton('publish-schedule', 'Publish this schedule');
 						?>
 					</form>
@@ -485,9 +485,11 @@ class Schedules{
 						?>
 						<p>Please select the user or family who is hosting</p>
 						<?php
-						echo TSJIPPY\userSelect('', true, true, '', 'host-id', [], '', [], 'list');
+						TSJIPPY\userSelect(onlyAdults: true, families:true,  id:'host-id', type:'list', echo: true);
 					}else{
-						echo "<input type='hidden' class='no-reset' name='host-id' value='{$this->user->ID}'>";
+						?>
+						<input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($this->user->ID);?>'>
+						<?php
 					}
 					echo TSJIPPY\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
 					?>
@@ -1164,9 +1166,11 @@ class Schedules{
 						?>
 						<p>Please select the user or family who is hosting</p>
 						<?php
-						echo TSJIPPY\userSelect('', true, true, '', 'host', [], '', [], 'list');
+						TSJIPPY\userSelect(onlyAdults:true, families:true, id:'host', type:'list', echo:true);
 					}else{
-						echo "<input type='hidden' class='no-reset' name='host' value='{$this->user->ID}'>";
+						?>
+						<input type='hidden' class='no-reset' name='host' value='<?php echo esc_attr($this->user->ID);?>'>
+						<?php
 					}
 					$id	= 'add-host';
 					if($this->mobile){
@@ -1287,7 +1291,7 @@ class Schedules{
 						<label>
 							<h4>Who is in charge</h4>
 							<?php
-							echo TSJIPPY\userSelect('', true, false, 'wide', 'host', [], $host, [], 'list', 'admin_host');
+							TSJIPPY\userSelect(onlyAdults:true, class:'wide', id:'host', userId:$host, type:'list', listId:'admin_host', echo:true);
 							?>
 						</label>
 						<?php
@@ -1298,7 +1302,7 @@ class Schedules{
 						<h4>Other people involved</h4>
 					</label>
 					<?php
-					echo TSJIPPY\userSelect('', true, false, 'wide', 'others', [], $others, [], 'list', 'admin_host', true);
+					TSJIPPY\userSelect(onlyAdults:true, class:'wide', id:'others', userId:$others, type:'list', listId:'admin_host', multiple:true, echo:true);
 					?>
 	
 					<h4>Warnings</h4>
