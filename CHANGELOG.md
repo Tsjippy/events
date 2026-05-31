@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- use named params for userSelect function
 
 ### Fixed
 
