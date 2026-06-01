@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- use named params for userSelect function
 
 ### Fixed
 
 ### Updated
+
+## [10.2.1] - 2026-06-01
+
+
+### Changed
+- use named params for userSelect function
 
 ## [10.2.0] - 2026-05-30
 
