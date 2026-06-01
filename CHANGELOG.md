@@ -4,12 +4,19 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.2] - 2026-06-01
+
+
+### Changed
 - merged hooks.md into readme.md
 
 ### Fixed
 - added domain to __ function
-
-### Updated
 
 ## [10.2.1] - 2026-06-01
 
