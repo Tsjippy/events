@@ -7,6 +7,7 @@
 - merged hooks.md into readme.md
 
 ### Fixed
+- added domain to __ function
 
 ### Updated
 
