@@ -226,7 +226,8 @@ export async function editTimeSlot(target, date){
 		CustomButtonText: 'Remove timeslot'
 	};
 
-	let response = await new Main.Alert(`Do you want to edit or remove this timeslot?`, 'question', options);
+	let alerter		= new Main.Alert(`Do you want to edit or remove this timeslot?`, 'question', options);
+	let response	= await alerter.promise; 
 
 	//swap and/or
 	if (response == 'confirm') {
@@ -284,7 +285,8 @@ export async function checkConfirmation(text, target){
 		CancelButtonText: 'Cancel'
 	};
 
-	let response = await new Main.Alert(text+"?", 'warning', options);
+	let alerter 		= new Main.Alert(text+"?", 'warning', options);
+	let response	= await alerter.promise;
 	
 	if (response == 'confirm') {
 		document.querySelectorAll('.modal:not(.hidden)').forEach(modal=>modal.classList.add('hidden'));
