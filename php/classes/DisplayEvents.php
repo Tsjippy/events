@@ -94,7 +94,7 @@ class DisplayEvents extends Events{
 
 		ob_start();
 		?>
-		<h4 class="title"><?php echo $title;?></h4>
+		<h4 class="title"><?php echo esc_attr($title);?></h4>
 		<div class="upcoming-events-wrapper">
 			<?php
 			if(!$events){
@@ -112,17 +112,20 @@ class DisplayEvents extends Events{
 						<article class="event-article">
 							<div class="event-wrapper">
 								<div class="event-date">
-									<?php echo "<span>{$event['day']}</span> {$event['month']}";?>
+									<span>
+										<?php echo esc_attr($event['day']);?>
+									</span>
+									<?php echo esc_attr($event['month']);?>
 								</div>
 								<div>
 								<h4 class="event-title">
-									<a href="<?php echo $event['url'] ?>">
-										<?php echo $event['title'];?>
+									<a href="<?php echo esc_url($event['url']) ?>">
+										<?php echo esc_attr($event['title']);?>
 									</a>
 								</h4>
 								<div class="event-detail">
 									<?php
-									echo $event['time'];
+									echo esc_attr($event['time']);
 									?>
 								</div>
 								</div>
@@ -135,7 +138,7 @@ class DisplayEvents extends Events{
 				<?php
 			}
 			?>
-			<a class='calendar button' href="<?php echo SITEURL;?>/events" class="button tsjippy">
+			<a class='calendar button' href="<?php echo esc_url(SITEURL);?>/events" class="button tsjippy">
 				Calendar
 			</a>
 		</div>
@@ -295,7 +298,7 @@ class DisplayEvents extends Events{
 	 * @return	string					String describing the repetition
 	*/
 	public function getRepeatDetail($meta){
-		$type	= $meta['repeat']['type'];
+		$type	= $meta['repeat']['type'] ?? '';
 		if($meta['repeat']['type'] == 'custom_days'){
 			$type	= '';
 			foreach($meta['repeat']['includedates'] as $date){
@@ -351,6 +354,7 @@ class DisplayEvents extends Events{
 		$endDate		= gmdate('Ymd', strtotime($event->end_date));
 
 		if($event->allday){
+			$startdt	= '';
 			$enddt		= gmdate('Ymd',strtotime('+1 day', $event->end_date));
 		}else{
 			$startdt	= $startDate."T".gmdate('His',strtotime($event->start_time)).'Z';
@@ -451,15 +455,15 @@ class DisplayEvents extends Events{
 		$weekDay		= gmdate("w", strtotime(date('Y-m-01', $date)));
 		$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
 
-		$calendarRows	= '';
-		$detailHtml		= '';
+		$calendarRows	= TSJIPPY\addElement('div', '', ['class' => 'calendar-rows-wrapper']);
+		$details		= TSJIPPY\addElement('div', '', ['class' => 'calendar-details']);
 
 		$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
 		//loop over all weeks of a month
 		while(true){
-			$calendarRows .= "<dl class='calendar-row'>";
-
+			$calendar	= TSJIPPY\addElement('dl', $calendarRows, ['class' => 'calendar-row']);
+			
 			//loop over all days of a week
 			while(true){
 				$monthName			= gmdate('F', $workingDate);
@@ -473,9 +477,9 @@ class DisplayEvents extends Events{
 				if(
 					$workingDateStr == gmdate('Y-m-d') ||			// date is today
 					(
-						$monthStr != gmdate('m') &&						// We are requesting another mont than this month
+						$monthStr != gmdate('m') &&					// We are requesting another month than this month
 						date('j', $workingDate) == 1 &&				// This is the first day of the month
-						date('m', $workingDate) == $monthStr			// We are in the requested month
+						date('m', $workingDate) == $monthStr		// We are in the requested month
 					)
 				){
 					$class = 'selected';
@@ -493,73 +497,10 @@ class DisplayEvents extends Events{
 					$class	.= ' has-event';
 				}
 				
-				$calendarRows .=  "<dt class='calendar-day $class' data-date='".date('Ymd', $workingDate)."'>";
-					$calendarRows	.= $day;
-				$calendarRows	.= "</dt>";
+				TSJIPPY\addElement('dt', $calendar, ['class'=>"calendar-day $class", 'data-date'=>date('Ymd', $workingDate)], $day);
 
-				$detailHtml .= "<div class='event-details-wrapper $hidden' data-date='".date('Ymd', $workingDate)."'>";
-					$detailHtml .= "<h6 class='event-title'>";
-						$detailHtml .= "Events for <span class='day'> ".date('j', $workingDate)."st</span>$monthName";
-					$detailHtml .= "</h6>";
-						if(empty($this->events)){
-							$detailHtml .= "<article class='event-article'>";
-								$detailHtml .= "<h4 class='event-title'><a>No Events</a></h4>";
-							$detailHtml .= "</article>";
-						}else{
-							foreach($this->events as $event){
-								$meta		= get_post_meta($event->ID, 'eventdetails', true);
-								if(!is_array($meta)){
-									if(!empty($meta)){
-										$meta	= (array)json_decode($meta, true);
-									}else{
-										$meta	= [];
-									}
-								}
+				$this->weekDetails($workingDateStr, $workingDate, $hidden, $details);
 
-								$detailHtml .= "<article class='event-article'>";
-									$detailHtml .= "<div class='event-header'>";
-										if(has_post_thumbnail($event->post_id)){
-											$detailHtml .= "<div class='event-image'>";
-												$detailHtml .= get_the_post_thumbnail($event->post_id);
-											$detailHtml .= '</div>';
-										}
-										$detailHtml .= "<div class='event-time'>";
-											$detailHtml .= "<img src='{$baseUrl}/time_red.png' loading='lazy' alt='time' class='event-icon'>";
-											$detailHtml .=  $this->getTime($event);
-										$detailHtml .= "</div>";
-									$detailHtml .= "</div>";
-									$detailHtml .= "<h4 class='event-title'>";
-										$url	= get_permalink($event->ID);
-										$detailHtml .= "<a href='$url'>";
-											$detailHtml .= $event->post_title;
-										$detailHtml .= "</a>";
-									$detailHtml .= "</h4>";
-									$detailHtml .= "<div class='event-detail'>";
-										if(!empty($event->location)){
-											$detailHtml .= "<div class='location'>";
-												$detailHtml .= "<img src='{$baseUrl}/location_red.png' loading='lazy' alt='time' class='event-icon'>";
-												$detailHtml .= $this->getLocationDetail($event);
-											$detailHtml .= "</div>";
-										}
-										if(!empty($event->organizer)){
-											$detailHtml .= "<div class='organizer'>";
-												$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event-icon'>";
-												$detailHtml .= $this->getAuthorDetail($event);
-											$detailHtml .= "</div>";
-										}
-										if(!empty($meta['repeat']['type'])){
-											$detailHtml .= "<div class='repeat'>";
-												$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
-												$detailHtml .= $this->getRepeatDetail($meta);
-											$detailHtml .= "</div>";
-										}
-										$detailHtml .= $this->eventExportHtml($event);
-									$detailHtml .= "</div>";
-								$detailHtml .= "</article>";
-							}
-						}
-				$detailHtml .=  "</div>";
-				
 				//calculate the next week
 				$workingDate	= strtotime('+1 day', $workingDate);
 				//if the next day is the first day of a new week
@@ -567,7 +508,6 @@ class DisplayEvents extends Events{
 					break;
 				}
 			}
-			$calendarRows .= '</dl>';
 
 			//stop if next month
 			if($month != gmdate('m', $date)){
@@ -576,20 +516,20 @@ class DisplayEvents extends Events{
 		}
 
 		?>
-		<div class="events-wrap" data-date="<?php echo "$yearStr-$monthStr";?>">
+		<div class="events-wrap" data-date="<?php echo esc_attr("$yearStr-$monthStr");?>">
 			<div class="event overview">
 				<div class="navigator">
 					<div class="prev">
-						<a href="#" class="prevnext" data-month="<?php echo $minusMonthStr;?>" data-year="<?php echo $minusYearStr;?>">
-							<span><</span> <?php echo gmdate('F', $minusMonth);?>
+						<a href="#" class="prevnext" data-month="<?php echo esc_attr($minusMonthStr);?>" data-year="<?php echo esc_attr($minusYearStr);?>">
+							<span><</span> <?php echo esc_attr(gmdate('F', $minusMonth));?>
 						</a>
 					</div>
 					<div class="current">
-						<?php echo gmdate('F Y', $date);?>
+						<?php echo esc_attr(gmdate('F Y', $date));?>
 					</div>
 					<div class="next">
-						<a href="#" class="prevnext" data-month="<?php echo $plusMonthStr;?>" data-year="<?php echo $plusYearStr;?>">
-							<?php echo gmdate('F', $plusMonth);?> <span>></span>
+						<a href="#" class="prevnext" data-month="<?php echo esc_attr($plusMonthStr);?>" data-year="<?php echo esc_attr($plusYearStr);?>">
+							<?php echo esc_attr(gmdate('F', $plusMonth));?> <span>></span>
 						</a>
 					</div>
 				</div>
@@ -600,20 +540,24 @@ class DisplayEvents extends Events{
 							$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
 							for ($y = 0; $y <= 6; $y++) {
 								$name	= gmdate('D', $workingDate);
-								echo "<dt class='calendar-day-head'>$name</dt>";
+								?>
+								<dt class='calendar-day-head'>
+									<?php echo esc_attr($name); ?>
+								</dt>
+								<?php
 								$workingDate	= strtotime("+1 days",$workingDate);
 							}
 							?>
 						</dl>
 						<?php
-						echo $calendarRows;
+						echo $calendarRows->ownerDocument->saveHTML($calendarRows);
 						?>
 					</div>
 				</div>
 			</div>
 			<div class="event details-wrapper">
 				<?php
-				echo $detailHtml;
+				echo $details->ownerDocument->saveHTML($details);
 				?>
 			</div>
 		</div>
@@ -630,10 +574,20 @@ class DisplayEvents extends Events{
 	 *
 	 * @return	string					The detail html
 	 */
-	private function weekDetails($workingDateStr, $workingDate){
-		
-		$detailHtml		= '';
-		$baseUrl		= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
+	private function weekDetails($workingDateStr, $workingDate, $hidden='hidden', $parent=''){
+		if(empty($parent)){
+			$details	= TSJIPPY\addElement('div', '', ['class' => 'calendar-details']);
+		}else{
+			$details	= $parent;
+		}
+
+		$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
+
+		//$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->start_date))."' data-start_time='{$event->start_time}'>";
+		$wrapper	= TSJIPPY\addElement('div', $details, ['class' => "event-details-wrapper $hidden", 'data-date'=>date('Ymd', $workingDate)]);
+		$heading	= TSJIPPY\addElement('h6', $wrapper, ['class' => 'event-title'], "Events for ");
+		TSJIPPY\addElement('span', $heading, ['class' => 'day'], date('j', $workingDate)."st");
+		$heading->append(gmdate('F', $workingDate));
 
 		foreach($this->events as $event){
 			$meta		= get_post_meta($event->ID, 'eventdetails', true);
@@ -652,50 +606,63 @@ class DisplayEvents extends Events{
 				continue;
 			}
 
-			$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->start_date))."' data-start_time='{$event->start_time}'>";
-				$detailHtml .= "<article class='event-article'>";
-					if(has_post_thumbnail($event->post_id)){
-						$detailHtml .= "<div class='event-image'>";
-							$detailHtml .= get_the_post_thumbnail($event->post_id);
-						$detailHtml .= '</div>';
+			if(empty($this->events)){
+				$article	= TSJIPPY\addElement('article', $wrapper, ['class' => 'event-article']);
+				TSJIPPY\addElement('h4', $article, ['class' => 'event-title'], 'No events');
+			}else{
+				foreach($this->events as $event){
+					$meta		= get_post_meta($event->ID, 'eventdetails', true);
+					if(!is_array($meta)){
+						if(!empty($meta)){
+							$meta	= (array)json_decode($meta, true);
+						}else{
+							$meta	= [];
+						}
 					}
-					$detailHtml .= "<div class='event-time'>";
-						$detailHtml .= "<img src='{$baseUrl}/time_red.png' alt='time' loading='lazy' class='event-icon'>";
-						$detailHtml .=  $this->getDate($event).'   '.$this->getTime($event);
-					$detailHtml .= "</div>";
 
-					$detailHtml .= "<h4 class='event-title'>";
-						$detailHtml .= "<a href='$url'>";
-							$detailHtml .= $event->post_title;
-						$detailHtml .= "</a>";
-					$detailHtml .= "</h4>";
-					$detailHtml .= "<div class='event-detail'>";
-						if(!empty($event->location)){
-							$detailHtml .= "<div class='location'>";
-								$detailHtml .= "<img src='{$baseUrl}/location_red.png' alt='time' loading='lazy' class='event-icon'>";
-								$detailHtml .= $this->getLocationDetail($event);
-							$detailHtml .= "</div>";
-						}
-						if(!empty($event->organizer)){
-							$detailHtml .= "<div class='organizer'>";
-								$detailHtml .= "<img src='{$baseUrl}/organizer.png' alt='time' loading='lazy' class='event-icon'>";
-								$detailHtml .= $this->getAuthorDetail($event);
-							$detailHtml .= "</div>";
-						}
+					$article	= TSJIPPY\addElement('article', $wrapper, ['class' => 'event-article']);
+						$header		= TSJIPPY\addElement('div', $article, ['class' => 'event-header']);
+							if(has_post_thumbnail($event->post_id)){
+								$imageWrapper	= TSJIPPY\addElement('div', $header, ['class' => 'event-image']);
+								TSJIPPY\addRawHtml(get_the_post_thumbnail($event->post_id), $imageWrapper);
+							}
 
-						if(!empty($meta['repeat']['type'])){
-							$detailHtml .= "<div class='repeat'>";
-								$detailHtml .= "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
-								$detailHtml .= $this->getRepeatDetail($meta);
-							$detailHtml .= "</div>";
-						}
-						$detailHtml .= $this->eventExportHtml($event);
-					$detailHtml .= "</div>";
-				$detailHtml .= "</article>";
-			$detailHtml .= "</div>";
+							$timeWrapper	= TSJIPPY\addElement('div', $header, ['class' => 'event-time']);
+							TSJIPPY\addElement('img', $timeWrapper, ['src' => TSJIPPY\pathToUrl(PLUGINPATH.'pictures/time_red.png'), 'loading' => 'lazy', 'alt' => 'time', 'class' => 'event-icon']);
+							//$detailHtml .=  $this->getDate($event).'   '.$this->getTime($event);
+							TSJIPPY\addElement('span', $timeWrapper, ['class' => 'time'], $this->getTime($event));
+
+						$title	= TSJIPPY\addElement('h4', $article, ['class' => 'event-title']);
+							TSJIPPY\addElement('a', $title, ['href' => get_permalink($event->ID)], $event->post_title);
+
+						$detail	= TSJIPPY\addElement('div', $article, ['class' => 'event-detail']);
+							if(!empty($event->location)){
+								$wrapper	= TSJIPPY\addElement('div', $detail, ['class' => 'location']);
+								TSJIPPY\addElement('img', $wrapper, ['src' => "$baseUrl/location_red.png", 'alt' => 'time', 'loading' => 'lazy', 'class' => 'event-icon']);
+
+								TSJIPPY\addRawHtml($this->getLocationDetail($event), $wrapper);
+							}
+							if(!empty($event->organizer)){
+								$wrapper	= TSJIPPY\addElement('div', $detail, ['class' => 'organizer']);
+								TSJIPPY\addElement('img', $wrapper, ['src' => "$baseUrl/organizer.png", 'alt' => 'organizer', 'loading' => 'lazy', 'class' => 'event-icon']);
+
+								TSJIPPY\addRawHtml($this->getAuthorDetail($event), $wrapper);
+							}
+							if(!empty($meta['repeat']['type'])){
+								$wrapper	= TSJIPPY\addElement('div', $detail, ['class' => 'repeat']);
+								TSJIPPY\addElement('img', $wrapper, ['src' => "$baseUrl/repeat_small.png", 'alt' => 'repeat', 'loading' => 'lazy', 'class' => 'event-icon']);
+
+								TSJIPPY\addRawHtml($this->getRepeatDetail($meta), $wrapper);
+							}
+							TSJIPPY\addRawHtml($this->eventExportHtml($event), $detail);
+
+				}
+			}
 		}
 
-		return $detailHtml;
+		if(empty($parent)){
+			return $details->ownerDocument->saveHTML($details);
+		}
 	}
 
 	protected function prepareWeekTable(){

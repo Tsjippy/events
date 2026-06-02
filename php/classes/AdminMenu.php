@@ -220,24 +220,6 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             <?php
             $this->tableBody($birthdayRows);
         }
-
-        $missingEvents   = '';
-
-        foreach(get_users() as $user){
-            if(empty(get_user_meta($user->ID, 'birthday_event_id', true))){
-                $missingEvents   .= "<tr><td>Birthdays</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
-            }
-
-            if(empty(get_user_meta($user->ID, SITENAME.' anniversary_event_id', true))){
-                $missingEvents   .= "<tr><td>Anniversary</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
-            }
-
-            $weddingDate    = $family->getWeddingDate($user->ID);
-
-            if($weddingDate && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
-                $missingEvents   .= "<tr><td>Wedding</td><td><a href='/edit-users/?user-id=$user->ID' target='_blank'>Edit $user->display_name</a></td></tr>";
-            }
-        }
     
         ?>
         <h4>Missing Events</h4>
@@ -247,7 +229,48 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 <th>Link</th>
             </thead>
             <tbody>
-                <?php echo $missingEvents;?>
+                <?php
+                foreach(get_users() as $user){
+                    if(empty(get_user_meta($user->ID, 'birthday_event_id', true))){
+                        ?>
+                        <tr>
+                            <td>Birthdays</td>
+                            <td>
+                                <a href='/edit-users/?user-id=<?php echo esc_attr($user->ID); ?>' target='_blank'>
+                                    Edit <?php echo esc_attr($user->display_name); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+
+                    if(empty(get_user_meta($user->ID, SITENAME.' anniversary_event_id', true))){
+                        ?>
+                        <tr>
+                            <td>Anniversary</td>
+                            <td>
+                                <a href='/edit-users/?user-id=<?php echo esc_attr($user->ID); ?>' target='_blank'>
+                                    Edit <?php echo esc_attr($user->display_name); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+
+                    if($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
+                        ?>
+                        <tr>
+                            <td>Wedding</td>
+                            <td>
+                                <a href='/edit-users/?user-id=<?php echo esc_attr($user->ID); ?>' target='_blank'>
+                                    Edit <?php echo esc_attr($user->display_name); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
             </tbody>
         </table>
 
@@ -279,11 +302,25 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                         <?php
                         foreach($row as $index=>$d){
                             if($index == 0){
-                                echo "<td>{$d->display_name}</td>";
+                                ?>
+                                <td>
+                                    <?php echo esc_attr($d->display_name); ?>
+                                </td>
+                                <?php
                             }elseif($index == 1 || $index == 2){
-                                echo "<td>$d</td>";
+                                ?>
+                                <td>
+                                    <?php echo esc_attr($d); ?>
+                                </td>
+                                <?php
                             }else{
-                                echo "<td><a href='/add-content/?post-id=$d' target='_blank'>Edit event</a></td>";
+                                ?>
+                                <td>
+                                    <a href='/add-content/?post-id=<?php echo esc_attr($d); ?>' target='_blank'>
+                                        Edit event
+                                    </a>
+                                </td>
+                                <?php
                             }
                         }
                         ?>
@@ -343,9 +380,9 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                 foreach($orphans as $orphan){
                     ?>
                     <tr>
-                        <th><?php echo $orphan->post_title;?></th>
-                        <th><?php echo $orphan->start_date;?></th>
-                        <th><?php echo $orphan->start_time;?></th>
+                        <th><?php echo esc_attr($orphan->post_title);?></th>
+                        <th><?php echo esc_attr($orphan->start_date);?></th>
+                        <th><?php echo esc_attr($orphan->start_time);?></th>
                     </tr>
                     <?php
                 }
@@ -353,7 +390,9 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             </tbody>
         </table>
         <form method='POST'>
-            <button type='submit' name='delete-orphans'>Remove these events</button>
+            <button type='submit' name='delete-orphans'>
+                Remove these events
+            </button>
         </form>
         <?php
 

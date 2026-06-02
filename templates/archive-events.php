@@ -130,19 +130,25 @@ function showCalendar(){
 			</div>
 		</div>
 
-		<div id='monthview' class='calendarview<?php if($view!='month'){echo ' hidden';}?>'>
+		<div id='monthview' class='calendarview<?php if($view != 'month'){echo ' hidden';}?>'>
 			<?php
-			echo $events->monthCalendar($cat);
+			if($view == 'month'){
+				echo $events->monthCalendar($cat);
+			}
 			?>
 		</div>
 		<div id='weekview' class='calendarview<?php if($view!='week'){echo ' hidden';}?>'>
 			<?php
-			echo $events->weekCalendar($cat);
+			if($view == 'week'){
+				echo $events->weekCalendar($cat);
+			}
 			?>
 		</div>
 		<div id='listview' class='calendarview<?php if($view!='list'){echo ' hidden';}?>'>
 			<?php
-			echo $events->listCalendar($cat);
+			if($view == 'list'){
+				echo $events->listCalendar($cat);
+			}
 			?>
 		</div>		
 	</div>

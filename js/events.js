@@ -35,6 +35,8 @@ async function requestWeek(target, wknr, year){
     url.searchParams.set('week', wknr);
     window.history.pushState({}, '', url);
 
+    wknr    = String(wknr).padStart(2, '0');
+
     //hide all
     document.querySelectorAll('#weekview .events-wrap:not(hidden)').forEach(el=>el.classList.add('hidden'));
 
@@ -221,6 +223,16 @@ function viewChanged(target){
     document.querySelectorAll('.calendarview').forEach(el=>el.classList.add('hidden'));
     document.getElementById(target.dataset.type).classList.remove('hidden');
 
+    // request data for the view if not already there
+    let year    = document.querySelector('select.year-selector').value;
+    if(target.dataset.type == 'weekview'){
+        requestWeek(target, document.querySelector('select.week-selector').value, year);
+    }else if(target.dataset.type == 'listview'){
+        requestExpandList(0, document.querySelector('select.month-selector').value, year);
+    }else if(target.dataset.type == 'monthview'){
+        requestMonth(target, document.querySelector('select.month-selector').value, year);
+    }
+
     //change url
     url.searchParams.set('view', target.dataset.type.replace('view',''));
     window.history.pushState({}, '', url);
@@ -278,10 +290,10 @@ document.addEventListener("change", function(event) {
         event.stopPropagation();
 
         let year    = target.closest('.date-search').querySelector('.year-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type=='weekview'){
+        if(document.querySelector('.viewselector.selected').dataset.type == 'weekview'){
             requestWeek(target, target.value, year);
-        }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
-            requestExpandList(0,target.value,year);
+        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
+            requestExpandList(0, target.value, year);
         }
 
         //change url
@@ -292,9 +304,9 @@ document.addEventListener("change", function(event) {
         event.stopPropagation();
 
         let year    = target.closest('.date-search').querySelector('.year-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type=='monthview'){
+        if(document.querySelector('.viewselector.selected').dataset.type == 'monthview'){
             requestMonth(target, target.value, year);
-        }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
+        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
             requestExpandList(0,target.value, year);
         }
         url.searchParams.set('month', target.value);
@@ -304,11 +316,11 @@ document.addEventListener("change", function(event) {
         event.stopPropagation();
         
         let month   = target.closest('.date-search').querySelector('.month-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type=='monthview'){
+        if(document.querySelector('.viewselector.selected').dataset.type == 'monthview'){
             requestMonth(target, month, target.value);
-        }else if(document.querySelector('.viewselector.selected').dataset.type=='listview'){
+        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
             requestExpandList(0,month, target.value);
-        }else if(document.querySelector('.viewselector.selected').dataset.type=='weekview'){
+        }else if(document.querySelector('.viewselector.selected').dataset.type == 'weekview'){
             let wknr  = target.closest('.date-search').querySelector('.week-selector').value;
             requestWeek(target, wknr, target.value);
         }
@@ -328,7 +340,7 @@ window.onscroll = function() {
     let height  = d.offsetHeight;
   
     //if we scrolled to the bottom of the page and the list view is actve, and we are not currently loading, load more
-    if (offset >= height-2 && document.querySelector('.viewselector.selected').dataset.type=='listview' && document.querySelector('#listview .loader') == null) {
+    if (offset >= height-2 && document.querySelector('.viewselector.selected').dataset.type == 'listview' && document.querySelector('#listview .loader') == null) {
         let skipcount  = document.querySelector("#listview").querySelectorAll('article').length;
 
         requestExpandList(skipcount);
