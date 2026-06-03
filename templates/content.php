@@ -135,7 +135,7 @@ function displayEventMeta(){
 				<dl>
 					<dd>
 						<?php
-						esc_html($date);
+						echo esc_html($date);
 						?>
 					</dd>
 				</dl>
@@ -146,7 +146,7 @@ function displayEventMeta(){
 				<dl>
 					<dd>
 						<?php
-						esc_html($time);
+						echo esc_html($time);
 						?>
 					</dd>
 				</dl>
@@ -168,14 +168,15 @@ function displayEventMeta(){
 									$type	.= gmdate('j F Y', strtotime($date)).'<br>';
 								}
 							}
-							echo ucfirst($type);
+							echo esc_html(ucfirst($type));
+							
 							if(!empty($meta['repeat']['end_date'])){
-								echo " until ".gmdate('j F Y',strtotime($meta['repeat']['end_date']));
+								echo esc_html(" until ".gmdate('j F Y',strtotime($meta['repeat']['end_date'])));
 							}
 							if(!empty($meta['repeat']['amount'])){
 								$repeatAmount = $meta['repeat']['amount'];
 								if($repeatAmount != 90){
-									echo " for $repeatAmount times";
+									echo esc_html(" for $repeatAmount times");
 								}
 							}
 							?>

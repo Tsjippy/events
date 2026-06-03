@@ -63,30 +63,29 @@ function showCalendar(){
 		<div id='calendaraddingoptions' class='hidden'>
 			<p>
 				To add the calendar to your outlook calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">outlook.office.com/mail</a>.<br>
-				Then add <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code> in the 'subscribe via internet' screen
+				Then add <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id());?></code> in the 'subscribe via internet' screen
 			</p>
 			<p>
 				To add the calendar to your gmail calendar go to <a href='https://calendar.google.com/calendar/u/1/r/settings/addbyurl' target="_blank">calendar.google.com</a>.<br>
-				Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
+				Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id());?></code>.
 			</p>
 			<p>
 				To add the calendar to outlook click on 'open agenda'->'from the internet'.<br>
-				Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
+				Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id());?></code>.
 			</p>
 		</div>
 		<div class="search-form">
 			<div class="date-selector">
 				<div class="date-search">
+					<img src='<?php echo esc_url(TSJIPPY\pathToUrl(PLUGINPATH.'pictures')); ?>/date.png' alt='time' loading='lazy' class='event-icon'>
 					<?php
-					$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
-					echo "<img src='{$baseUrl}/date.png' alt='time' loading='lazy' class='event-icon'>";
 					?>
 					<select class='month-selector<?php if($view=='week'){echo ' hidden';}?>' placeholder="Select month">
 						<?php
 						for ($m=1; $m<13; $m++){
 							$monthName	= gmdate("F", mktime(0, 0, 0, $m, 10));
 							$monthNum	= sprintf("%02d", $m);
-							if(isset($_GET['month']) && $_GET['month'] == $m){echo ' selected=selected';}
+							if(($_GET['month'] ?? '') == $m){echo ' selected=selected';}
 							?>
 							<option value='<?php echo esc_attr($monthNum);?>'<?php if(($_GET['month'] ?? '') == $m){echo ' selected=selected';}?>>
 								<?php echo esc_html($monthName); ?>
@@ -97,7 +96,7 @@ function showCalendar(){
 					</select>
 					<select class='week-selector<?php if($view!='week'){echo ' hidden';}?>' placeholder="Select week">
 						<?php
-						for ($w=1;$w<=53;$w++){
+						for ($w=1; $w<=53; $w++){
 							?>
 							<option value='<?php echo esc_attr($w);?>'<?php if(($_GET['week'] ?? '') == $w){echo ' selected=selected';}?>>
 								Week <?php echo esc_html($w); ?>

@@ -116,7 +116,12 @@ class Schedules{
 
 		$query				= "SELECT * FROM {$this->tableName} WHERE 1";
 		
-		$this->schedules	= $wpdb->get_results($query);
+		$this->schedules	= $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE 1",
+				$this->tableName
+			)
+		);
 	}
 
 	/**
@@ -340,8 +345,14 @@ class Schedules{
 								$dateTime		= strtotime($date);
 								$dayName		= gmdate('l', $dateTime);
 								$formatedDate	= gmdate(DATEFORMAT, $dateTime);
-								echo "<th data-date='$dateStr' data-isodate='$date'>$dayName<br>$formatedDate</th>";
+								?>
+								<th data-date='<?php echo esc_attr($dateStr);?>' data-isodate='<?php echo esc_attr($date);?>'>
+									<?php echo esc_html($dayName);?>
+									<br>
+									<?php echo esc_html($formatedDate);?>
+								</th>
 
+								<?php
 								if ($date == $this->currentSchedule->end_date) {
 									break;
 								}
@@ -557,9 +568,13 @@ class Schedules{
 			return $this->currentSchedule->sessions;
 		}
 
-		$query	=  "SELECT * FROM $this->sessionTableName WHERE `schedule_id`={$this->currentSchedule->id}";
-
-		$results	= $wpdb->get_results($query);
+		$results	= $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE `schedule_id`=%d",
+				$this->sessionTableName,
+				$this->currentSchedule->id
+			)
+		);
 
 		$this->currentSchedule->sessions	= [];
 
@@ -623,9 +638,13 @@ class Schedules{
 
 		global $wpdb;
 
-		$query	=  "SELECT * FROM $this->sessionTableName WHERE id=$sessionId";
-
-		$results	= $wpdb->get_results($query);
+		$results	= $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM %i WHERE id=%d",
+				$this->sessionTableName,
+				$sessionId
+			)
+		);
 
 		if(empty($results)){
 			return false;
@@ -651,16 +670,23 @@ class Schedules{
 
 		global $wpdb;
 
-		$query	= "SELECT * FROM {$this->events->tableName} WHERE only_for={$this->user->ID}";
+		$query	= "SELECT * FROM %i WHERE only_for=%d";
+		$values	= [
+			$this->events->tableName,
+			$this->user->ID
+		];
+
 		if($this->currentSchedule->lunch){
-			$query	.= " AND start_time != '$this->lunchStartTime'";
+			$query	.= " AND start_time != %s";
+			$values[]	= $this->lunchStartTime;
 		}
 
 		if($this->currentSchedule->diner){
-			$query	.= " AND start_time != '$this->dinerTime'";
+			$query	.= " AND start_time != %s";
+			$values[]	= $this->dinerTime;
 		}
 
-		$events	= $wpdb->get_results($query);
+		$events	= $wpdb->get_results($wpdb->prepare($query, $values));
 
 		if(!empty($events)){
 			foreach($events as $event){
@@ -685,7 +711,7 @@ class Schedules{
 	 * @param	string	$date			date string
 	 * @param	string	$startTime		time string
 	 *
-	 * @return 	array					Cell html
+	 * @return 	string					Cell html
 	*/
 	public function writeMealCell($date, $startTime){
 		$family	= new TSJIPPY\FAMILY\Family();
@@ -705,9 +731,8 @@ class Schedules{
 
 		$this->getScheduleSessions();
 
+		$hostData		= "";
 		if(isset($this->currentSchedule->sessions[$date][$startTime])){
-			
-			$hostData		= "";
 			$data			= $this->currentSchedule->sessions[$date][$startTime];
 			$hostId			= $data->events[0]->organizer-id;
 			$partnerId 		= $family->getPartner($this->user->ID);
@@ -777,7 +802,7 @@ class Schedules{
 	 * @param	string	$date			date string
 	 * @param	string	$startTime		time string
 	 *
-	 * @return 	array					Cell html
+	 * @return 	string					Cell html
 	*/
 	public function writeOrientationCell( $date, $startTime) {
 		$family	= new TSJIPPY\FAMILY\Family();
@@ -785,13 +810,14 @@ class Schedules{
 		$this->getScheduleSessions();
 
 		$rowSpan	= '';
+		$dataset	= '';
 		$class		= 'orientation';
 
 		if(isset($this->currentSchedule->sessions[$date][$startTime])){
 			$this->currentSession		= $this->currentSchedule->sessions[$date][$startTime];
 			$event						= $this->currentSession->events[0];
 
-			$hostId			= $event->organizer-id;
+			$hostId		= $event->organizer-id;
 			$dataset	= "data-start_time='{$event->start_time}' data-end_time='{$event->end_time}' data-session-id='{$this->currentSession->id}'";
 			if (is_numeric($hostId)) {
 				$dataset	.= " data-host='".get_userdata($hostId)->display_name."' data-host-id='$hostId'";
@@ -907,13 +933,9 @@ class Schedules{
 	}
 
 	/**
-	 * Write all rws of a schedule table
-	 *
-	 * @return 	array					Rows html
+	 * Write all rows of a schedule table
 	*/
-	public function writeRows(){
-		$html 					= '';
-		
+	public function writeRows(){		
 		$this->nextStartTimes	= [];
 
 		//loop over the rows
@@ -957,35 +979,45 @@ class Schedules{
 				$mealScheduleRow	= false;
 				$description		= $startTime;
 			}
-
-			//loop over the dates to write a cell per date in this timerow
-			$cells	= '';
-			while(true){
-				if($this->nextStartTimes[$date] > $startTime){
-					$cells	.= "<td class='hidden'>Available</td>";
-				}else{
-					//mealschedule
-					if($mealScheduleRow){
-						$cells .= $this->writeMealCell($date, $startTime);
-					//Orientation schedule
-					}else{
-						$cells .= $this->writeOrientationCell($date, $startTime);
-					}
-				}
-
-				if($date >= $this->currentSchedule->end_date){
-					break;
-				}
-
-				$date	= gmdate('Y-m-d', strtotime('+1 day', strtotime($date)));
-			}
 			
 			//Show the row if we can see all rows or the row is a mealschedule row
 			if (!$this->onlyMeals || $mealScheduleRow || !empty($this->defaultSubject)) {
-				$html  .= "<tr class='table-row' data-start_time='$startTime' data-end_time='$endTime'>";
-					$html 	.= "<td $extra class='sticky' label=''><strong>$description</strong></td>";
-					$html	.= $cells;
-				$html .= "</tr>";
+				?>
+				<tr class='table-row' data-startTime='<?php echo esc_attr($startTime); ?>' data-endTime='<?php echo esc_attr($endTime); ?>'>
+					<td <?php echo esc_attr($extra); ?> class='sticky'>
+						<strong>
+							<?php echo esc_html($description); ?>
+						</strong>
+					</td>
+					
+					<?php
+					//loop over the dates to write a cell per date in this timerow
+					while(true){
+						if($this->nextStartTimes[$date] > $startTime){
+							?>
+							<td class='hidden'>
+								Available
+							</td>
+							<?php
+						}else{
+							//mealschedule
+							if($mealScheduleRow){
+								echo wp_kses_post($this->writeMealCell($date, $startTime));
+							//Orientation schedule
+							}else{
+								echo wp_kses_post($this->writeOrientationCell($date, $startTime));
+							}
+						}
+
+						if($date >= $this->currentSchedule->end_date){
+							break;
+						}
+
+						$date	= gmdate('Y-m-d', strtotime('+1 day', strtotime($date)));
+					}
+					?>
+				</tr>
+				<?php
 			}
 
 			if($startTime >= $this->currentSchedule->end_time){
@@ -993,8 +1025,6 @@ class Schedules{
 			}
 			$startTime		= $endTime;
 		}//end row
-		
-		return $html;
 	}
 
 	/**
@@ -1002,7 +1032,7 @@ class Schedules{
 	 *
 	 * @param	string	$date		the date
 	 *
-	 * @return 	array					Rows html
+	 * @return 	string					Rows html
 	*/
 	public function getMobileDay($date){
 		$dateTime		= strtotime($date);
@@ -1053,6 +1083,7 @@ class Schedules{
 				//Show the row if we can see all rows or the row is a mealschedule row
 				if (!$this->onlyMeals || $mealScheduleRow  || !empty($this->defaultSubject)) {
 					//mealschedule
+					$data			= [];
 					if($mealScheduleRow){
 						$data			= $this->writeMealCell($date, $startTime, true);
 					//Orientation schedule
@@ -1062,7 +1093,7 @@ class Schedules{
 							$description	.=	' - '.$data['event']->end_time;
 						}
 					}
-					$content	= $data['text'];
+					$content	= $data['text'] ?? '';
 					
 					if(
 						$content != 'Available'		||	// There is something scheduled
@@ -1307,12 +1338,12 @@ class Schedules{
 	
 					<h4>Warnings</h4>
 					<label>
-						<input type="checkbox" name="reminders[]" value="15" <?php echo $checked1;?>>
+						<input type="checkbox" name="reminders[]" value="15" <?php echo esc_attr($checked1);?>>
 						Send a remider 15 minutes before the start
 					</label>
 					<br>
 					<label>
-						<input type="checkbox" name="reminders[]" value="1440" <?php echo $checked2;?>>
+						<input type="checkbox" name="reminders[]" value="1440" <?php echo esc_attr($checked2);?>>
 						Send a remider 1 day before the start
 					</label>
 					<br>
@@ -1332,7 +1363,7 @@ class Schedules{
 				<div class="modal-content">
 					<span class="close">&times;</span>
 					<?php
-						echo $this->addScheduleForm(true);
+						echo wp_kses_post($this->addScheduleForm(true));
 					?>
 				</div>
 			</div>
@@ -1375,7 +1406,9 @@ class Schedules{
 			<datalist id="website-users">
 				<?php
 				foreach(TSJIPPY\getUserAccounts(true) as $user){
-					echo "<option value='{$user->display_name}' data-value='{$user->ID}'></option>";
+					?>
+					<option value='<?php echo esc_attr($user->display_name); ?>' data-value='<?php echo esc_attr($user->ID); ?>'></option>
+					<?php
 				}
 				?>
 			</datalist>
@@ -1454,7 +1487,11 @@ class Schedules{
 
 					<?php
 					foreach($userRoles as $key=>$roleName){
-						echo "<option value='$key'>$roleName</option>";
+						?>
+						<option value='<?php echo esc_attr($key); ?>'>
+							<?php echo esc_html($roleName); ?>
+						</option>
+						<?php
 					}
 					?>
 				</select>
@@ -1469,7 +1506,11 @@ class Schedules{
 
 						<?php
 						foreach($userRoles as $key=>$roleName){
-							echo "<option value='$key'>$roleName</option>";
+							?>
+							<option value='<?php echo esc_attr($key); ?>'>
+								<?php echo esc_html($roleName); ?>
+							</option>
+							<?php
 						}
 						?>
 					</select>

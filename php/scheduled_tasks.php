@@ -107,8 +107,13 @@ function removeOldSchedules(){
 function addRepeatedEvents(){
 	global $wpdb;
 
-	$query		= "SELECT * FROM `$wpdb->postmeta` WHERE `meta_key`='eventdetails'";
-	$results	= $wpdb->get_results($query);
+	$results	= $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT * FROM %i WHERE `meta_key`=%s",
+			$wpdb->postmeta,
+			'eventdetails'
+		)
+	);
 
 	foreach($results as $result){
 		$details	= maybe_unserialize($result->meta_value);

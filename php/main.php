@@ -24,7 +24,13 @@ function editButton($buttonHtml, $post, $content){
     $schedules  = new Schedules();
 
     $query  = "SELECT * FROM `{$schedules->sessionTableName}` WHERE `post_ids` LIKE '%{$post->ID}%';";
-    $result = $wpdb->get_results($query);
+    $result = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT * FROM %i WHERE `post_ids` LIKE %s",
+            $schedules->sessionTableName,
+            "%".$wpdb->esc_like($post->ID)."%"
+        )
+    );
     
     if(!empty($result)){;
         $url        = TSJIPPY\ADMIN\getDefaultPageLink('events', 'schedules-pages')."?schedule={$result[0]->schedule_id}&session={$result[0]->id}";

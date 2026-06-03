@@ -59,8 +59,12 @@ class Events{
 	*/
 	public function retrieveSingleEvent($postId){
 		global $wpdb;
-		$query		= "SELECT * FROM {$wpdb->prefix}posts INNER JOIN `{$this->tableName}` ON {$wpdb->prefix}posts.ID={$this->tableName}.post_id WHERE post_id=$postId ORDER BY ABS( DATEDIFF( start_date, CURDATE() ) ) LIMIT 1";
-		$results	= $wpdb->get_results($query);
+		$results	= $wpdb->get_results($wpdb->prepare(
+			"SELECT * FROM %i as posts INNER JOIN %i as events ON posts.ID = events.post_id WHERE post_id=%d ORDER BY ABS( DATEDIFF( start_date, CURDATE() ) ) LIMIT 1",
+			$wpdb->posts,
+			$this->tableName,
+			$postId
+		));
 		
 		if(empty($results)){
 			return false;

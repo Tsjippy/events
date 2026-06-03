@@ -30,29 +30,36 @@ class DisplayEvents extends Events{
 		global $wpdb;
 
 		//select all events attached to a post with publish status
-		$query	 = "SELECT DISTINCT {$wpdb->posts}.*, {$wpdb->prefix}tsjippy_events.* FROM {$wpdb->posts} ";
-		$query	.= "INNER JOIN `{$this->tableName}` ON {$wpdb->posts}.ID={$this->tableName}.post_id";
+		$query	 = "SELECT DISTINCT posts.*, events.* FROM %i as posts INNER JOIN %i as events ON posts.ID=events.post_id";
+		$values	 = [
+			$wpdb->posts,
+			$this->tableName
+		];
 		
 		if(!empty($cats)){
-			$query	.= " LEFT JOIN `{$wpdb->prefix}term_relationships` ON {$wpdb->prefix}posts.ID={$wpdb->prefix}term_relationships.object_id";
+			$query	.= " LEFT JOIN %i as relations ON posts.ID=relations.object_id";
+			$values[] = `{$wpdb->prefix}term_relationships`;
 		}
 		
-		$query	 .= " WHERE  {$wpdb->prefix}posts.post_status='publish'";
+		$query	 .= " WHERE posts.post_status='publish'";
 		
 		//start date is greater than or the requested date falls in between a multiday event
 		if(!empty($startDate)){
-			$query	.= " AND(`{$this->tableName}`.`start_date` >= '$startDate' OR '$startDate' BETWEEN `{$this->tableName}`.start_date and `{$this->tableName}`.end_date)";
+			$query	.= " AND(events.`start_date` >= %s OR %s BETWEEN events.start_date and events.end_date)";
+			$values[] = $startDate;
+			$values[] = $startDate;
 		}
 		
 		//any event who starts before the end_date
 		if(!empty($endDate)){
-			$query		.= " AND `{$this->tableName}`.`start_date` <= '$endDate'";
+			$query		.= " AND events.`start_date` <= %s";
+			$values[] = $endDate;
 		}
 
 		//get events with a specific category
 		if(!empty($cats)){
 			$cats		= implode(', ', $cats);
-			$query		.= " AND (`{$wpdb->prefix}term_relationships`.`term_taxonomy_id` IN ($cats) OR `{$wpdb->prefix}term_relationships`.`term_taxonomy_id` IS NULL)";
+			$query		.= " AND (relations.`term_taxonomy_id` IN ($cats) OR relations.`term_taxonomy_id` IS NULL)";
 		}
 		
 		//extra query
@@ -61,21 +68,23 @@ class DisplayEvents extends Events{
 		}
 		
 		//exclude private events which are not ours
-		$userId	 = get_current_user_id();
-		$query	.= " AND (`{$this->tableName}`.`only_for` IS NULL OR `{$this->tableName}`.`only_for`='$userId')";
+		$query	.= " AND (events.`only_for` IS NULL OR events.`only_for`=%d)";
+		$values[] = get_current_user_id();
 
 		//sort on start_date
-		$query	.= " ORDER BY `{$this->tableName}`.`start_date`, `{$this->tableName}`.`start_time` ASC";
+		$query	.= " ORDER BY events.`start_date`, events.`start_time` ASC";
 
 		//LIMIT must be the very last
 		if(is_numeric($amount)){
-			$query	.= "  LIMIT $amount";
+			$query	.= "  LIMIT %d";
+			$values[] = $amount;
 		}
 		if(is_numeric($offset)){
-			$query	.= "  OFFSET $offset";
+			$query	.= "  OFFSET %d";
+			$values[] = $offset;
 		}
 
-		$this->events 	=  $wpdb->get_results($query);
+		$this->events 	=  $wpdb->get_results($wpdb->prepare($query, $values));
 	}
 
 	/**
@@ -344,9 +353,6 @@ class DisplayEvents extends Events{
 			}
 		}
 
-		//set the timezone
-		date_default_timezone_set(wp_timezone_string());
-
 		$title			= urlencode($event->post_title);
 		$description	= urlencode("<a href='".get_permalink($event->post_id)."'>Read more on ".SITEURLWITHOUTSCHEME."</a>");
 		$location		= urlencode($event->location);
@@ -355,7 +361,7 @@ class DisplayEvents extends Events{
 
 		if($event->allday){
 			$startdt	= '';
-			$enddt		= gmdate('Ymd',strtotime('+1 day', $event->end_date));
+			$enddt		= gmdate('Ymd', strtotime('+1 day', $event->end_date));
 		}else{
 			$startdt	= $startDate."T".gmdate('His',strtotime($event->start_time)).'Z';
 			$enddt		= $endDate."T".gmdate('His',strtotime($event->end_time)).'Z';
@@ -879,7 +885,12 @@ class DisplayEvents extends Events{
 									for ($day = 0; $day <= 6; $day++) {
 										$content	= $this->calendarRows['allday'][$day];
 										?>
-										<td class='calendar-hour<?php if(!empty($content)){echo ' has-event';}?>' data-date='<?php echo gmdate('Ymd', $weekDayTimestamp);?>' data-start_time='<?php echo esc_attr($this->dayStartTime);?>' <?php if($colSizes[$day] > 1){echo " colspan='{$colSizes[$day]}'";}?>>
+										<td 
+											class='calendar-hour<?php if(!empty($content)){echo ' has-event';}?>' 
+											data-date='<?php echo esc_attr(gmdate('Ymd', $weekDayTimestamp));?>' 
+											data-start_time='<?php echo esc_attr($this->dayStartTime);?>' 
+											<?php if($colSizes[$day] > 1){echo esc_attr(" colspan='{$colSizes[$day]}'");}?>
+										>
 											<?php
 											foreach($this->calendarRows['allday'][$day] as $event){
 												echo wp_kses_post("$event<br>");
@@ -1067,8 +1078,11 @@ class DisplayEvents extends Events{
 	 */
 	public function sendEventReminder($eventId){
 		global $wpdb;
-		$query		= "SELECT * FROM $this->tableName WHERE id=$eventId";
-		$results	= $wpdb->get_results($query);
+		$results	= $wpdb->get_results($wpdb->prepare(
+			"SELECT * FROM %i WHERE id=%d",
+			$this->tableName,
+			$eventId
+		));
 		
 		if(empty($results)){
 			return false;

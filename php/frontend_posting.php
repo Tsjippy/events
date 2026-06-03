@@ -336,14 +336,12 @@ function repetitionIntervalSettings($eventDetails){
 
 		<?php
 		foreach($weekNames as $weekName){
-			if(!empty($eventDetails['repeat']['weeks']) && is_array($eventDetails['repeat']['weeks']) && in_array($weekName, $eventDetails['repeat']['weeks'])){
-				$checked = 'checked';
-			}else{
-				$checked = '';
-			}
-			echo "<label class='option-label'>";
-				echo "<input type='checkbox' name='event[repeat][weeks][]' value='$weekName' $checked>$weekName";
-			echo "</label>";
+			?>
+			<label class='option-label'>
+				<input type='checkbox' name='event[repeat][weeks][]' value='<?php echo esc_attr($weekName); ?>' <?php if(is_array($eventDetails['repeat']['weeks'] ?? '') && in_array($weekName, $eventDetails['repeat']['weeks'])){echo 'checked';} ?>>
+				<?php echo esc_html($weekName); ?>
+			</label>
+			<?php
 		}
 		?>
 	</div>
