@@ -7,6 +7,7 @@
 
 ### Changed
 - html to dom elements
+- use gmdate instead of date
 
 ### Fixed
 
