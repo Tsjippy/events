@@ -134,7 +134,7 @@ function displayEventMeta(){
 				<dl>
 					<dd>
 						<?php
-						echo $date;
+						esc_html($date);
 						?>
 					</dd>
 				</dl>
@@ -147,7 +147,7 @@ function displayEventMeta(){
 				<dl>
 					<dd>
 						<?php
-						echo $time;
+						esc_html($time);
 						?>
 					</dd>
 				</dl>

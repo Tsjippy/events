@@ -826,26 +826,26 @@ class DisplayEvents extends Events{
 		ob_start();
 
 		?>
-		<div class="events-wrap" data-weeknr="<?php echo $weekNr;?>" data-year="<?php echo $year;?>">
+		<div class="events-wrap" data-weeknr="<?php echo esc_attr($weekNr);?>" data-year="<?php echo esc_attr($year);?>">
 			<div class="event overview">
 				<div class="navigator">
 					<div class="prev">
-						<a href="#" class="prevnext" data-weeknr="<?php echo $prevWeekNr;?>" data-year="<?php echo $year;?>">
-							<span><</span> <?php echo $prevWeekNr;?>
+						<a href="#" class="prevnext" data-weeknr="<?php echo esc_attr($prevWeekNr);?>" data-year="<?php echo esc_attr($year);?>">
+							<span><</span> <?php echo esc_html($prevWeekNr);?>
 						</a>
 					</div>
 					<div class="current">
-						Week <?php echo $weekNr;?>
+						Week <?php echo esc_html($weekNr);?>
 					</div>
 					<div class="next">
-						<a href="#" class="prevnext" data-weeknr="<?php echo $nextWeekNr;?>" data-year="<?php echo $year;?>">
-							<?php echo $nextWeekNr;?> <span>></span>
+						<a href="#" class="prevnext" data-weeknr="<?php echo esc_attr($nextWeekNr);?>" data-year="<?php echo esc_attr($year);?>">
+							<?php echo esc_html($nextWeekNr);?> <span>></span>
 						</a>
 					</div>
 				</div>
 				<div class="calendar-table">
 					<table class="week-container">
-						<caption>Week overview for week <?php echo $weekNr;?></caption>
+						<caption>Week overview for week <?php echo esc_html($weekNr);?></caption>
 						<thead>
 							<th> </th>
 							<?php
