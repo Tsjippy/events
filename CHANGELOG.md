@@ -2,16 +2,23 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.3] - 2026-06-03
+
+
+### Added
 - escaping functions
 - echo escapaping
 
 ### Changed
 - html to dom elements
 - use gmdate instead of date
-
-### Fixed
-
-### Updated
 
 ## [10.2.2] - 2026-06-01
 
