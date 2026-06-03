@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- escaping functions
 
 ### Changed
 - html to dom elements
