@@ -851,14 +851,12 @@ class DisplayEvents extends Events{
 							<?php
 							$weekDayTimestamp	= $firstWeekDay;
 							for ($day = 0; $day <= 6; $day++) {
-								$name		= gmdate('D', $weekDayTimestamp);
-								$nr			= gmdate('d', $weekDayTimestamp);
-								$colspan	= '';
-
-								if($colSizes[$day] > 1){
-									$colspan	= " colspan='{$colSizes[$day]}'";
-								}
-								echo "<th$colspan>$name<br>$nr</th>";
+								?>
+								<th<?php if($colSizes[$day] > 1){echo esc_attr("colspan='{$colSizes[$day]}'");}?>>
+									<?php echo esc_html(gmdate('D', $weekDayTimestamp));?><br>
+									<?php echo esc_html(gmdate('d', $weekDayTimestamp));?>
+								</th>
+								<?php
 								$weekDayTimestamp	= strtotime("+1 days", $weekDayTimestamp);
 							}
 							?>
@@ -868,71 +866,78 @@ class DisplayEvents extends Events{
 							<?php
 							// Write all day events
 							if(!empty($this->calendarRows['allday'])){
-								echo "<tr class='calendar-row'>";
-									echo "<td class=''><strong>All day</strong></td>";
+								?>
+								<tr class='calendar-row'>
+									<td class=''>
+										<strong>All day</strong>
+									</td>
+
+									<?php
 									//loop over the dayweeks
 									$weekDayTimestamp	= $firstWeekDay;
 									for ($day = 0; $day <= 6; $day++) {
 										$content	= $this->calendarRows['allday'][$day];
-										$dateString	= gmdate('Ymd', $weekDayTimestamp);
-
-										if(empty($content)){
-											$class = '';
-										}else{
-											$class = ' has-event';
-										}
-
-										$colspan	= '';
-										if($colSizes[$day] > 1){
-											$colspan	= " colspan='{$colSizes[$day]}'";
-										}
-
-										echo "<td class='calendar-hour$class' data-date='$dateString' data-start_time='$this->dayStartTime'$colspan>";
+										?>
+										<td class='calendar-hour<?php if(!empty($content)){echo ' has-event';?>' data-date='<?php echo gmdate('Ymd', $weekDayTimestamp);?>' data-start_time='<?php echo esc_attr($this->dayStartTime);?>' <?php if($colSizes[$day] > 1){echo " colspan='{$colSizes[$day]}'";}?>>
+											<?php
 											foreach($this->calendarRows['allday'][$day] as $event){
 												echo "$event<br>";
 											}
-										echo "</td>";
+											?>
+										</td>
+										<?php
 										$weekDayTimestamp	= strtotime("+1 days", $weekDayTimestamp);
 									}
-								echo '</tr>';
+								?>
+								</tr>
+								<?php
 							}
 
 							// make sure we do not output them again
 							unset($this->calendarRows['allday']);
 
 							//one row per half an hour
-							foreach($this->calendarRows as $i=>$row){
-								$time	= $i/2;
-								echo "<tr class='calendar-row'>";
+							foreach($this->calendarRows as $i => $row){
+								?>
+								<tr class='calendar-row'>
+									<?php
 									if($i % 2 == 0){
 										// Write the whole hour
-										echo "<td class='calendar-hour-head' rowspan='2'><strong>$time:00</strong></td>";
+										?>
+										<td class='calendar-hour-head' rowspan='2'>
+											<strong>
+												<?php echo esc_html($i/2);?>:00
+											</strong>
+										</td>
+										<?php
 									}else{
-										// add an hidden cell as the first cell with the hour has a rowspan of 2
-										echo "<td class='hidden'></td>";
+										// add a hidden cell as the first cell with the hour has a rowspan of 2
+										?>
+										<td class='hidden'></td>
+										<?php
 									}
 
 									//loop over the dayweeks
 									$weekDayTimestamp	= $firstWeekDay;
-									foreach($row as $day=>$cell){
+									foreach($row as $day => $cell){
 										$colspan	= $colSizes[$day];
 										for ($col = 0; $col < $colspan; $col++) {
 											if(isset($cell[$col])){
-												echo $cell[$col];
+												echo esc_html($cell[$col]);
 											}else{
-												$span	= $colspan-$col;
-												if($span > 1){
-													$span	= " colspan='$span'";
-												}else{
-													$span	= '';
-												}
-												echo "<td class='calendar-hour' data-date='".date('Ymd', $weekDayTimestamp)."'$span></td>";
+												$span	= $colspan - $col;
+												
+												?>
+												<td class='calendar-hour' data-date='<?php echo esc_attr(date('Ymd', $weekDayTimestamp));?>'<?php if($span > 1){echo esc_attr(" colspan='$span'");}?>></td>
+												<?php
 												break;
 											}
 											$weekDayTimestamp	= strtotime("+1 days", $weekDayTimestamp);
 										}
 									}
-								echo "</tr>";
+								?>
+								</tr>
+								<?php
 							}
 							?>
 						</tbody>
@@ -942,7 +947,11 @@ class DisplayEvents extends Events{
 			<div class="event details-wrapper">
 				<div class="event-details-wrapper" data-date="empty">
 					<article class="event-article">
-						<h4 class="event-title"><a>No Event selected</a></h4>
+						<h4 class="event-title">
+							<a>
+								No Event selected
+							</a>
+						</h4>
 					</article>
 				</div>
 				<?php
@@ -953,6 +962,7 @@ class DisplayEvents extends Events{
 		<?php
 
 		return ob_get_clean();
+							}
 	}
 
 	/**

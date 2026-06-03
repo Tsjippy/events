@@ -259,7 +259,7 @@ class Schedules{
 		$this->currentSchedule->start_date	= max([date('Y-m-d'), $this->currentSchedule->start_date]);
 		
 		?>
-		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo $this->currentSchedule->id; ?>" data-target="<?php echo $this->currentSchedule->name; ?>" data-slotsize="<?php echo $this->timeSlotSize;?>" data-fixedslotsize="<?php echo $this->fixedTimeSlotSize;?>" data-hide_names="<?php echo $this->hideNames;?>" data-subject="<?php echo $this->defaultSubject;?>">
+		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo esc_attr($this->currentSchedule->id); ?>" data-target="<?php echo esc_attr($this->currentSchedule->name); ?>" data-slotsize="<?php echo esc_attr($this->timeSlotSize);?>" data-fixedslotsize="<?php echo esc_attr($this->fixedTimeSlotSize);?>" data-hide_names="<?php echo esc_attr($this->hideNames);?>" data-subject="<?php echo esc_attr($this->defaultSubject);?>">
 			<div class="modal publish-schedule hidden">
 				<div class="modal-content">
 					<span id="modal-close" class="close">&times;</span>
@@ -281,17 +281,17 @@ class Schedules{
 				?>
 				<div class='warning'>
 					This schedule has no website user connected to it.<br>
-					Please <button type="button" class="button small schedule-action edit-schedule" data-schedule-id="<?php echo $this->currentSchedule->id;?>">Edit</button> the schedule to add one.
+					Please <button type="button" class="button small schedule-action edit-schedule" data-schedule-id="<?php echo esc_attr($this->currentSchedule->id);?>">Edit</button> the schedule to add one.
 				</div>
 				<?php
 			}
 			?>
 			<div style='display:inline-block;'>
 				<h3 class="table-title">
-					Schedule for <?php echo $this->currentSchedule->name;?>
+					Schedule for <?php echo esc_attr($this->currentSchedule->name);?>
 				</h3>
 				<h3 class="table-title sub-title">
-					<?php echo $this->currentSchedule->info;?>
+					<?php echo esc_attr($this->currentSchedule->info);?>
 				</h3>
 			</div>
 
@@ -308,8 +308,8 @@ class Schedules{
 					?>
 					<div class='schedule publish warning'>
 						This schedule is currently not scheduled.<br>
-						Publish it for <?php esc_attr($name);?> to see it.<br>
-						<button type='button' class='button schedule-action publish' data-target='<?php echo $this->currentSchedule->target;?>' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Publish</button>
+						Publish it for <?php echo esc_attr($name);?> to see it.<br>
+						<button type='button' class='button schedule-action publish' data-target='<?php echo esc_attr($this->currentSchedule->target);?>' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Publish</button>
 					</div>
 					<?php
 				}
@@ -329,7 +329,7 @@ class Schedules{
 				}
 
 				?>
-				<table class="tsjippy table schedule" <?php esc_attr($dataSet);?>>
+				<table class="tsjippy table schedule" <?php echo esc_attr($dataSet);?>>
 					<thead>
 						<tr>
 							<th class='sticky'>Dates</th>
@@ -362,8 +362,8 @@ class Schedules{
 				if($this->admin){
 					?>
 					<div class='schedule-actions'>
-						<button type='button' class='button schedule-action edit-schedule' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Edit</button>
-						<button type='button' class='button schedule-action remove-schedule' data-schedule-id='<?php echo $this->currentSchedule->id;?>'>Remove</button>
+						<button type='button' class='button schedule-action edit-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Edit</button>
+						<button type='button' class='button schedule-action remove-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Remove</button>
 						<?php
 						//schedule is not yet set.
 						if(!$this->currentSchedule->published && $this->currentSchedule->target != 0){
@@ -387,7 +387,7 @@ class Schedules{
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' class='no-reset' name='schedule-id' value='<?php echo $this->currentSchedule->id;?>'>
+					<input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($this->currentSchedule->id);?>'>
 
 					<?php
 					if($this->currentSchedule->lunch){
@@ -444,7 +444,7 @@ class Schedules{
 					?>
 					<div class='lunch select-wrapper hidden'>
 						<label>
-							Select the gmdate(s) to host <?php esc_attr($nameString);?> for lunch
+							Select the gmdate(s) to host <?php echo esc_attr($nameString);?> for lunch
 						</label>
 						<br>
 
@@ -452,7 +452,7 @@ class Schedules{
 						foreach($availableLunches as $availableLunch){
 							?>
 							<label class='date'>
-								<input type='checkbox' name='date[]' value='<?php esc_attr($availableLunch);?>'>
+								<input type='checkbox' name='date[]' value='<?php echo esc_attr($availableLunch);?>'>
 								<?php echo gmdate('l j F', strtotime($availableLunch));?>
 							</label>
 							<br>
@@ -462,14 +462,14 @@ class Schedules{
 					</div>
 					<div class='diner select-wrapper <?php if($this->currentSchedule->lunch){echo 'hidden';}?>'>
 						<label>
-							Select the gmdate(s) to host <?php esc_attr($nameString);?> for diner
+							Select the gmdate(s) to host <?php echo esc_attr($nameString);?> for diner
 						</label>
 						<br>
 						<?php
 						foreach($availableDiners as $availableDiner){
 							?>
 							<label class='date'>
-								<input type='checkbox' name='date[]' value='<?php esc_attr($availableDiner);?>'>
+								<input type='checkbox' name='date[]' value='<?php echo esc_attr($availableDiner);?>'>
 								<?php echo gmdate('l j F', strtotime($availableDiner));?>
 							</label>
 							<br>
@@ -1249,39 +1249,39 @@ class Schedules{
 		}
 		?>
 		<!-- Add session modal -->
-		<div name='add-session' class="modal <?php esc_attr($hidden);?>">
+		<div name='add-session' class="modal <?php echo esc_attr($hidden);?>">
 			<div class="modal-content">
 				<span class="close">&times;</span>
 				<form action="" method="post">
-					<input type='hidden' class='no-reset' name='schedule-id' value='<?php esc_attr($schdeuleId);?>'>
-					<input type='hidden' class='no-reset' name='session-id' value='<?php esc_attr($sessionId);?>'>
-					<input type='hidden' class='no-reset' name='host-id' value='<?php esc_attr($hostId);?>'>
+					<input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($schdeuleId);?>'>
+					<input type='hidden' class='no-reset' name='session-id' value='<?php echo esc_attr($sessionId);?>'>
+					<input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($hostId);?>'>
 					
 					<h3>Add a session</h3>
 
 					<label>
 						<h4>Date:</h4>
-						<input type='date' name='date' class='wide'  value='<?php esc_attr($date);?>' required>
+						<input type='date' name='date' class='wide'  value='<?php echo esc_attr($date);?>' required>
 					</label>
 
 					<label>
 						<h4>Select a start time:</h4>
-						<input type="time" name="start_time" class="time wide"  value='<?php esc_attr($startTime);?>' step="900" min="08:00" max="18:00" required>
+						<input type="time" name="start_time" class="time wide"  value='<?php echo esc_attr($startTime);?>' step="900" min="08:00" max="18:00" required>
 					</label>
 					
 					<label>
 						<h4>Select an end time:</h4>
-						<input type="time" name="end_time" class="time wide" value='<?php esc_attr($endTime);?>' step="900" min="08:00" max="18:00" required>
+						<input type="time" name="end_time" class="time wide" value='<?php echo esc_attr($endTime);?>' step="900" min="08:00" max="18:00" required>
 					</label>
 					
 					<label>
 						<h4>Subject</h4>
-						<input type="text" name="subject" class="wide" value='<?php esc_attr($subject);?>' required>
+						<input type="text" name="subject" class="wide" value='<?php echo esc_attr($subject);?>' required>
 					</label>
 					
 					<label>
 						<h4>Location</h4>
-						<input type="text"  name="location" class="wide" value='<?php esc_attr($location);?>'>
+						<input type="text"  name="location" class="wide" value='<?php echo esc_attr($location);?>'>
 					</label>
 					
 					<?php
@@ -1365,7 +1365,7 @@ class Schedules{
 		<form class='add-schedule-form'>
 			<input type="hidden" class="no-reset" name="schedule-id">
 			<input type="hidden" class="no-reset" name="target-id">
-			<input type="hidden" class="no-reset" name="update" value="<?php esc_attr($update);?>">
+			<input type="hidden" class="no-reset" name="update" value="<?php echo esc_attr($update);?>">
 			
 			<label>
 				<h4>Name of the person the schedule is for</h4>

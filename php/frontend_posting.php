@@ -194,17 +194,17 @@ function displayRepetitionParameters($eventDetails){
 			<!-- Same Day of the week -->
 			<label class='option-label'>
 				<input type='radio' name='event[repeat][datetype]' value='patterned' <?php if($repeatParam['datetype'] == 'patterned'){echo 'checked';}?>>
-				On the <span class='weekword'><?php esc_html($occurence);?></span> <span class='dayname'><?php esc_html($dayName);?></span> of the month
+				On the <span class='weekword'><?php echo esc_html($occurence);?></span> <span class='dayname'><?php echo esc_html($dayName);?></span> of the month
 			</label>
 
 			<!-- Last dayname of the month-->
 			<label class='option-label last-dayname-of-month <?php echo esc_html($hideLast);?>'>
 				<input type='radio' name='event[repeat][datetype]' value='last' <?php if($repeatParam['datetype'] == 'last'){echo 'checked';}?>>
-				On the last <span class='dayname'><?php esc_html($dayName);?></span> of the month
+				On the last <span class='dayname'><?php echo esc_html($dayName);?></span> of the month
 			</label>
 
 			<!-- On the very last day of the month-->
-			<label class='option-label last-day-of-month <?php esc_attr($hideLastDay);?>'>
+			<label class='option-label last-day-of-month <?php echo esc_attr($hideLastDay);?>'>
 				<input type='radio' name='event[repeat][datetype]' value='lastday' <?php if($repeatParam['datetype'] == 'lastday'){echo 'checked';}?>>
 				On the last day of the month
 			</label>
@@ -226,10 +226,10 @@ function displayRepetitionParameters($eventDetails){
 				
 				foreach($includeDates as $index=>$includeDate){
 					?>
-					<div id="includedate-div-<?php esc_attr($index);?>" class="clone-div" data-div-id="<?php esc_attr($index);?>">
+					<div id="includedate-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
 						<label>Include date <?php echo $index+1;?></label>
 						<div class='button-wrapper'>
-							<input type="date" name="event[repeat][includedates][<?php esc_attr($index);?>]" style="flex: 9;" value="<?php esc_attr($includeDate);?>">
+							<input type="date" name="event[repeat][includedates][<?php echo esc_attr($index);?>]" style="flex: 9;" value="<?php echo esc_attr($includeDate);?>">
 							<button type="button" class="add button" style="flex: 1;">+</button>
 						</div>
 					</div>
@@ -278,10 +278,10 @@ function displayRepetitionParameters($eventDetails){
 			
 			foreach($excludeDates as $index=>$excludeDate){
 				?>
-				<div id="excludedate-div-<?php esc_attr($index);?>" class="clone-div" data-div-id="<?php esc_attr($index);?>">
+				<div id="excludedate-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
 					<label>Exclude date <?php echo $index+1;?></label>
 					<div class='button-wrapper'>
-						<input type="date" name="event[repeat][excludedates][<?php esc_attr($index);?>]" style="flex: 9;" value="<?php esc_attr($excludeDate);?>">
+						<input type="date" name="event[repeat][excludedates][<?php echo esc_attr($index);?>]" style="flex: 9;" value="<?php echo esc_attr($excludeDate);?>">
 						<button type="button" class="add button" style="flex: 1;">+</button>
 					</div>
 				</div>
@@ -319,10 +319,10 @@ function repetitionIntervalSettings($eventDetails){
 	}
 
 	?>
-	<label class='repeatinterval <?php esc_attr($samedate);?>'>
+	<label class='repeatinterval <?php echo esc_attr($samedate);?>'>
 		<h4>Repeat every </h4>
 		
-		<input type='number' name='event[repeat][interval]' value='<?php esc_attr($interval);?>'>
+		<input type='number' name='event[repeat][interval]' value='<?php echo esc_attr($interval);?>'>
 		<span id='repeattype'>days</span>
 	</label>
 
