@@ -63,15 +63,15 @@ function showCalendar(){
 		<div id='calendaraddingoptions' class='hidden'>
 			<p>
 				To add the calendar to your outlook calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">outlook.office.com/mail</a>.<br>
-				Then add <code class='calendarurl'>webcal://<?php echo SITEURLWITHOUTSCHEME;?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code> in the 'subscribe via internet' screen
+				Then add <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code> in the 'subscribe via internet' screen
 			</p>
 			<p>
 				To add the calendar to your gmail calendar go to <a href='https://calendar.google.com/calendar/u/1/r/settings/addbyurl' target="_blank">calendar.google.com</a>.<br>
-				Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo SITEURLWITHOUTSCHEME;?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
+				Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
 			</p>
 			<p>
 				To add the calendar to outlook click on 'open agenda'->'from the internet'.<br>
-				Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo SITEURLWITHOUTSCHEME;?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
+				Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME);?>/public_calendar/tsjippy_events.ics?id=<?php echo get_current_user_id();?></code>.
 			</p>
 		</div>
 		<div class="search-form">
@@ -86,38 +86,41 @@ function showCalendar(){
 						for ($m=1; $m<13; $m++){
 							$monthName	= gmdate("F", mktime(0, 0, 0, $m, 10));
 							$monthNum	= sprintf("%02d", $m);
-							if(isset($_GET['month']) && $_GET['month'] == $m){
-								$selected	= ' selected=selected';
-							}else{
-								$selected	= '';
-							}
-							echo "<option value='$monthNum'$selected>$monthName</option>";
+							if(isset($_GET['month']) && $_GET['month'] == $m){echo ' selected=selected';}
+							?>
+							<option value='<?php echo esc_attr($monthNum);?>'<?php if(($_GET['month'] ?? '') == $m){echo ' selected=selected';}?>>
+								<?php echo esc_html($monthName); ?>
+							</option>
+							<?php
 						}
 						?>
 					</select>
 					<select class='week-selector<?php if($view!='week'){echo ' hidden';}?>' placeholder="Select week">
 						<?php
 						for ($w=1;$w<=53;$w++){
-							if($_GET['week'] == $w){
-								$selected	= ' selected=selected';
-							}else{
-								$selected	= '';
-							}
-							echo "<option value='$w'$selected>Week $w</option>";
+							?>
+							<option value='<?php echo esc_attr($w);?>'<?php if(($_GET['week'] ?? '') == $w){echo ' selected=selected';}?>>
+								Week <?php echo esc_html($w); ?>
+							</option>
+							<?php
 						}
 						?>
 					</select>
+
 					<select class="year-selector" placeholder="Select year">
 						<?php
 						$start 	= gmdate('Y');
 						$end	= gmdate("Y",strtotime('+10 year'));
 						for ($y=$start;$y<$end;$y++){
-							if($y == $_GET['year']){
-								$selected = 'selected=selected';
-							}else{
-								$selected = '';
-							}
-							echo "<option value='$y' $selected>$y</option>";
+							
+							?>
+							<option 
+								value='<?php echo esc_attr($y);?>' 
+								<?php if($y == ($_GET['year'] ?? '')){echo 'selected=selected';}?>
+							>
+								<?php echo esc_html($y);?>
+							</option>
+							<?php
 						}
 						?>
 					</select>

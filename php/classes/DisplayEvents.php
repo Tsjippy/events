@@ -148,7 +148,7 @@ class DisplayEvents extends Events{
 
 	public function upcomingEventsArray($max, $months, $include){
 
-		$this->retrieveEvents(date("Y-m-d"), gmdate('Y-m-d', strtotime("+$months month")), $max, "", '', $include);
+		$this->retrieveEvents(gmdate("Y-m-d"), gmdate('Y-m-d', strtotime("+$months month")), $max, "", '', $include);
 
 		foreach($this->events as $key=>$event){
 			// do not keep events who already happened
@@ -208,7 +208,7 @@ class DisplayEvents extends Events{
 			$event->end_date	= $event->start_date;
 		}
 		if($event->start_date != $event->end_date){
-			$date		= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.date(DATEFORMAT, strtotime($event->end_date));
+			$date		= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.gmdate(DATEFORMAT, strtotime($event->end_date));
 		}else{
 			$date		= gmdate(DATEFORMAT, strtotime($event->start_date));
 		}
@@ -231,7 +231,7 @@ class DisplayEvents extends Events{
 				$time			= $event->start_time.' - '.$event->end_time;
 			}
 		}else{
-			$time			= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.$event->start_time.' - '.date(DATEFORMAT, strtotime($event->end_date)).' - '.$event->end_time;
+			$time			= gmdate(DATEFORMAT, strtotime($event->start_date)).' - '.$event->start_time.' - '.gmdate(DATEFORMAT, strtotime($event->end_date)).' - '.$event->end_time;
 		}
 
 		return $time;
@@ -309,12 +309,12 @@ class DisplayEvents extends Events{
 
 		if($meta['repeat']['type'] == 'weekly' && !empty($meta['repeat']['weeks'])){
 			$when	= strtolower(implode(' and ', $meta['repeat']['weeks']));
-			$day	= strtolower(Date('l', strtotime($meta['start_date'])));
+			$day	= strtolower(gmdate('l', strtotime($meta['start_date'])));
 			$html	.= " on the $when $day of the month";
 		}
 
 		if(!empty($meta['repeat']['end_date'])){
-			$html	.= " until ".date('j F Y',strtotime($meta['repeat']['end_date']));
+			$html	.= " until ".gmdate('j F Y',strtotime($meta['repeat']['end_date']));
 		}
 
 		if(!empty($meta['repeat']['amount'])){
@@ -452,8 +452,8 @@ class DisplayEvents extends Events{
 		$plusMonthStr	= gmdate('m', $plusMonth);
 		$plusYearStr	= gmdate('Y', $plusMonth);
 
-		$weekDay		= gmdate("w", strtotime(date('Y-m-01', $date)));
-		$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
+		$weekDay		= gmdate("w", strtotime(gmdate('Y-m-01', $date)));
+		$workingDate	= strtotime("-$weekDay day", strtotime(gmdate('Y-m-01', $date)));
 
 		$calendarRows	= TSJIPPY\addElement('div', '', ['class' => 'calendar-rows-wrapper']);
 		$details		= TSJIPPY\addElement('div', '', ['class' => 'calendar-details']);
@@ -478,8 +478,8 @@ class DisplayEvents extends Events{
 					$workingDateStr == gmdate('Y-m-d') ||			// date is today
 					(
 						$monthStr != gmdate('m') &&					// We are requesting another month than this month
-						date('j', $workingDate) == 1 &&				// This is the first day of the month
-						date('m', $workingDate) == $monthStr		// We are in the requested month
+						gmdate('j', $workingDate) == 1 &&				// This is the first day of the month
+						gmdate('m', $workingDate) == $monthStr		// We are in the requested month
 					)
 				){
 					$class = 'selected';
@@ -497,14 +497,14 @@ class DisplayEvents extends Events{
 					$class	.= ' has-event';
 				}
 				
-				TSJIPPY\addElement('dt', $calendar, ['class'=>"calendar-day $class", 'data-date'=>date('Ymd', $workingDate)], $day);
+				TSJIPPY\addElement('dt', $calendar, ['class'=>"calendar-day $class", 'data-date'=>gmdate('Ymd', $workingDate)], $day);
 
 				$this->weekDetails($workingDateStr, $workingDate, $hidden, $details);
 
 				//calculate the next week
 				$workingDate	= strtotime('+1 day', $workingDate);
 				//if the next day is the first day of a new week
-				if(date('w', $workingDate) == 0){
+				if(gmdate('w', $workingDate) == 0){
 					break;
 				}
 			}
@@ -537,7 +537,7 @@ class DisplayEvents extends Events{
 					<div class="month-container">
 						<dl>
 							<?php
-							$workingDate	= strtotime("-$weekDay day", strtotime(date('Y-m-01', $date)));
+							$workingDate	= strtotime("-$weekDay day", strtotime(gmdate('Y-m-01', $date)));
 							for ($y = 0; $y <= 6; $y++) {
 								$name	= gmdate('D', $workingDate);
 								?>
@@ -583,10 +583,11 @@ class DisplayEvents extends Events{
 
 		$baseUrl	= TSJIPPY\pathToUrl(PLUGINPATH.'pictures');
 
-		//$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".date('Ymd', strtotime($event->start_date))."' data-start_time='{$event->start_time}'>";
-		$wrapper	= TSJIPPY\addElement('div', $details, ['class' => "event-details-wrapper $hidden", 'data-date'=>date('Ymd', $workingDate)]);
+		//$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".gmdate('Ymd', strtotime($event->start_date))."' data-start_time='{$event->start_time}'>";
+		$wrapper	= TSJIPPY\addElement('div', $details, ['class' => "event-details-wrapper $hidden", 'data-date'=>gmdate('Ymd', $workingDate)]);
 		$heading	= TSJIPPY\addElement('h6', $wrapper, ['class' => 'event-title'], "Events for ");
-		TSJIPPY\addElement('span', $heading, ['class' => 'day'], date('j', $workingDate)."st");
+		TSJIPPY\addElement('span', $heading, ['class' => 'day'], gmdate('j', $workingDate)."st");
+		/** @disregard */
 		$heading->append(gmdate('F', $workingDate));
 
 		foreach($this->events as $event){
@@ -711,7 +712,7 @@ class DisplayEvents extends Events{
 			}
 
 			//plus one if starting at :30
-			if(date('i', strtotime($startTime)) != '00'){
+			if(gmdate('i', strtotime($startTime)) != '00'){
 				$timeIndex++;
 			}
 
@@ -762,7 +763,7 @@ class DisplayEvents extends Events{
 			$weekDayTimestamp	= strtotime('+1 day', $weekDayTimestamp);
 
 			//if the next day is the first day of a new week
-			if(date('w', $weekDayTimestamp) == 0){
+			if(gmdate('w', $weekDayTimestamp) == 0){
 				break;
 			}
 		}
@@ -803,7 +804,7 @@ class DisplayEvents extends Events{
 		$dateTime		= new \DateTime();
 
 		// Get the date of the first day of this week
-		$firstWeekDay	= $dateTime->setISODate(date('Y', $date), $weekNr, "0")->getTimestamp();
+		$firstWeekDay	= $dateTime->setISODate(gmdate('Y', $date), $weekNr, "0")->getTimestamp();
 
 		$detailHtml		= $this->getCalendarRows($firstWeekDay, $cat);
 
@@ -878,10 +879,10 @@ class DisplayEvents extends Events{
 									for ($day = 0; $day <= 6; $day++) {
 										$content	= $this->calendarRows['allday'][$day];
 										?>
-										<td class='calendar-hour<?php if(!empty($content)){echo ' has-event';?>' data-date='<?php echo gmdate('Ymd', $weekDayTimestamp);?>' data-start_time='<?php echo esc_attr($this->dayStartTime);?>' <?php if($colSizes[$day] > 1){echo " colspan='{$colSizes[$day]}'";}?>>
+										<td class='calendar-hour<?php if(!empty($content)){echo ' has-event';}?>' data-date='<?php echo gmdate('Ymd', $weekDayTimestamp);?>' data-start_time='<?php echo esc_attr($this->dayStartTime);?>' <?php if($colSizes[$day] > 1){echo " colspan='{$colSizes[$day]}'";}?>>
 											<?php
 											foreach($this->calendarRows['allday'][$day] as $event){
-												echo "$event<br>";
+												echo wp_kses_post("$event<br>");
 											}
 											?>
 										</td>
@@ -928,7 +929,7 @@ class DisplayEvents extends Events{
 												$span	= $colspan - $col;
 												
 												?>
-												<td class='calendar-hour' data-date='<?php echo esc_attr(date('Ymd', $weekDayTimestamp));?>'<?php if($span > 1){echo esc_attr(" colspan='$span'");}?>></td>
+												<td class='calendar-hour' data-date='<?php echo esc_attr(gmdate('Ymd', $weekDayTimestamp));?>'<?php if($span > 1){echo esc_attr(" colspan='$span'");}?>></td>
 												<?php
 												break;
 											}
@@ -962,7 +963,6 @@ class DisplayEvents extends Events{
 		<?php
 
 		return ob_get_clean();
-							}
 	}
 
 	/**

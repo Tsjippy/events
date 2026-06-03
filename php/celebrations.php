@@ -29,7 +29,7 @@ function getAnniversaries(){
 	$messages = [];
 
 	$events = new DisplayEvents();
-	$events->retrieveEvents(date('Y-m-d'), gmdate('Y-m-d'));
+	$events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
 
 	foreach($events->events as $event){
 		$startYear	= get_post_meta($event->ID, 'celebrationdate', true);

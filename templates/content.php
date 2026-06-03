@@ -68,8 +68,8 @@ function displayEventCategories(){
 	if(!empty($categories)){
 		?>
 		<span class='category eventmeta'>
+			<img src='<?php echo esc_url($baseUrl); ?>/event_category.png' alt='category' loading='lazy' class='event-icon'>
 			<?php
-			echo "<img src='{$baseUrl}/event_category.png' alt='category' loading='lazy' class='event-icon'>";
 			
 			//First loop over the cat to see if any parent cat needs to be removed
 			foreach($categories as $id=>$category){
@@ -89,10 +89,13 @@ function displayEventCategories(){
 			$lastKey	 = array_key_last($categories);
 			foreach($categories as $id=>$category){
 				//Only show the category if all of its subcats are not there
-				$url = get_term_link($id);
-				$category = ucfirst($category);
-				echo "<a href='$url'>$category</a>";
-				
+				$url 		= get_term_link($id);
+				$category 	= ucfirst($category);
+				?>
+				<a href='<?php echo esc_url($url); ?>'>
+					<?php echo esc_html($category); ?>
+				</a>
+				<?php
 				if($id != $lastKey){
 					echo ', ';
 				}
@@ -127,9 +130,7 @@ function displayEventMeta(){
 	<div class='event metas' style='margin-top:10px;'>
 		<div class="event-meta">
 			<div class="single-event-date">
-				<?php
-				echo "<img src='{$baseUrl}/date.png' alt='date' loading='lazy' class='event-icon'>";
-				?>
+				<img src='<?php echo esc_url($baseUrl); ?>/date.png' alt='date' loading='lazy' class='event-icon'>
 				<h4>DATE</h4>
 				<dl>
 					<dd>
@@ -140,9 +141,7 @@ function displayEventMeta(){
 				</dl>
 			</div>
 			<div class="event-time">
-				<?php
-				echo "<img src='{$baseUrl}/time_red.png' alt='time' loading='lazy' class='event-icon'>";
-				?>
+				<img src='<?php echo esc_url($baseUrl); ?>/time_red.png' alt='time' loading='lazy' class='event-icon'>
 				<h4 class="time">TIME</h4>
 				<dl>
 					<dd>
@@ -157,9 +156,7 @@ function displayEventMeta(){
 			if(!empty($meta['repeat']['type'])){
 			?>
 				<div class="event-repeat">
-					<?php
-					echo "<img src='{$baseUrl}/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>";
-					?>
+					<img src='<?php echo esc_url($baseUrl); ?>/repeat_small.png' alt='repeat' loading='lazy' class='event-icon'>
 					<h4 class="repeat">REPEATS</h4>
 					<dl>
 						<dd>
@@ -173,7 +170,7 @@ function displayEventMeta(){
 							}
 							echo ucfirst($type);
 							if(!empty($meta['repeat']['end_date'])){
-								echo " until ".date('j F Y',strtotime($meta['repeat']['end_date']));
+								echo " until ".gmdate('j F Y',strtotime($meta['repeat']['end_date']));
 							}
 							if(!empty($meta['repeat']['amount'])){
 								$repeatAmount = $meta['repeat']['amount'];
@@ -190,9 +187,7 @@ function displayEventMeta(){
 			if(!empty($event->location)){
 			?>
 				<div class="event-location">
-					<?php
-					echo "<img src='{$baseUrl}/location_red.png' alt='' loading='lazy' class='event-icon'>";
-					?>
+					<img src='<?php echo esc_url($baseUrl); ?>/location_red.png' alt='location' loading='lazy' class='event-icon'>
 					<h4>LOCATION</h4>
 					<div class='location-details'>
 						<?php
@@ -205,9 +200,7 @@ function displayEventMeta(){
 			if(!empty($event->organizer)){
 			?>
 				<div class="event-organizer">
-					<?php
-					echo "<img src='{$baseUrl}/organizer.png' alt='' loading='lazy' class='event-icon'>";
-					?>
+					<img src='<?php echo esc_url($baseUrl); ?>/organizer.png' alt='organizer' loading='lazy' class='event-icon'>
 					<h4>ORGANIZER</h4>
 					<div class='author-details''>
 						<?php

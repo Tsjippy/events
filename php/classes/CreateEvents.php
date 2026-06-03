@@ -20,7 +20,7 @@ class CreateEvents extends Events{
 	 * @return	int				the weeknumber
 	*/
 	protected function yearWeek($date){
-		return intval(date('W', $date));
+		return intval(gmdate('W', $date));
 	}
 
 	/**
@@ -30,7 +30,7 @@ class CreateEvents extends Events{
 	 * @return	int				the weeknumber
 	*/
 	protected function monthWeek($date){
-		$firstDayOfMonth	= strtotime(date('Y-m-01', $date));
+		$firstDayOfMonth	= strtotime(gmdate('Y-m-01', $date));
 		return $this->yearWeek($firstDayOfMonth);
 	}
 
@@ -44,7 +44,7 @@ class CreateEvents extends Events{
 		$baseStartDate		= strtotime($baseStartDateStr);
 
 		// Startdate is in the past
-		if($baseStartDate < strtotime(date('Y-m-d', time()))){
+		if($baseStartDate < strtotime(gmdate('Y-m-d', time()))){
 			// in the past and not repeated
 			if( empty($this->eventData['isrepeated']) ){
 				return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['start_date']}");
@@ -105,7 +105,7 @@ class CreateEvents extends Events{
 		switch ($repeatParam['type']){
 			case 'daily':
 				$startDate		= strtotime("+{$index} day", $baseStartDate);
-				if(!empty($weekDays) && !in_array(date('w', $startDate), $weekDays)){
+				if(!empty($weekDays) && !in_array(gmdate('w', $startDate), $weekDays)){
 					return false;
 				}
 				break;
@@ -140,7 +140,7 @@ class CreateEvents extends Events{
 				if(!empty($repeatParam['datetype'])){
 					if($repeatParam['datetype'] == 'samedate'){
 						// The new month does not have this date
-						if(Date('t', $startDate) < gmdate('d', $baseStartDate)){
+						if(gmdate('t', $startDate) < gmdate('d', $baseStartDate)){
 							return false;
 						}
 
@@ -153,7 +153,7 @@ class CreateEvents extends Events{
 						$firstWeek	= gmdate('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
 
 						// The weeknumber of this week in the month
-						$targetWeek	= TSJIPPY\numberToWords(Date("W", $baseStartDate)-$firstWeek +1);
+						$targetWeek	= TSJIPPY\numberToWords(gmdate("W", $baseStartDate)-$firstWeek +1);
 
 						$dayName	= gmdate('l', $baseStartDate);
 
@@ -206,12 +206,12 @@ class CreateEvents extends Events{
 		if($type == 'dai'){
 			$type	= 'day';
 		}
-		while($baseStartDate < strtotime(date('Y-m-d'))){
+		while($baseStartDate < strtotime(gmdate('Y-m-d'))){
 			// Add one day/week/month/year
 			$baseStartDate		= strtotime("+1 $type", $baseStartDate);
 
 			//re-adjust the start_date string
-			$this->startDates	= [date('Y-m-d', $baseStartDate)];
+			$this->startDates	= [gmdate('Y-m-d', $baseStartDate)];
 		}
 		
 		// Calculate amount of repititions
@@ -283,7 +283,7 @@ class CreateEvents extends Events{
 		
 		$existingEvent	= $this->retrieveSingleEvent($postId);
 		if(
-			date('-m-d', strtotime($existingEvent->start_date)) == gmdate('-m-d', strtotime($date)) &&
+			gmdate('-m-d', strtotime($existingEvent->start_date)) == gmdate('-m-d', strtotime($date)) &&
 			$title == $existingEvent->post_title
 		){
 			return false; //nothing changed
@@ -330,8 +330,8 @@ class CreateEvents extends Events{
 			$newTime	= strtotime($newValue);
 
 			if(
-				Date('Y', $oldTime) != gmdate('Y', $newTime) && 
-				Date('m-d', $oldTime) == gmdate('m-d', $newTime)
+				gmdate('Y', $oldTime) != gmdate('Y', $newTime) && 
+				gmdate('m-d', $oldTime) == gmdate('m-d', $newTime)
 			){
 				// no need to create new events, just update the meta value
 				$postId	= get_user_meta($user->ID, $eventIdMetaKey, true);
@@ -359,7 +359,7 @@ class CreateEvents extends Events{
 
 	protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey){
 		//Get the upcoming celebration date
-		$start_date								= gmdate(date('Y').'-m-d', strtotime($metaValue));
+		$start_date								= gmdate(gmdate('Y').'-m-d', strtotime($metaValue));
 
 		$this->eventData['start_date']			= $start_date;
 		$this->eventData['end_date']				= $start_date;

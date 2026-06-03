@@ -31,7 +31,7 @@ function removeOldEvents(){
 
 	$events		= new CreateEvents();
 
-	$query		= "DELETE FROM {$events->tableName} WHERE start_date<'".date('Y-m-d', strtotime("- $maxAge"))."'";
+	$query		= "DELETE FROM {$events->tableName} WHERE start_date<'".gmdate('Y-m-d', strtotime("- $maxAge"))."'";
 
 	$expiredEvents	= $wpdb->get_results( $query);
 	foreach($expiredEvents as $event){
@@ -49,7 +49,7 @@ function anniversaryCheck(){
 	$family		= new TSJIPPY\FAMILY\Family();
 
 	// Get all the events of today
-	$events->retrieveEvents(date('Y-m-d'), gmdate('Y-m-d'));
+	$events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
 
 	foreach($events->events as $event){
 		$startYear	= get_post_meta($event->ID, 'celebrationdate', true);

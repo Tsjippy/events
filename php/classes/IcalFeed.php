@@ -183,7 +183,7 @@ class IcalFeed{
 
 						//add the first two letters of the weekday of the start_date as capitals (FR)
 						if(empty($weekDays[$index])){
-							$icalEvent	.= strtoupper(substr(date('D', strtotime($meta['start_date'])), 0, 2));
+							$icalEvent	.= strtoupper(substr(gmdate('D', strtotime($meta['start_date'])), 0, 2));
 						//add the first two letters as capitals (FR)
 						}else{
 							$icalEvent	.= strtoupper(substr($weekDays[$index], 0, 2));

@@ -33,9 +33,11 @@ function eventTitle($postType){
 		$class .= ' hidden';
 	}
 	
-	echo "<label class='$class' name='event-content-label'>";
-		echo '<h4>Describe the event</h4>';
-	echo "</label>";
+	?>
+	<label class='<?php echo esc_attr($class); ?>' name='event-content-label'>
+		<h4>Describe the event</h4>
+	</label>
+	<?php
 }
 
 function eventSpecificFields($frontEndContent){		
@@ -142,7 +144,7 @@ function displayRepetitionParameters($eventDetails){
 	$hideLastDay= '';
 	
 	if(!empty($eventDetails)){
-		$dayName	= strtolower(date('l', strtotime($eventDetails['start_date'])));
+		$dayName	= strtolower(gmdate('l', strtotime($eventDetails['start_date'])));
 		$dayNum		= explode('-', $eventDetails['start_date'])[2];
 		$occurence	= 1;
 		while($dayNum - 7 >= 0){
@@ -173,12 +175,11 @@ function displayRepetitionParameters($eventDetails){
 			<option value="">---</option>
 			<?php
 				foreach($list as $key=>$item){
-					if($repeatParam['type'] == $key){
-						$selected	= 'selected=selected';
-					}else{
-						$selected	= '';
-					}
-					echo "<option value=$key $selected>$item</option>";
+					?>
+					<option value='<?php echo esc_attr($key); ?>' <?php if($repeatParam['type'] == $key){echo 'selected=selected';} ?>>
+						<?php echo esc_html($item); ?>
+					</option>
+					<?php
 				}
 			?>
 		</select>
@@ -227,7 +228,7 @@ function displayRepetitionParameters($eventDetails){
 				foreach($includeDates as $index=>$includeDate){
 					?>
 					<div id="includedate-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
-						<label>Include date <?php echo $index+1;?></label>
+						<label>Include date <?php echo esc_attr($index+1);?></label>
 						<div class='button-wrapper'>
 							<input type="date" name="event[repeat][includedates][<?php echo esc_attr($index);?>]" style="flex: 9;" value="<?php echo esc_attr($includeDate);?>">
 							<button type="button" class="add button" style="flex: 1;">+</button>
@@ -251,7 +252,7 @@ function displayRepetitionParameters($eventDetails){
 			</label><br>
 			
 			<label class='repeat-type-option-specifics <?php if(empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'date'){echo 'hidden';}?>'>
-				<input type='date' name='event[repeat][end_date]' value='<?php if(!empty($eventDetails['repeat']['end_date'])){echo $eventDetails['repeat']['end_date'];}?>'>
+				<input type='date' name='event[repeat][end_date]' value='<?php if(!empty($eventDetails['repeat']['end_date'])){echo esc_attr($eventDetails['repeat']['end_date']);}?>'>
 			</label>
 		</div>
 
@@ -262,7 +263,7 @@ function displayRepetitionParameters($eventDetails){
 			</label>
 			
 			<label class='repeat-type-option-specifics <?php if(empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'after'){echo 'hidden';}?>'>
-				<input type='number' name='event[repeat][amount]' value='<?php if(!empty($eventDetails['repeat']['amount'])){echo $eventDetails['repeat']['amount'];}?>'>
+				<input type='number' name='event[repeat][amount]' value='<?php if(!empty($eventDetails['repeat']['amount'])){echo esc_attr($eventDetails['repeat']['amount']);}?>'>
 			</label>
 		</div>
 		
@@ -279,7 +280,7 @@ function displayRepetitionParameters($eventDetails){
 			foreach($excludeDates as $index=>$excludeDate){
 				?>
 				<div id="excludedate-div-<?php echo esc_attr($index);?>" class="clone-div" data-div-id="<?php echo esc_attr($index);?>">
-					<label>Exclude date <?php echo $index+1;?></label>
+					<label>Exclude date <?php echo esc_attr($index+1);?></label>
 					<div class='button-wrapper'>
 						<input type="date" name="event[repeat][excludedates][<?php echo esc_attr($index);?>]" style="flex: 9;" value="<?php echo esc_attr($excludeDate);?>">
 						<button type="button" class="add button" style="flex: 1;">+</button>
@@ -327,7 +328,7 @@ function repetitionIntervalSettings($eventDetails){
 	</label>
 
 	<!-- Weekly repetition options -->
-	<div class="selector-wrapper weeks <?php echo $repeatParam['type'] == 'weekly' ? 'hide' : "hidden";?>">
+	<div class="selector-wrapper weeks <?php echo esc_attr($repeatParam['type'] == 'weekly' ? 'hide' : "hidden");?>">
 		<h4 class='checkbox'>Select weeks(s) of the month this event should be repeated on</h4>
 		<label class='select-all-wrapper option-label'>
 			<input type='checkbox' class='selectall' name='allweekss' value='all'>Select all weeks<br>
@@ -348,7 +349,7 @@ function repetitionIntervalSettings($eventDetails){
 	</div>
 
 	<!-- Daily repetition options -->
-	<div class="selector-wrapper days <?php echo $repeatParam['type'] == 'daily' ? 'hide' : "hidden";?>">
+	<div class="selector-wrapper days <?php echo esc_attr($repeatParam['type'] == 'daily' ? 'hide' : "hidden");?>">
 		<h4 class='checkbox'>Select day(s) this event should be repeated on</h4>
 		<label class='select-all-wrapper option-label'>
 			<input type='checkbox' class='selectall' name='alldays' value='all'>Select all days<br>
@@ -356,14 +357,18 @@ function repetitionIntervalSettings($eventDetails){
 
 		<?php
 		foreach(['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $key=>$dayName){
-			if(!empty($eventDetails['repeat']['weekdays']) && is_array($eventDetails['repeat']['weekdays']) && in_array($dayName, $eventDetails['repeat']['weekdays'])){
-				$checked	= 'checked';
-			}else{
-				$checked	= '';
-			}
-			echo "<label class='option-label'>";
-				echo "<input type='checkbox' name='event[repeat][weekdays][]' value='$key'$checked>$dayName";
-			echo "</label>";
+
+			?>
+			<label class='option-label'>
+				<input 
+				type='checkbox' 
+				name='event[repeat][weekdays][]' 
+				value='<?php echo esc_attr($key);?>'
+				<?php if(is_array($eventDetails['repeat']['weekdays'] ?? '') && in_array($dayName, $eventDetails['repeat']['weekdays'])){ echo 'checked';}?>
+			>
+				<?php echo esc_attr($dayName);?>
+			</label>
+			<?php
 		}
 		?>
 	</div>
@@ -375,6 +380,7 @@ function postNotification($excerpt, $post){
 	if($post->post_type == 'event'){
 		$events		= new DisplayEvents();
 		$event		= $events->retrieveSingleEvent($post->ID);
+		
 		$startDate	= gmdate(DATEFORMAT, strtotime($event->start_date));
 		if($event->start_date == $event->end_date){
 			$excerpt .= "\n\nDate: $startDate";

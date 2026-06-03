@@ -256,7 +256,7 @@ class Schedules{
 		}
 
 		// Do not show dates in the past
-		$this->currentSchedule->start_date	= max([date('Y-m-d'), $this->currentSchedule->start_date]);
+		$this->currentSchedule->start_date	= max([gmdate('Y-m-d'), $this->currentSchedule->start_date]);
 		
 		?>
 		<div class='schedules-div table-wrapper' data-schedule-id="<?php echo esc_attr($this->currentSchedule->id); ?>" data-target="<?php echo esc_attr($this->currentSchedule->name); ?>" data-slotsize="<?php echo esc_attr($this->timeSlotSize);?>" data-fixedslotsize="<?php echo esc_attr($this->fixedTimeSlotSize);?>" data-hide_names="<?php echo esc_attr($this->hideNames);?>" data-subject="<?php echo esc_attr($this->defaultSubject);?>">
@@ -271,7 +271,7 @@ class Schedules{
 						</p>
 						<?php
 						TSJIPPY\userSelect(onlyAdults:true, families:true, id:'schedule-target', args:$args, echo: true);
-						echo TSJIPPY\addSaveButton('publish-schedule', 'Publish this schedule');
+						TSJIPPY\addSaveButton('publish-schedule', 'Publish this schedule');
 						?>
 					</form>
 				</div>
@@ -491,7 +491,7 @@ class Schedules{
 						<input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($this->user->ID);?>'>
 						<?php
 					}
-					echo TSJIPPY\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
+					TSJIPPY\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
 					?>
 				</form>
 			</div>
@@ -1176,7 +1176,7 @@ class Schedules{
 					if($this->mobile){
 						$id	= 'add-host-mobile';
 					}
-					echo TSJIPPY\addSaveButton($id,'Add host','update_schedule');
+					TSJIPPY\addSaveButton($id,'Add host','update_schedule');
 					?>
 				</form>
 			</div>
@@ -1196,7 +1196,7 @@ class Schedules{
 					<input type='text' class='wide' name='recipe-keyword'>
 					
 					<?php
-					echo TSJIPPY\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
+					TSJIPPY\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
 					?>
 				</form>
 			</div>
@@ -1318,7 +1318,7 @@ class Schedules{
 					<br>
 					<?php
 					
-					echo TSJIPPY\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
+					TSJIPPY\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
 					?>
 				</form>
 			</div>
@@ -1481,7 +1481,7 @@ class Schedules{
 			if($update){
 				$action = 'Update';
 			}
-			echo TSJIPPY\addSaveButton('add_schedule', "$action schedule");
+			TSJIPPY\addSaveButton('add_schedule', "$action schedule");
 		echo '</form>';
 		return ob_get_clean();
 	}
