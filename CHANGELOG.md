@@ -3,6 +3,7 @@
 
 ### Added
 - escaping functions
+- echo escapaping
 
 ### Changed
 - html to dom elements
