@@ -1,12 +1,15 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
 add_action('rest_api_init',  __NAMESPACE__ . '\blockRestApiInit');
-function blockRestApiInit() {
+function blockRestApiInit()
+{
     // show schedules
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/show_schedules',
         array(
             'methods'                 => 'GET',
@@ -14,12 +17,12 @@ function blockRestApiInit() {
             'permission_callback'     => function ($rest) {
                 return current_user_can('read');
             },
-       )
-   );
+        )
+    );
 
     // show upcoming arrivals
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/upcoming_arrivals',
         array(
             'methods'                 => 'POST',
@@ -27,22 +30,23 @@ function blockRestApiInit() {
             'permission_callback'     => function ($rest) {
                 return current_user_can('read');
             },
-       )
-   );
+        )
+    );
 
     // Upcoming events
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/upcoming_events',
         array(
             'methods'                 => 'GET',
             'callback'                 => __NAMESPACE__ . '\upcomingEvents',
             'permission_callback'     => '__return_true',                        // allow public access for public events
-       )
-   );
+        )
+    );
 }
 
-function showSchedules() {
+function showSchedules()
+{
     $schedule        = new Schedules();
     return $schedule->showSchedules();
 }
@@ -52,7 +56,8 @@ function showSchedules() {
  *
  * @param \WP_REST_Request|array $param    The parameters for the block, either as an array or as a WP_REST_Request object
  */
-function upcomingArrivals($param) {
+function upcomingArrivals($param)
+{
     if (!is_array($param)) {
         $param    = $param->get_Params();
     }
@@ -60,7 +65,8 @@ function upcomingArrivals($param) {
     return upcomingArrivalsBlock($param);
 }
 
-function upcomingEvents($rest) {
+function upcomingEvents($rest)
+{
     $events        = new DisplayEvents();
 
     $items    = 10;
@@ -82,7 +88,7 @@ function upcomingEvents($rest) {
         $categories    = get_categories(array(
             'taxonomy'        => 'events',
             'hide_empty'     => false,
-       ));
+        ));
 
         $exclude    = $cats;
 

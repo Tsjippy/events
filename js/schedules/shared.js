@@ -1,314 +1,371 @@
 //shows the modal to select a user as host
-export function showAddHostModal(target, date='', startTime=''){
-	target.classList.add('active');
-	let modal											= document.querySelector('[name="add-host"]');
+export function showAddHostModal(target, date = "", startTime = "") {
+  target.classList.add("active");
+  let modal = document.querySelector('[name="add-host"]');
 
-	// Clear
-	modal.querySelectorAll('input:not([type="hidden" class="no-reset"], [type="radio"])').forEach(el=>el.value='');
+  // Clear
+  modal
+    .querySelectorAll(
+      'input:not([type="hidden" class="no-reset"], [type="radio"])',
+    )
+    .forEach((el) => (el.value = ""));
 
-    modal.querySelector('[name="date"]').value			= date;
-    modal.querySelector('[name="starttime"]').value		= startTime;
+  modal.querySelector('[name="date"]').value = date;
+  modal.querySelector('[name="starttime"]').value = startTime;
 
-	// Add new values
-	modal.querySelector('[name="schedule-id"]').value	= target.closest('.schedules-div').dataset.id;
+  // Add new values
+  modal.querySelector('[name="schedule-id"]').value =
+    target.closest(".schedules-div").dataset.id;
 
-	modal.classList.remove('hidden');
+  modal.classList.remove("hidden");
 }
 
 // Add current user as host
-export async function addCurrentUserAsHost(target, dateStr){
-    let scheduleOwner	= target.closest('.schedules-div').dataset.target;   
-	let text 			= `Please confirm you want to be the host for ${scheduleOwner} on ${dateStr}`;
-	let confirmed		= await checkConfirmation(text, target.firstChild);
+export async function addCurrentUserAsHost(target, dateStr) {
+  let scheduleOwner = target.closest(".schedules-div").dataset.target;
+  let text = `Please confirm you want to be the host for ${scheduleOwner} on ${dateStr}`;
+  let confirmed = await checkConfirmation(text, target.firstChild);
 
-	if(confirmed){
+  if (confirmed) {
+    let formData = loadHostFormdata(target);
 
-		let formData		= loadHostFormdata(target);
+    if (target.closest("table") == null) {
+      Main.showLoader(target);
+    } else {
+      target.innerHTML = "<span></span>";
+      Main.showLoader(target.querySelector("span"));
+    }
 
-		if(target.closest('table') == null){
-			Main.showLoader(target);
-		}else{
-			target.innerHTML = '<span></span>';
-			Main.showLoader(target.querySelector('span'));
-		}
+    let response = await FormSubmit.fetchRestApi("events/add_host", formData);
 
-		let response	= await FormSubmit.fetchRestApi('events/add_host', formData);
-
-		if(response){
-			addHostHtml(response);
-		}
-	}
+    if (response) {
+      addHostHtml(response);
+    }
+  }
 }
 
 // Show the new host in the schedule
-export function addHostHtml(response){
-	let target			= document.querySelector('.active');
+export function addHostHtml(response) {
+  let target = document.querySelector(".active");
 
-	if(target != null){
-		target.classList.remove('active');
-		target.outerHTML	= response.html;
-	}
+  if (target != null) {
+    target.classList.remove("active");
+    target.outerHTML = response.html;
+  }
 
-	Main.displayMessage(response.message);
+  Main.displayMessage(response.message);
 
-	Main.hideModals();
+  Main.hideModals();
 }
 
 // Remove a host
-export async function removeHost(target, dateStr){
-	let text, confirmed;
+export async function removeHost(target, dateStr) {
+  let text, confirmed;
 
-    let scheduleOwner	= target.closest('.schedules-div').dataset.target;
+  let scheduleOwner = target.closest(".schedules-div").dataset.target;
 
-	if(target.classList.contains('orientation')){
-		text 	= `Are you sure you want to remove this orientation session`;
-	}else if(target.classList.contains('admin')){
-		text 	= `Please confirm host removal for ${scheduleOwner} on ${dateStr}`;
-	}else{
-		text 	= `Please confirm you do not want to be the host for ${scheduleOwner} on ${dateStr} anymore`;
-	}
+  if (target.classList.contains("orientation")) {
+    text = `Are you sure you want to remove this orientation session`;
+  } else if (target.classList.contains("admin")) {
+    text = `Please confirm host removal for ${scheduleOwner} on ${dateStr}`;
+  } else {
+    text = `Please confirm you do not want to be the host for ${scheduleOwner} on ${dateStr} anymore`;
+  }
 
-	confirmed	= await checkConfirmation(text, target.firstChild);
+  confirmed = await checkConfirmation(text, target.firstChild);
 
-	if(confirmed){
-		
-		let formData		= new FormData();
-		formData.append('session-id', target.dataset.sessionId);
-		Main.showLoader(target.firstChild);
+  if (confirmed) {
+    let formData = new FormData();
+    formData.append("session-id", target.dataset.sessionId);
+    Main.showLoader(target.firstChild);
 
-		var response = await FormSubmit.fetchRestApi('events/remove_host', formData);
+    var response = await FormSubmit.fetchRestApi(
+      "events/remove_host",
+      formData,
+    );
 
-		Main.displayMessage(response.message);
+    Main.displayMessage(response.message);
 
-		return response.html;
-	}
+    return response.html;
+  }
 
-    return confirmed;
+  return confirmed;
 }
 
-export function showTimeslotModal(selected=''){
-	let reminders, firstCell, lastCell, date, startTime, endTime, hostId, oldTime, subject, location, hostName, eventId, sessionId, atendees, li, html, option;
-	let modal 		= document.querySelector('[name="add-session"]');
-	let ul			= modal.querySelector('ul.list-selection-list');
+export function showTimeslotModal(selected = "") {
+  let reminders,
+    firstCell,
+    lastCell,
+    date,
+    startTime,
+    endTime,
+    hostId,
+    oldTime,
+    subject,
+    location,
+    hostName,
+    eventId,
+    sessionId,
+    atendees,
+    li,
+    html,
+    option;
+  let modal = document.querySelector('[name="add-session"]');
+  let ul = modal.querySelector("ul.list-selection-list");
 
-	// Clear
-	modal.querySelectorAll('input:not([type="hidden" class="no-reset"], [type="checkbox"], [type="radio"])').forEach(el=>el.value='');
-	if(ul != null){
-		ul.innerHTML	= '';
-	}
+  // Clear
+  modal
+    .querySelectorAll(
+      'input:not([type="hidden" class="no-reset"], [type="checkbox"], [type="radio"])',
+    )
+    .forEach((el) => (el.value = ""));
+  if (ul != null) {
+    ul.innerHTML = "";
+  }
 
-	if(selected[0] == undefined){
-		firstCell	= selected;
-		lastCell	= firstCell;
-		startTime	= firstCell.dataset.starttime;
-		endTime		= firstCell.dataset.endtime;
-	}else{
-		firstCell		= selected[0].node;
-		lastCell		= selected[selected.length-1].node;
-		let rowCount	= document.querySelectorAll('.ui-selected').length;
-		applyRowSpan(firstCell, rowCount);
+  if (selected[0] == undefined) {
+    firstCell = selected;
+    lastCell = firstCell;
+    startTime = firstCell.dataset.starttime;
+    endTime = firstCell.dataset.endtime;
+  } else {
+    firstCell = selected[0].node;
+    lastCell = selected[selected.length - 1].node;
+    let rowCount = document.querySelectorAll(".ui-selected").length;
+    applyRowSpan(firstCell, rowCount);
 
-		// Only show loader when the cell is empty
-		if(!firstCell.matches('.selected')){
-			Main.showLoader(firstCell.firstChild);
-		}
-	}
-	modal.querySelector('[name="schedule-id"]').value		= firstCell.closest('.schedules-div').dataset.id;
-	
-	let table	= firstCell.closest('table');
-	startTime	= firstCell.dataset.starttime;
-	endTime		= firstCell.dataset.endtime;
-	date	 	= firstCell.dataset.isodate;
-	if(firstCell.closest('tr') != null){
-		startTime	= firstCell.closest('tr').dataset.starttime;
-		endTime		= lastCell.closest('tr').dataset.endtime;
-		date		= table.rows[0].cells[firstCell.cellIndex].dataset.isodate;
-	}
+    // Only show loader when the cell is empty
+    if (!firstCell.matches(".selected")) {
+      Main.showLoader(firstCell.firstChild);
+    }
+  }
+  modal.querySelector('[name="schedule-id"]').value =
+    firstCell.closest(".schedules-div").dataset.id;
 
-	hostId			= firstCell.dataset.hostId;
-	//oldTime			= firstCell.dataset.oldTime;
-	subject			= firstCell.dataset.subject;
-	location		= firstCell.dataset.location;
-	hostName		= firstCell.dataset.host;
-	sessionId		= firstCell.dataset.sessionId;
-	if(firstCell.dataset.reminders != undefined){
-		reminders		= JSON.parse(firstCell.dataset.reminders);
+  let table = firstCell.closest("table");
+  startTime = firstCell.dataset.starttime;
+  endTime = firstCell.dataset.endtime;
+  date = firstCell.dataset.isodate;
+  if (firstCell.closest("tr") != null) {
+    startTime = firstCell.closest("tr").dataset.starttime;
+    endTime = lastCell.closest("tr").dataset.endtime;
+    date = table.rows[0].cells[firstCell.cellIndex].dataset.isodate;
+  }
 
-		modal.querySelectorAll('[name="reminders[]"]').forEach(el => {
-			if(reminders.includes(el.value)){
-				el.checked	= true;
-			}else{
-				el.checked	= false;
-			}
-		});
-	}
+  hostId = firstCell.dataset.hostId;
+  //oldTime			= firstCell.dataset.oldTime;
+  subject = firstCell.dataset.subject;
+  location = firstCell.dataset.location;
+  hostName = firstCell.dataset.host;
+  sessionId = firstCell.dataset.sessionId;
+  if (firstCell.dataset.reminders != undefined) {
+    reminders = JSON.parse(firstCell.dataset.reminders);
 
-	if(firstCell.dataset.atendees != undefined){
-		atendees		= JSON.parse(firstCell.dataset.atendees);
-	}
-	
-	if(firstCell.closest('.day-wrapper-mobile') != null){
-		firstCell.closest('.day-wrapper-mobile').classList.add('active');
-	}else{
-		firstCell.classList.add('active');
-	}
+    modal.querySelectorAll('[name="reminders[]"]').forEach((el) => {
+      if (reminders.includes(el.value)) {
+        el.checked = true;
+      } else {
+        el.checked = false;
+      }
+    });
+  }
 
-	//Fill the modal values
-	modal.querySelector('[name="date"]').value				= date;
-	modal.querySelector('[name="starttime"]').value			= startTime;
-	modal.querySelector('[name="endtime"]').value			= endTime;
+  if (firstCell.dataset.atendees != undefined) {
+    atendees = JSON.parse(firstCell.dataset.atendees);
+  }
 
-	if(firstCell.closest('.schedules-div.table-wrapper').dataset.fixedslotsize == '1' ){
-		modal.querySelector('[name="endtime"]').closest('label').querySelector('h4').textContent = 'End time';
-		modal.querySelector('[name="endtime"]').disabled	= true;
-	}else{
-		modal.querySelector('[name="endtime"]').disabled	= false;
-		modal.querySelector('[name="endtime"]').closest('label').querySelector('h4').textContent = 'Select an end time:'
-	}
-	
-	if(firstCell.closest('.schedules-div.table-wrapper').dataset.subject == '' || firstCell.closest('.schedules-div.table-wrapper').dataset.subject == undefined){
-		modal.querySelector('[name="subject"]').value		= '';
-		modal.querySelector('[name="endtime"]').disabled	= false;
-	}else{
-		modal.querySelector('[name="subject"]').value		= firstCell.closest('.schedules-div.table-wrapper').dataset.subject;
-		modal.querySelector('[name="endtime"]').disabled	= true;
-	}
+  if (firstCell.closest(".day-wrapper-mobile") != null) {
+    firstCell.closest(".day-wrapper-mobile").classList.add("active");
+  } else {
+    firstCell.classList.add("active");
+  }
 
-	modal.querySelector('[name="add-timeslot"]').classList.remove('add_schedule_row');
-	modal.querySelector('[name="add-timeslot"]').classList.add('update_schedule');
+  //Fill the modal values
+  modal.querySelector('[name="date"]').value = date;
+  modal.querySelector('[name="starttime"]').value = startTime;
+  modal.querySelector('[name="endtime"]').value = endTime;
 
-	if(sessionId != undefined){
-		modal.querySelector('[name="session-id"]').value	= sessionId;
-	}
-	if(hostId	!= undefined){
-		modal.querySelector('[name="host-id"]').value		= hostId;
+  if (
+    firstCell.closest(".schedules-div.table-wrapper").dataset.fixedslotsize ==
+    "1"
+  ) {
+    modal
+      .querySelector('[name="endtime"]')
+      .closest("label")
+      .querySelector("h4").textContent = "End time";
+    modal.querySelector('[name="endtime"]').disabled = true;
+  } else {
+    modal.querySelector('[name="endtime"]').disabled = false;
+    modal
+      .querySelector('[name="endtime"]')
+      .closest("label")
+      .querySelector("h4").textContent = "Select an end time:";
+  }
 
-	}
-	if(subject	!= undefined){
-		modal.querySelector('[name="subject"]').value		= subject;
-	}
-	if(location	!= undefined){
-		modal.querySelector('[name="location"]').value		= location;
-	}
-	if(hostName	!= undefined){
-		modal.querySelector('#host').value					= hostName;
-	}
-	if(atendees != undefined){
-		atendees.forEach(atendee => {
-			li	 		= document.createElement('li');
-			li.classList.add('list-selection');
+  if (
+    firstCell.closest(".schedules-div.table-wrapper").dataset.subject == "" ||
+    firstCell.closest(".schedules-div.table-wrapper").dataset.subject ==
+      undefined
+  ) {
+    modal.querySelector('[name="subject"]').value = "";
+    modal.querySelector('[name="endtime"]').disabled = false;
+  } else {
+    modal.querySelector('[name="subject"]').value = firstCell.closest(
+      ".schedules-div.table-wrapper",
+    ).dataset.subject;
+    modal.querySelector('[name="endtime"]').disabled = true;
+  }
 
-			html	= `<button type="button" class="small remove-list-selection"><span class='remove-list-selection'>×</span></button>`;
+  modal
+    .querySelector('[name="add-timeslot"]')
+    .classList.remove("add_schedule_row");
+  modal.querySelector('[name="add-timeslot"]').classList.add("update_schedule");
 
-			if(typeof(atendee) === 'object'){
-				html   += `<input type='hidden' class='no-reset' name='others[]' value='${atendee.id}'>`;
-				html   += `<span>${atendee.name}</span>`;
-			}else{
-				html   += `<span>`;
-					html   += `<input type='text' name='others[]' value='${atendee}' readonly=readonly style='width:${atendee.length}ch'>`;
-				html   += `</span>`;
-			}
+  if (sessionId != undefined) {
+    modal.querySelector('[name="session-id"]').value = sessionId;
+  }
+  if (hostId != undefined) {
+    modal.querySelector('[name="host-id"]').value = hostId;
+  }
+  if (subject != undefined) {
+    modal.querySelector('[name="subject"]').value = subject;
+  }
+  if (location != undefined) {
+    modal.querySelector('[name="location"]').value = location;
+  }
+  if (hostName != undefined) {
+    modal.querySelector("#host").value = hostName;
+  }
+  if (atendees != undefined) {
+    atendees.forEach((atendee) => {
+      li = document.createElement("li");
+      li.classList.add("list-selection");
 
-			li.innerHTML	= html;
+      html = `<button type="button" class="small remove-list-selection"><span class='remove-list-selection'>×</span></button>`;
 
-			ul.appendChild(li);
-		});
-	}
-	
-	Main.showModal(modal);
+      if (typeof atendee === "object") {
+        html += `<input type='hidden' class='no-reset' name='others[]' value='${atendee.id}'>`;
+        html += `<span>${atendee.name}</span>`;
+      } else {
+        html += `<span>`;
+        html += `<input type='text' name='others[]' value='${atendee}' readonly=readonly style='width:${atendee.length}ch'>`;
+        html += `</span>`;
+      }
+
+      li.innerHTML = html;
+
+      ul.appendChild(li);
+    });
+  }
+
+  Main.showModal(modal);
 }
 
-export async function editTimeSlot(target, date){
-	let options	= {
-		title: 'What do you want to do?',
-		timer: 1500,
-		ConfirmButtonText: 'Edit timeslot',
-		CustomButtonText: 'Remove timeslot'
-	};
+export async function editTimeSlot(target, date) {
+  let options = {
+    title: "What do you want to do?",
+    timer: 1500,
+    ConfirmButtonText: "Edit timeslot",
+    CustomButtonText: "Remove timeslot",
+  };
 
-	let alerter		= new Main.Alert(`Do you want to edit or remove this timeslot?`, 'question', options);
-	let response	= await alerter.promise; 
+  let alerter = new Main.Alert(
+    `Do you want to edit or remove this timeslot?`,
+    "question",
+    options,
+  );
+  let response = await alerter.promise;
 
-	//swap and/or
-	if (response == 'confirm') {
-		// Show modal and prefill the default fields
-		showTimeslotModal(target, date, target.dataset.starttime, target.dataset.endtime);
-		
-		//change button text
-		var modal 			= document.querySelector('[name="add-session"]');
-		modal.querySelector('[name="add-timeslot"]').textContent	= 'Update time slot';
-	//add new rule after this one
-	}else if (response == 'custom') {
-		return true;
-	}
+  //swap and/or
+  if (response == "confirm") {
+    // Show modal and prefill the default fields
+    showTimeslotModal(
+      target,
+      date,
+      target.dataset.starttime,
+      target.dataset.endtime,
+    );
+
+    //change button text
+    var modal = document.querySelector('[name="add-session"]');
+    modal.querySelector('[name="add-timeslot"]').textContent =
+      "Update time slot";
+    //add new rule after this one
+  } else if (response == "custom") {
+    return true;
+  }
 }
 
-function loadHostFormdata(target){
-    let scheduleId		= target.closest('.schedules-div').dataset.id;
-	let table			= target.closest('table');
+function loadHostFormdata(target) {
+  let scheduleId = target.closest(".schedules-div").dataset.id;
+  let table = target.closest("table");
 
-	let heading, cell, date, startTime, host;
+  let heading, cell, date, startTime, host;
 
-	if(table == null){
-		startTime		= target.dataset.starttime;
-		host			= target.dataset.hostId;
-		date			= target.dataset.isodate
-	}else{
-		heading			= table.tHead.rows[0];
-		cell			= target.closest('td');
-		startTime		= target.closest('tr').dataset.starttime;
-		host			= cell.dataset.host;
-		date			= heading.cells[cell.cellIndex].dataset.isodate;
-	}
+  if (table == null) {
+    startTime = target.dataset.starttime;
+    host = target.dataset.hostId;
+    date = target.dataset.isodate;
+  } else {
+    heading = table.tHead.rows[0];
+    cell = target.closest("td");
+    startTime = target.closest("tr").dataset.starttime;
+    host = cell.dataset.host;
+    date = heading.cells[cell.cellIndex].dataset.isodate;
+  }
 
-	var formData		= new FormData();
-	formData.append('date', date);
-	if(host != null){
-		formData.append('host-id', host);
-	}else{
-		formData.append('host-id', tsjippy.userId);
-	}
-	
-	formData.append('starttime', startTime);
-	formData.append('schedule-id', scheduleId);
+  var formData = new FormData();
+  formData.append("date", date);
+  if (host != null) {
+    formData.append("host-id", host);
+  } else {
+    formData.append("host-id", tsjippy.userId);
+  }
 
-	formData.append('subject', target.closest('.schedules-div.table-wrapper').dataset.subject)
+  formData.append("starttime", startTime);
+  formData.append("schedule-id", scheduleId);
 
-	return formData;
+  formData.append(
+    "subject",
+    target.closest(".schedules-div.table-wrapper").dataset.subject,
+  );
+
+  return formData;
 }
 
-export async function checkConfirmation(text, target){
-	let options	= {
-		title: 'Are you sure?',
-		timer: 1500,
-		ConfirmButtonText: 'Yes',
-		CancelButtonText: 'Cancel'
-	};
+export async function checkConfirmation(text, target) {
+  let options = {
+    title: "Are you sure?",
+    timer: 1500,
+    ConfirmButtonText: "Yes",
+    CancelButtonText: "Cancel",
+  };
 
-	let alerter 		= new Main.Alert(text+"?", 'warning', options);
-	let response	= await alerter.promise;
-	
-	if (response == 'confirm') {
-		document.querySelectorAll('.modal:not(.hidden)').forEach(modal=>modal.classList.add('hidden'));
-		//display loading gif
-		Main.showLoader(target.firstChild);
-		
-		return true;
-	}
+  let alerter = new Main.Alert(text + "?", "warning", options);
+  let response = await alerter.promise;
 
-	return false;
+  if (response == "confirm") {
+    document
+      .querySelectorAll(".modal:not(.hidden)")
+      .forEach((modal) => modal.classList.add("hidden"));
+    //display loading gif
+    Main.showLoader(target.firstChild);
+
+    return true;
+  }
+
+  return false;
 }
 
-
-export function applyRowSpan(target, count){
-	if(count > 1){
-		var row		= target.closest('tr');
-		var index	= target.cellIndex;
-		//Loop over the next cells to add the hidden attribute
-		for (var i = 1; i < count; i++) {
-			row = row.nextElementSibling;
-			row.cells[index].classList.add('hidden');
-		}
-		target.rowSpan	= count;
-	}
+export function applyRowSpan(target, count) {
+  if (count > 1) {
+    var row = target.closest("tr");
+    var index = target.cellIndex;
+    //Loop over the next cells to add the hidden attribute
+    for (var i = 1; i < count; i++) {
+      row = row.nextElementSibling;
+      row.cells[index].classList.add("hidden");
+    }
+    target.rowSpan = count;
+  }
 }

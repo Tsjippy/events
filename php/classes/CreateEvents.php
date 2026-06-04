@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class CreateEvents extends Events{
+class CreateEvents extends Events
+{
     public $eventData;
     public $startDates;
     public $partner;
@@ -18,8 +21,9 @@ class CreateEvents extends Events{
      * @param      int  $date        a date in epoch
      *
      * @return    int                the weeknumber
-    */
-    protected function yearWeek($date) {
+     */
+    protected function yearWeek($date)
+    {
         return intval(gmdate('W', $date));
     }
 
@@ -28,16 +32,18 @@ class CreateEvents extends Events{
      * @param      int  $date        a date in epoch
      *
      * @return    int                the weeknumber
-    */
-    protected function monthWeek($date) {
+     */
+    protected function monthWeek($date)
+    {
         $firstDayOfMonth    = strtotime(gmdate('Y-m-01', $date));
         return $this->yearWeek($firstDayOfMonth);
     }
 
     /**
      * Creates events in the db
-    */
-    public function createEvents() {
+     */
+    public function createEvents()
+    {
         global $wpdb;
 
         $baseStartDateStr    = $this->eventData['start_date'];
@@ -46,7 +52,7 @@ class CreateEvents extends Events{
         // Startdate is in the past
         if ($baseStartDate < strtotime(gmdate('Y-m-d', time()))) {
             // in the past and not repeated
-            if ( empty($this->eventData['isrepeated'])) {
+            if (empty($this->eventData['isrepeated'])) {
                 return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['start_date']}");
             }
         }
@@ -75,13 +81,14 @@ class CreateEvents extends Events{
             }
 
             //Update the database
-            $wpdb->update($this->tableName,
+            $wpdb->update(
+                $this->tableName,
                 $args,
                 array(
                     'post_id'        => $this->postId,
                     'start_date'        => $startDate
-               ),
-           );
+                ),
+            );
 
             if ($wpdb->last_error !== '') {
                 return new WP_Error('event', $wpdb->last_error);
@@ -91,7 +98,8 @@ class CreateEvents extends Events{
         return true;
     }
 
-    protected function calculateStartDate($repeatParam, $baseStartDate, $index) {
+    protected function calculateStartDate($repeatParam, $baseStartDate, $index)
+    {
         $weekDays    = [];
         if (!empty($repeatParam['weekdays'])) {
             $weekDays        = (array)$repeatParam['weekdays'];
@@ -131,7 +139,7 @@ class CreateEvents extends Events{
                 if ($repeatParam['type'] == 'yearly') {
                     $startDate            = strtotime("+{$index} year", $baseStartDate);
                     $recurrenceString    = "year";
-                }else{
+                } else {
                     $startDate            = strtotime("first day of +{$index} month", $baseStartDate);
                     $recurrenceString    = "month";
                 }
@@ -144,7 +152,7 @@ class CreateEvents extends Events{
                             return false;
                         }
 
-                        $day        = gmdate('d', $baseStartDate)-1;
+                        $day        = gmdate('d', $baseStartDate) - 1;
                         $startDate    = strtotime("+$day days", $startDate);
                     }
                     // Same week and day i.e. first friday
@@ -153,7 +161,7 @@ class CreateEvents extends Events{
                         $firstWeek    = gmdate('W', strtotime("first day of 0 $recurrenceString", $baseStartDate));
 
                         // The weeknumber of this week in the month
-                        $targetWeek    = TSJIPPY\numberToWords(gmdate("W", $baseStartDate)-$firstWeek +1);
+                        $targetWeek    = TSJIPPY\numberToWords(gmdate("W", $baseStartDate) - $firstWeek + 1);
 
                         $dayName    = gmdate('l', $baseStartDate);
 
@@ -164,7 +172,7 @@ class CreateEvents extends Events{
                         $startDate    = strtotime("last day +$index month", $baseStartDate);
                     }
                     // Same last day i.e. last Friday
-                    else{
+                    else {
                         $dayName    = gmdate('l', $baseStartDate);
                         $startDate    = strtotime("last $dayName of +{$index} $recurrenceString", $baseStartDate);
                     }
@@ -181,7 +189,8 @@ class CreateEvents extends Events{
         return $startDate;
     }
 
-    protected function createRepeatedEvents($baseStartDate) {
+    protected function createRepeatedEvents($baseStartDate)
+    {
         //first remove any existing events for this post
         $this->removeDbRows();
 
@@ -206,7 +215,7 @@ class CreateEvents extends Events{
         if ($type == 'dai') {
             $type    = 'day';
         }
-        while($baseStartDate < strtotime(gmdate('Y-m-d'))) {
+        while ($baseStartDate < strtotime(gmdate('Y-m-d'))) {
             // Add one day/week/month/year
             $baseStartDate        = strtotime("+1 $type", $baseStartDate);
 
@@ -217,13 +226,13 @@ class CreateEvents extends Events{
         // Calculate amount of repititions
         $repeatStop    = $repeatParam['stop'];
         if ($repeatParam['stop'] == 'after' && !empty($repeatParam['amount']) && is_numeric($amount)) {
-            $amount = intval($repeatParam['amount'])-1;    // The first event is already created
+            $amount = intval($repeatParam['amount']) - 1;    // The first event is already created
         }
 
         // calculate repetition end date
         if ($repeatStop == 'date') {
             $repEnddate    = strtotime($repeatParam['end_date']);
-        }else{
+        } else {
             $repEnddate    = strtotime("+5 year", $baseStartDate);
         }
 
@@ -239,17 +248,17 @@ class CreateEvents extends Events{
 
         $startDate        = $baseStartDate;
         $i                = 1;
-        while($startDate < $repEnddate && $amount > 0) {
+        while ($startDate < $repEnddate && $amount > 0) {
             $startDate    = $this->calculateStartDate($repeatParam, $baseStartDate, $i);
 
             if ($repeatParam['type'] == 'custom_days') {
                 $startDateStr    = $includeDates[$i];
-            }elseif ($startDate) {
+            } elseif ($startDate) {
                 $startDateStr    = gmdate('Y-m-d', $startDate);
             }
 
             if (!$startDate || in_array($startDateStr, $excludeDates)) {
-                $i                = $i+$interval;
+                $i                = $i + $interval;
                 continue;
             }
 
@@ -257,12 +266,12 @@ class CreateEvents extends Events{
                 !in_array($startDateStr, $includeDates)        &&        //we should not exclude this date
                 $startDate < $repEnddate                    &&         //falls within the limits
                 (!is_numeric($amount) || $amount > 0)                //We have not exeeded the amount
-           ) {
+            ) {
                 $this->startDates[]    = $startDateStr;
             }
 
-            $i                = $i+$interval;
-            $amount            = $amount-1;
+            $i                = $i + $interval;
+            $amount            = $amount - 1;
         }
 
         return $baseStartDate;
@@ -275,8 +284,9 @@ class CreateEvents extends Events{
      * @param    int        $userId        WP_User id
      * @param    string    $type        the anniverasry type
      * @param    string    $title        the event title
-    */
-    protected function deleteOldCelEvent($postId, $date, $userId, $type, $title) {
+     */
+    protected function deleteOldCelEvent($postId, $date, $userId, $type, $title)
+    {
         if (!is_numeric($postId)) {
             return false;
         }
@@ -285,10 +295,10 @@ class CreateEvents extends Events{
         if (
             gmdate('-m-d', strtotime($existingEvent->start_date)) == gmdate('-m-d', strtotime($date)) &&
             $title == $existingEvent->post_title
-       ) {
+        ) {
             return false; //nothing changed
-        }else{
-            delete_user_meta($userId, $type. '_event_id');
+        } else {
+            delete_user_meta($userId, $type . '_event_id');
 
             $this->removeDbRows('', true);
         }
@@ -300,8 +310,9 @@ class CreateEvents extends Events{
      * @param    int|object    $userId        WP_User id or WP_User object
      * @param    string        $metaKey    the meta key key
      * @param    string        $metaValue    the meta value, should be a date string
-    */
-    public function createCelebrationEvent($type, $user, $oldValue, $newValue) {
+     */
+    public function createCelebrationEvent($type, $user, $oldValue, $newValue)
+    {
         $family            = new TSJIPPY\FAMILY\Family();
 
         if (is_numeric($user)) {
@@ -317,14 +328,14 @@ class CreateEvents extends Events{
             return;
         }
 
-        $eventIdMetaKey        = $type. '_event_id';
+        $eventIdMetaKey        = $type . '_event_id';
 
         if ($newValue == $oldValue) {
             // nothing to work with or no update
             return;
-        }elseif (empty($newValue)) {
+        } elseif (empty($newValue)) {
             $newValue = $oldValue;
-        }else{
+        } else {
             // check if just the year was updated
             $oldTime    = strtotime($oldValue);
             $newTime    = strtotime($newValue);
@@ -332,7 +343,7 @@ class CreateEvents extends Events{
             if (
                 gmdate('Y', $oldTime) != gmdate('Y', $newTime) &&
                 gmdate('m-d', $oldTime) == gmdate('m-d', $newTime)
-           ) {
+            ) {
                 // no need to create new events, just update the meta value
                 $postId    = get_user_meta($user->ID, $eventIdMetaKey, true);
 
@@ -341,10 +352,10 @@ class CreateEvents extends Events{
             }
         }
 
-        $title                = ucfirst($type). ' ' .$user->display_name;
+        $title                = ucfirst($type) . ' ' . $user->display_name;
         $this->partner        = $family->getPartner($user->ID, true);
         if ($this->partner) {
-            $title            = ucfirst($type). " {$user->first_name} & {$this->partner->first_name} {$user->last_name}";
+            $title            = ucfirst($type) . " {$user->first_name} & {$this->partner->first_name} {$user->last_name}";
         }
 
         //get old post
@@ -357,9 +368,10 @@ class CreateEvents extends Events{
         $this->createEvents();
     }
 
-    protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey) {
+    protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey)
+    {
         //Get the upcoming celebration date
-        $start_date                                = gmdate(gmdate('Y'). '-m-d', strtotime($metaValue));
+        $start_date                                = gmdate(gmdate('Y') . '-m-d', strtotime($metaValue));
 
         $this->eventData['start_date']            = $start_date;
         $this->eventData['end_date']                = $start_date;
@@ -381,7 +393,7 @@ class CreateEvents extends Events{
             'post_content'  => $title,
             'post_status'   => 'publish',
             'post_author'   => $user->ID
-       );
+        );
 
         $this->postId     = wp_insert_post($post, true, false);
         update_metadata('post', $this->postId, 'eventdetails', json_encode($this->eventData));
@@ -390,10 +402,10 @@ class CreateEvents extends Events{
         // Set the categories
         if ($type == 'birthday') {
             $catName = 'birthday';
-        }else{
+        } else {
             $catName = 'anniversary';
         }
-        $termId = get_term_by('slug', $catName,'events')->term_id;
+        $termId = get_term_by('slug', $catName, 'events')->term_id;
         if (empty($termId)) {
             $termId = wp_insert_term(ucfirst($catName), 'events')['term_id'];
         }
@@ -405,7 +417,7 @@ class CreateEvents extends Events{
 
         if ($type == 'birthday') {
             $pictureId = $pictureIds['birthday_image'] ?? -1;
-        }else{
+        } else {
             $pictureId = $pictureIds['anniversary_image'] ?? -1;
         }
 
@@ -420,8 +432,9 @@ class CreateEvents extends Events{
     /**
      * Stores all event details in the db, removes any existing events, and creates new ones.
      * @param      int|WP_post  $post        The id of a post or the post itself
-    */
-    public function storeEventMeta($post) {
+     */
+    public function storeEventMeta($post)
+    {
         if (is_numeric($post)) {
             $post    = get_post($post);
         }
@@ -454,7 +467,7 @@ class CreateEvents extends Events{
         if (!is_array($oldMeta)) {
             if (!empty($oldMeta)) {
                 $oldMeta    = (array)json_decode($oldMeta, true);
-            }else{
+            } else {
                 $oldMeta    = [];
             }
         }
@@ -469,14 +482,14 @@ class CreateEvents extends Events{
          * add_action('updated_postmeta', __NAMESPACE__ . '\createEvents', 10, 4);
          * hooks
          */
-
     }
 
     /**
      * Creatres a new event in db if it does not exist already
      * @param      string  $start_date        The start_date of the event
-    */
-    protected function maybeCreateRow($start_date) {
+     */
+    protected function maybeCreateRow($start_date)
+    {
         global $wpdb;
 
         //check if form row already exists
@@ -486,8 +499,8 @@ class CreateEvents extends Events{
                 array(
                     'post_id'            => $this->postId,
                     'start_date'            => $start_date
-               )
-           );
+                )
+            );
         }
     }
 }

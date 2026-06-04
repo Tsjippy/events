@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('init', __NAMESPACE__ . '\initTasks');
-function initTasks() {
+function initTasks()
+{
     //add action for use in scheduled task
     add_action('remove_old_events_action', __NAMESPACE__ . '\removeOldEvents');
     add_action('anniversary_check_action', __NAMESPACE__ . '\anniversaryCheck');
@@ -23,15 +26,16 @@ function initTasks() {
 /**
  * Clean up events, in events table. Not the post
  *
-*/
-function removeOldEvents() {
+ */
+function removeOldEvents()
+{
     global $wpdb;
 
     $maxAge       = SETTINGS['max-age'] ?? 90;
 
     $events        = new CreateEvents();
 
-    $query        = "DELETE FROM {$events->tableName} WHERE start_date<'" .gmdate('Y-m-d', strtotime("- $maxAge")). "'";
+    $query        = "DELETE FROM {$events->tableName} WHERE start_date<'" . gmdate('Y-m-d', strtotime("- $maxAge")) . "'";
 
     $expiredEvents    = $wpdb->get_results($query);
     foreach ($expiredEvents as $event) {
@@ -43,8 +47,9 @@ function removeOldEvents() {
  * Get all the events of today and check if they are an anniversary.
  * If so, send a concratulation message
  *
-*/
-function anniversaryCheck() {
+ */
+function anniversaryCheck()
+{
     $events        = new DisplayEvents();
     $family        = new TSJIPPY\FAMILY\Family();
 
@@ -61,7 +66,7 @@ function anniversaryCheck() {
             $partner        = $family->getPartner($event->post_author, true);
 
             if ($partner) {
-                $coupleString    = $firstName. ' & ' .$partner->display_name;
+                $coupleString    = $firstName . ' & ' . $partner->display_name;
                 $eventTitle        = trim(str_replace($coupleString, "", $eventTitle));
             }
 
@@ -73,7 +78,7 @@ function anniversaryCheck() {
                 'tsjippy-events-anniversary-message',
                 "Hi $firstName,\nCongratulations with your $age $eventTitle!",
                 $event->post_author
-           );
+            );
 
             //If the author has a partner and this events applies to both of them
             if ($partner && str_contains($event->post_title, $coupleString)) {
@@ -81,7 +86,7 @@ function anniversaryCheck() {
                     'tsjippy-events-anniversary-message',
                     "Hi {$partner->first_name},\nCongratulations with your $eventTitle!",
                     $partner->ID
-               );
+                );
             }
         }
     }
@@ -89,8 +94,9 @@ function anniversaryCheck() {
 
 /**
  * Get all schedules with an end_date in the past and deletes them
-*/
-function removeOldSchedules() {
+ */
+function removeOldSchedules()
+{
     $schedules    = new CreateSchedule();
     $schedules->getSchedules();
 
@@ -104,7 +110,8 @@ function removeOldSchedules() {
 /**
  * Create repeated events for the next 5 years
  */
-function addRepeatedEvents() {
+function addRepeatedEvents()
+{
     global $wpdb;
 
     $results    = $wpdb->get_results(
@@ -112,14 +119,14 @@ function addRepeatedEvents() {
             "SELECT * FROM %i WHERE `meta_key`=%s",
             $wpdb->postmeta,
             'eventdetails'
-       )
-   );
+        )
+    );
 
     foreach ($results as $result) {
         $details    = maybe_unserialize($result->meta_value);
         if (!is_array($details)) {
             $details    = json_decode($details, true);
-        }else{
+        } else {
             update_post_meta($result->post_id, 'eventdetails', json_encode($details));
         }
 

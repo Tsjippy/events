@@ -1,16 +1,19 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
-function restApiInit() {
+function restApiInit()
+{
     // Month calendar
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/get_month_html',
         array(
             'methods'                 => 'POST',
@@ -25,20 +28,20 @@ function restApiInit() {
                     'validate_callback' => function ($param) {
                         return is_numeric($param);
                     }
-               ),
+                ),
                 'year'        => array(
                     'required'    => true,
                     'validate_callback' => function ($param) {
                         return is_numeric($param);
                     }
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // Week calendar
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/get_week_html',
         array(
             'methods'                 => 'POST',
@@ -53,20 +56,20 @@ function restApiInit() {
                     'validate_callback' => function ($weekNr) {
                         return is_numeric($weekNr);
                     }
-               ),
+                ),
                 'year'        => array(
                     'required'    => true,
                     'validate_callback' => function ($year) {
                         return is_numeric($year);
                     }
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     // List calendar
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/get_list_html',
         array(
             'methods'                 => 'POST,GET',
@@ -81,8 +84,8 @@ function restApiInit() {
                     'validate_callback' => function ($offset) {
                         return is_numeric($offset);
                     }
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 }

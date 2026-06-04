@@ -5,29 +5,30 @@
  */
 
 .event {
-	h4.title,  h4.event-title{
-		font-weight: bold;
-		color: #bd2919;
-		margin: 15px 5px 5px;
-	}
+  h4.title,
+  h4.event-title {
+    font-weight: bold;
+    color: #bd2919;
+    margin: 15px 5px 5px;
+  }
 
-	a.button {
-		background-color: #bd2919;
-		border-radius: 3px;
-		text-align: center;
-		margin-right: 10px;
-		color: #ffffff;
-	}
+  a.button {
+    background-color: #bd2919;
+    border-radius: 3px;
+    text-align: center;
+    margin-right: 10px;
+    color: #ffffff;
+  }
 
-	.eventlist .event-article{
-        margin-bottom: 10px;
-    }
+  .eventlist .event-article {
+    margin-bottom: 10px;
+  }
 
-    .event-wrapper{
-        display:            flex;
-    }
+  .event-wrapper {
+    display: flex;
+  }
 
-	.event-date{
-		max-height:         40px;
-	}
+  .event-date {
+    max-height: 40px;
+  }
 }

@@ -1,30 +1,35 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class Events{
+class Events
+{
     public $tableName;
     public $dayStartTime;
     public $dayEndTime;
     public $postId;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
-        $this->tableName        = $wpdb->prefix. 'tsjippy_events';
+        $this->tableName        = $wpdb->prefix . 'tsjippy_events';
         $this->dayStartTime        = '00:00';
         $this->dayEndTime        = '23:59';
     }
 
     /**
      * Creates the table holding all events if it does not exist
-    */
-    public function createEventsTable() {
-        if ( !function_exists('maybe_create_table')) {
+     */
+    public function createEventsTable()
+    {
+        if (!function_exists('maybe_create_table')) {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }
 
@@ -56,15 +61,16 @@ class Events{
      * @param    int            $postId        WP_Post id
      *
      * @return    object|false            The event or false if no event found
-    */
-    public function retrieveSingleEvent($postId) {
+     */
+    public function retrieveSingleEvent($postId)
+    {
         global $wpdb;
         $results    = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM %i as posts INNER JOIN %i as events ON posts.ID = events.post_id WHERE post_id=%d ORDER BY ABS(DATEDIFF(start_date, CURDATE())) LIMIT 1",
             $wpdb->posts,
             $this->tableName,
             $postId
-       ));
+        ));
 
         if (empty($results)) {
             return false;
@@ -76,8 +82,9 @@ class Events{
      * Removes all events connected to an certain event post
      * @param      int      $postId        Optional post id
      * @param    bool    $delPost    Wheter to delete the post as well
-    */
-    public function removeDbRows($postId = null, $delPost=false) {
+     */
+    public function removeDbRows($postId = null, $delPost = false)
+    {
         global $wpdb;
 
         if (!is_numeric($postId)) {
@@ -92,6 +99,6 @@ class Events{
             $this->tableName,
             ['post_id' => $postId],
             ['%d']
-       );
+        );
     }
 }

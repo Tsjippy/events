@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
 add_action('init', function () {
@@ -7,15 +9,15 @@ add_action('init', function () {
         __DIR__ . '/upcomingEvents/build',
         array(
             'render_callback' => __NAMESPACE__ . '\displayUpcomingEvents',
-       )
-   );
+        )
+    );
 
     register_block_type(
         __DIR__ . '/schedules/build',
         array(
             'render_callback' => __NAMESPACE__ . '\displaySchedules',
-       )
-   );
+        )
+    );
 
     register_block_type(
         __DIR__ . '/upcomingArrivals/build',
@@ -35,8 +37,8 @@ add_action('init', function () {
                     'default'    => true
                 ]
             ]
-       )
-   );
+        )
+    );
 
     register_block_type(
         __DIR__ . '/metadata/build',
@@ -54,22 +56,23 @@ add_action('init', function () {
                     'default'    => ''
                 ]
             ]
-       )
-   );
+        )
+    );
 });
 
-function displayUpcomingEvents($attributes) {
+function displayUpcomingEvents($attributes)
+{
 
     $args = wp_parse_args($attributes, array(
         'items'         => 10,
         'months'        => 3,
         'categories'    => []
-   ));
+    ));
 
     $categories    = get_categories(array(
         'taxonomy'        => 'events',
         'hide_empty'     => false,
-   ));
+    ));
 
     $exclude    = $args['categories'];
 
@@ -86,30 +89,33 @@ function displayUpcomingEvents($attributes) {
     return $events->upcomingEvents($args['items'], $args['months'], $include, $args['title']);
 }
 
-function displaySchedules() {
+function displaySchedules()
+{
     $schedule    = new Schedules();
     return $schedule->showSchedules();
 }
 
 // register custom meta tag field
 add_action('init', __NAMESPACE__ . '\registerPostMeta');
-function registerPostMeta() {
+function registerPostMeta()
+{
     register_post_meta('event', 'eventdetails', array(
         'show_in_rest'     => true,
         'single'         => true,
         'type'             => 'string',
         'sanitize_callback' => 'sanitize_text_field'
-   ));
+    ));
 }
 
 add_action('added_post_meta', __NAMESPACE__ . '\createEvents', 10, 4);
 add_action('updated_postmeta', __NAMESPACE__ . '\createEvents', 10, 4);
 
-function createEvents($metaId, $postId,  $metaKey,  $metaValue) {
+function createEvents($metaId, $postId,  $metaKey,  $metaValue)
+{
     if (
         $metaKey != 'eventdetails' ||
         empty($metaValue)
-   ) {
+    ) {
         return;
     }
 
@@ -120,7 +126,7 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue) {
         !empty($metaValue) &&
         !empty($metaValue['start_date']) &&
         $metaValue['start_date'] < gmdate('Y-m-d')
-   ) {
+    ) {
         return;
     }
 
@@ -140,13 +146,14 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue) {
     }
 }
 
-function upcomingArrivalsBlock($attributes) {
+function upcomingArrivalsBlock($attributes)
+{
     $family    = new TSJIPPY\FAMILY\Family();
 
     $args     = wp_parse_args($attributes, array(
         'title'         => 'Upcoming Arrivals',
         'months'        => 2
-   ));
+    ));
 
     $arrivingUsers    = get_users([
         'meta_query' => array(
@@ -156,14 +163,14 @@ function upcomingArrivalsBlock($attributes) {
                 'value'   => gmdate("Y-m-d"),
                 'compare' => '>=',
                 'type'    => 'DATE'
-           ),
+            ),
             array(
                 'key'     => 'arrival_date',
                 'value'   => gmdate("Y-m-d", strtotime("+{$args['months']} month", time())),
                 'compare' => '<=',
                 'type'    => 'DATE'
-           )
-       ),
+            )
+        ),
         'orderby'    => 'meta_value',
         'order'     => 'ASC'
     ]);
@@ -190,7 +197,7 @@ function upcomingArrivalsBlock($attributes) {
         // Add to an existing date, multiple people arrive on the same date
         if (isset($dates[$dateString])) {
             $dates[$dateString]    .= "<br><a href='$url' class='arrival-name'>$name</a>";
-        }else{
+        } else {
             $dates[$dateString]    = "<a href='$url' class='arrival-name'>$name</a>";
         }
     }
@@ -200,16 +207,16 @@ function upcomingArrivalsBlock($attributes) {
     }
 
     $html    = "<div class='arrival-dates-wrapper'>";
-        $html    .= "<h4 class='title'>{$args['title']}</h4>";
+    $html    .= "<h4 class='title'>{$args['title']}</h4>";
 
-        if (empty($dates)) {
-            $html    .= "No upcoming arrivals found";
-        }
-        foreach ($dates as $date=>$string) {
-            $html    .= "<div class='arrival-date-wrapper'>";
-                $html    .= "<strong class='arrival-title'>$date</strong><br>$string";
-            $html    .= "</div>";
-        }
+    if (empty($dates)) {
+        $html    .= "No upcoming arrivals found";
+    }
+    foreach ($dates as $date => $string) {
+        $html    .= "<div class='arrival-date-wrapper'>";
+        $html    .= "<strong class='arrival-title'>$date</strong><br>$string";
+        $html    .= "</div>";
+    }
     $html    .= "</div>";
 
     return $html;

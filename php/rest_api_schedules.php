@@ -1,16 +1,19 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\schedulesRestApiInit');
-function schedulesRestApiInit() {
+function schedulesRestApiInit()
+{
     //add_schedule
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/add_schedule',
         array(
             'methods'                 => 'POST',
@@ -29,20 +32,20 @@ function schedulesRestApiInit() {
             'args'                    => array(
                 'target-name'        => array(
                     'required'    => true
-               ),
+                ),
                 'start_date'        => array(
                     'required'    => true,
-               ),
+                ),
                 'end_date'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 
     //publish_schedule
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/publish_schedule',
         array(
             'methods'                 => 'POST',
@@ -60,14 +63,14 @@ function schedulesRestApiInit() {
                     'validate_callback' => function ($scheduleId) {
                         return is_numeric($scheduleId);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     //remove_schedule
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/remove_schedule',
         array(
             'methods'                 => 'POST',
@@ -85,45 +88,47 @@ function schedulesRestApiInit() {
                     'validate_callback' => function ($scheduleId) {
                         return is_numeric($scheduleId);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     //add_host
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/add_host',
         array(
             'methods'                 => 'POST',
             'callback'                 => __NAMESPACE__ . '\addHost',
-            'permission_callback'     => function () {return current_user_can('read');},
+            'permission_callback'     => function () {
+                return current_user_can('read');
+            },
             'args'                    => array(
                 'schedule-id'        => array(
                     'required'    => true,
                     'validate_callback' => function ($scheduleId) {
                         return is_numeric($scheduleId);
                     }
-               ),
+                ),
                 'date'        => array(
                     'required'    => true,
                     'validate_callback' => function ($param) {
                         return TSJIPPY\isDate($param);
                     }
-               ),
+                ),
                 'start_time'        => array(
                     'required'    => true,
                     'validate_callback' => function ($param) {
                         return TSJIPPY\isTime($param);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     //remove_host
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/remove_host',
         array(
             'methods'                 => 'POST',
@@ -131,21 +136,23 @@ function schedulesRestApiInit() {
                 $schedule                = new CreateSchedule();
                 return $schedule->removeHost($_POST['session-id']);
             },
-            'permission_callback'     => function () {return current_user_can('read');}    ,
+            'permission_callback'     => function () {
+                return current_user_can('read');
+            },
             'args'                    => array(
                 'session-id'        => array(
                     'required'            => true,
                     'validate_callback' => function ($scheduleId) {
                         return is_numeric($scheduleId);
                     }
-               )
-           )
-       )
-   );
+                )
+            )
+        )
+    );
 
     //add_menu
     register_rest_route(
-        RESTAPIPREFIX. '/events',
+        RESTAPIPREFIX . '/events',
         '/add_menu',
         array(
             'methods'                 => 'POST',
@@ -153,32 +160,35 @@ function schedulesRestApiInit() {
                 $schedule        = new CreateSchedule();
                 return $schedule->addMenu();
             },
-            'permission_callback'     => function () {return current_user_can('read');},
+            'permission_callback'     => function () {
+                return current_user_can('read');
+            },
             'args'                    => array(
                 'schedule-id'        => array(
                     'required'    => true,
                     'validate_callback' => function ($scheduleId) {
                         return is_numeric($scheduleId);
                     }
-               ),
+                ),
                 'date'        => array(
                     'required'    => true,
                     'validate_callback' => function ($param) {
                         return TSJIPPY\isDate($param);
                     }
-               ),
+                ),
                 'start_time'        => array(
                     'required'    => true
-               ),
+                ),
                 'recipe-keyword'        => array(
                     'required'    => true
-               ),
-           )
-       )
-   );
+                ),
+            )
+        )
+    );
 }
 
-function addHost($param) {
+function addHost($param)
+{
     $schedules        = new CreateSchedule();
 
     if (is_array($_POST['date'])) {
@@ -196,7 +206,7 @@ function addHost($param) {
                     $unSuccesFull        .= ' and ';
                 }
                 $unSuccesFull    .= gmdate(DATEFORMAT, strtotime($date));
-            }else{
+            } else {
                 if (!empty($succesFull)) {
                     $succesFull        .= ' and ';
                 }
@@ -204,7 +214,7 @@ function addHost($param) {
 
                 $html[$date]    = $result['html'];
 
-                $succes        = explode(" as a host for $schedule->name on", $result['message'])[0]. " as a host for $schedule->name on";
+                $succes        = explode(" as a host for $schedule->name on", $result['message'])[0] . " as a host for $schedule->name on";
             }
         }
 

@@ -1,22 +1,26 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_action('init', __NAMESPACE__ . '\init');
-function init() {
+function init()
+{
     add_rewrite_endpoint('public_calendar', EP_ROOT);
 }
 
 add_action('template_redirect', __NAMESPACE__ . '\templateRedirect');
-function templateRedirect() {
+function templateRedirect()
+{
     global $wp_query;
 
     // if this is not a request for json or a singular object then bail
-    if ( ! isset($wp_query->query_vars['public_calendar'])) {
+    if (! isset($wp_query->query_vars['public_calendar'])) {
         return;
     }
 
@@ -27,4 +31,3 @@ function templateRedirect() {
 
 //outlook.com: https://outlook.office.com/calendar/addcalendar
 //google: https://calendar.google.com/calendar/u/1/r/settings/addbyurl
-

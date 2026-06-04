@@ -1,23 +1,28 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class IcalFeed{
+class IcalFeed
+{
     public $icalFormat;
 
-    public function __construct() {
+    public function __construct()
+    {
         //see https://gist.github.com/jakebellacera/635416
         $this->icalFormat = 'Ymd\THis\Z';
     }
 
     /**
      * Creates an iCal feed
-    */
-    public function calendarStream() {
+     */
+    public function calendarStream()
+    {
         $userId        = $_GET['id'];
         if (!is_numeric($userId)) {
             $userId    = -1;
@@ -27,8 +32,8 @@ class IcalFeed{
             array(
                 'post_type'      => 'event',
                 'posts_per_page' => -1
-           )
-       );
+            )
+        );
 
         $icalStart         = "BEGIN:VCALENDAR\r\n";
         $icalStart        .= "VERSION:2.0\r\n";
@@ -70,7 +75,7 @@ class IcalFeed{
         }
         ob_start();
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $icalStart.$icalEvents.$icalEnd;
+        echo $icalStart . $icalEvents . $icalEnd;
         ob_end_flush();
         exit;
         die();
@@ -84,7 +89,8 @@ class IcalFeed{
      *
      * @return  string              The ical data
      */
-    public function createIcalEvent($meta, $event) {
+    public function createIcalEvent($meta, $event)
+    {
         $icalEvent    = "BEGIN:VEVENT\r\n";
 
         if (!isset($meta['start_date']) || !isset($meta['end_date'])) {
@@ -93,52 +99,53 @@ class IcalFeed{
 
         //between times
         if (empty($meta['allday'])) {
-            $start            = get_gmt_from_date($meta['start_date']. ' ' .$meta['start_time'], $this->icalFormat);
-            $end            = get_gmt_from_date($meta['end_date']. ' ' .$meta['end_time'], $this->icalFormat);
+            $start            = get_gmt_from_date($meta['start_date'] . ' ' . $meta['start_time'], $this->icalFormat);
+            $end            = get_gmt_from_date($meta['end_date'] . ' ' . $meta['end_time'], $this->icalFormat);
             $start            = "DTSTART:$start\r\n";
             $end            = "DTEND:$end\r\n";
-        //all day
-        }else{
+            //all day
+        } else {
             $start            = strtotime($meta['start_date']);
             $startDate        = gmdate('Ymd', $start);
 
             if ($meta['start_date'] == $meta['end_date']) {
                 $endDate        = gmdate('Ymd', strtotime('+1 day', $start));
-            }else{
+            } else {
                 $endDate        = gmdate('Ymd', strtotime($meta['end_date']));
             }
-            $start                ="DTSTART;VALUE=DATE:$startDate\r\n";
-            $end                ="DTEND;VALUE=DATE:$endDate\r\n";
+            $start                = "DTSTART;VALUE=DATE:$startDate\r\n";
+            $end                = "DTEND;VALUE=DATE:$endDate\r\n";
         }
-        $icalEvent        .= $start.$end;
+        $icalEvent        .= $start . $end;
 
-        $creationdate     = gmdate($this->icalFormat,strtotime($event->post_date_gmt));
-        $icalEvent        .="DTSTAMP:$creationdate\r\n";
-        $icalEvent        .="SUMMARY:{$event->post_title}\r\n";
+        $creationdate     = gmdate($this->icalFormat, strtotime($event->post_date_gmt));
+        $icalEvent        .= "DTSTAMP:$creationdate\r\n";
+        $icalEvent        .= "SUMMARY:{$event->post_title}\r\n";
 
         $url             = get_permalink($event->ID);
         //maxline length is 75
-        $icalEvent        .= trim(chunk_split("DESCRIPTION:$event->post_title read more on $url", 74, "\r\n ")). "\r\n";
+        $icalEvent        .= trim(chunk_split("DESCRIPTION:$event->post_title read more on $url", 74, "\r\n ")) . "\r\n";
 
         $uid             = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
-        $icalEvent        .="UID:$uid\r\n";
+        $icalEvent        .= "UID:$uid\r\n";
 
         $moddate         = gmdate($this->icalFormat, strtotime($event->post_modified_gmt));
-        $icalEvent        .="LAST-MODIFIED:$moddate\r\n";
-        $icalEvent        .="LOCATION:" .$meta['location'] ?? '' . "\r\n";
+        $icalEvent        .= "LAST-MODIFIED:$moddate\r\n";
+        $icalEvent        .= "LOCATION:" . $meta['location'] ?? '' . "\r\n";
 
-        $icalEvent    .= trim(chunk_split("URL:$url",74,"\r\n ")). "\r\n";
+        $icalEvent    .= trim(chunk_split("URL:$url", 74, "\r\n ")) . "\r\n";
 
         if (is_array($meta['repeat'])) {
             $this->addRepeatDetails($meta, $start, $end, $uid, $icalEvent);
         }
 
-        $icalEvent    .="END:VEVENT\r\n";
+        $icalEvent    .= "END:VEVENT\r\n";
 
         return        $icalEvent;
     }
 
-    public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent) {
+    public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent)
+    {
         if (empty($meta['repeat'])) {
             return $icalEvent;
         }
@@ -148,7 +155,7 @@ class IcalFeed{
             if (is_array($meta['repeat']['includedates'])) {
                 $icalEvent .= $this->addIcalCustomDates($meta, $start, $end, $uid, $icalEvent);
             }
-        }else{
+        } else {
             $intval        = $meta['repeat']['interval'];
 
             $icalEvent    .= "RRULE:FREQ=$freq;INTERVAL=$intval;";
@@ -158,23 +165,23 @@ class IcalFeed{
                 (
                     //!empty($meta['repeat']['datetype']) &&
                     $meta['repeat']['datetype'] ?? '' == 'samedate'
-               )
-           ) {
+                )
+            ) {
                 $month    = gmdate('m', strtotime($meta['start_date']));
                 $day    = gmdate('d', strtotime($meta['start_date']));
                 if ($freq == 'YEARLY') {
-                    $icalEvent    .="BYMONTH=$month;";
+                    $icalEvent    .= "BYMONTH=$month;";
                 }
-                $icalEvent    .="BYMONTHDAY=$day;";
-            }elseif ($freq == 'MONTHLY' || $freq == 'WEEKLY') {
+                $icalEvent    .= "BYMONTHDAY=$day;";
+            } elseif ($freq == 'MONTHLY' || $freq == 'WEEKLY') {
                 $weeks             = $meta['repeat']['weeks'];
                 $weekDays         = $meta['repeat']['weekdays'];
                 if (is_array($weeks)) {
-                    $icalEvent    .="BYDAY=";
+                    $icalEvent    .= "BYDAY=";
 
-                    foreach ($weeks as $index=>$week) {
-                        if ($index>0) {
-                            $icalEvent    .=",";
+                    foreach ($weeks as $index => $week) {
+                        if ($index > 0) {
+                            $icalEvent    .= ",";
                         }
 
                         if ($freq == 'MONTHLY') {
@@ -185,33 +192,33 @@ class IcalFeed{
                         //add the first two letters of the weekday of the start_date as capitals (FR)
                         if (empty($weekDays[$index])) {
                             $icalEvent    .= strtoupper(substr(gmdate('D', strtotime($meta['start_date'])), 0, 2));
-                        //add the first two letters as capitals (FR)
-                        }else{
+                            //add the first two letters as capitals (FR)
+                        } else {
                             $icalEvent    .= strtoupper(substr($weekDays[$index], 0, 2));
                         }
                     }
 
-                    $icalEvent    .=";";
+                    $icalEvent    .= ";";
                 }
             }
 
             if (!empty($meta['repeat']['end_date'])) {
-                $endDate         = gmdate($this->icalFormat,strtotime($meta['repeat']['end_date']));
-                $icalEvent        .="UNTIL=$endDate;";
-            }elseif (is_numeric($meta['repeat']['amount'])) {
-                $icalEvent        .="COUNT={$meta['repeat']['amount']};";
+                $endDate         = gmdate($this->icalFormat, strtotime($meta['repeat']['end_date']));
+                $icalEvent        .= "UNTIL=$endDate;";
+            } elseif (is_numeric($meta['repeat']['amount'])) {
+                $icalEvent        .= "COUNT={$meta['repeat']['amount']};";
             }
 
-            $icalEvent    .="\r\n";
+            $icalEvent    .= "\r\n";
 
             if (!empty($meta['repeat']['excludedates'])) {
                 $excludeDates        = $meta['repeat']['excludedates'];
                 array_filter($excludeDates);
                 if (!empty($excludeDates)) {
-                    $icalEvent    .="EXDATE:";
+                    $icalEvent    .= "EXDATE:";
 
-                    foreach ($excludeDates as $i=>$exdate) {
-                        if ($i>0) {
+                    foreach ($excludeDates as $i => $exdate) {
+                        if ($i > 0) {
                             $icalEvent    .= ',';
                         }
                         $icalEvent    .= gmdate($this->icalFormat, strtotime($exdate));
@@ -224,13 +231,14 @@ class IcalFeed{
         return $icalEvent;
     }
 
-    public function addIcalCustomDates($meta, $start, $end, $uid, $icalEvent) {
+    public function addIcalCustomDates($meta, $start, $end, $uid, $icalEvent)
+    {
         //copy the event for each includes date
         $extraIcalEvents    = '';
         foreach ($meta['repeat']['includedates'] as $date) {
             $extraIcalEvents    .= "END:VEVENT\r\n";
-            $newStart             = gmdate($this->icalFormat, strtotime("$date " .$meta['start_time']));
-            $newEnd                  = gmdate($this->icalFormat, strtotime("$date " .$meta['end_time']));
+            $newStart             = gmdate($this->icalFormat, strtotime("$date " . $meta['start_time']));
+            $newEnd                  = gmdate($this->icalFormat, strtotime("$date " . $meta['end_time']));
             $newStart             = "DTSTART:$newStart\r\n";
             $newEnd                  = "DTEND:$newEnd\r\n";
 

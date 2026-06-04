@@ -5,16 +5,16 @@
  * Replace them with your own styles or remove the file completely.
  */
 
- @use '../../../../tsjippy-shared-functionality/includes/css/scss/global' as *;
+@use "../../../../tsjippy-shared-functionality/includes/css/scss/global" as *;
 
- .arrival-dates-wrapper{
-    padding-left: 10px;
- }
- 
- .arrival-name{
-    margin-left: 10px;
- }
+.arrival-dates-wrapper {
+  padding-left: 10px;
+}
 
- .arrival-date-wrapper{
-   margin-top: 7px;
- }
+.arrival-name {
+  margin-left: 10px;
+}
+
+.arrival-date-wrapper {
+  margin-top: 7px;
+}

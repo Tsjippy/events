@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class CreateSchedule extends Schedules{
+class CreateSchedule extends Schedules
+{
     public string $date;
     public string $startTime;
     public string $endTime;
@@ -18,7 +21,8 @@ class CreateSchedule extends Schedules{
     public string $title;
     public bool $sessionAtendeesUpdated;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->sessionAtendeesUpdated    = false;
@@ -30,14 +34,15 @@ class CreateSchedule extends Schedules{
      * @param    object    $event            the event
      *
      * @return     array                    Rows html
-    */
-    protected function addEventToDb($event) {
+     */
+    protected function addEventToDb($event)
+    {
         global $wpdb;
 
         $wpdb->insert(
             $this->events->tableName,
             $event
-       );
+        );
 
         if (!empty($wpdb->last_error)) {
             return new WP_Error('schedules', $wpdb->last_error);
@@ -48,7 +53,7 @@ class CreateSchedule extends Schedules{
         //Create event warning
         if (isset($_POST['reminders'])) {
             foreach ($_POST['reminders'] as $minutes) {
-                $start    = new \DateTime($event['start_date']. ' ' .$event['start_time'], new \DateTimeZone(wp_timezone_string()));
+                $start    = new \DateTime($event['start_date'] . ' ' . $event['start_time'], new \DateTimeZone(wp_timezone_string()));
 
                 //Warn minutes in advance
                 $start    = $start->getTimestamp() - $minutes * MINUTE_IN_SECONDS;
@@ -65,8 +70,9 @@ class CreateSchedule extends Schedules{
      *
      * @param    bool    $addHostPartner    Whether to add an event for the host partner as well. Default true
      * @param    bool    $addPartner        Whether to add an event for the schedule target partner as well. Default true
-    */
-    protected function addScheduleEvents($addHostPartner=true, $addPartner=true) {
+     */
+    protected function addScheduleEvents($addHostPartner = true, $addPartner = true)
+    {
         $family                            = new TSJIPPY\FAMILY\Family();
         $event                            = [];
         $event['start_date']                = $this->date;
@@ -77,7 +83,7 @@ class CreateSchedule extends Schedules{
         $event['organizer-id']            = $this->hostId;
         if (empty($_POST['others'])) {
             $event['atendees']            = serialize([]);
-        }else{
+        } else {
             $event['atendees']            = maybe_serialize($_POST['others']);
         }
 
@@ -85,16 +91,16 @@ class CreateSchedule extends Schedules{
         if (is_numeric($this->hostId)) {
             if ($addHostPartner) {
                 $event['organizer']                = $family->getFamilyName($this->hostId, false, $hostPartner);
-            }else{
+            } else {
                 $event['organizer']                = get_userdata($this->hostId)->display_name;
             }
-        }elseif (!empty($_POST['host'])) {
+        } elseif (!empty($_POST['host'])) {
             $event['organizer']                    = $_POST['host'];
         }
 
         if ($addPartner) {
             $partnerId    = $family->getPartner($this->currentSchedule->target);
-        }else{
+        } else {
             $partnerId    = false;
         }
 
@@ -104,14 +110,14 @@ class CreateSchedule extends Schedules{
         }
 
         if (!empty($event['organizer']) && empty($this->defaultSubject)) {
-            $ownTitle    = ucfirst($this->title). " with {$event['organizer']}";
-        }else{
+            $ownTitle    = ucfirst($this->title) . " with {$event['organizer']}";
+        } else {
             $ownTitle    = ucfirst($this->title);
         }
 
         if (str_contains(strtolower($ownTitle), 'at home')) {
             if (!empty($event['organizer'])) {
-                $ownTitle    = ucfirst($this->title). ' ' .$event['organizer'];
+                $ownTitle    = ucfirst($this->title) . ' ' . $event['organizer'];
             }
 
             $event['location']    = 'Home';
@@ -134,24 +140,24 @@ class CreateSchedule extends Schedules{
         if (is_numeric($this->hostId)) {
             if (empty($this->defaultSubject)) {
                 $titleString    = "Hosting {$this->name} for $title";
-            }else{
+            } else {
                 $titleString    = $title;
             }
 
             $eventArray[] =
-            [
-                'title'        =>    $titleString,
-                'only_for'    =>[$this->hostId, $hostPartner]
-            ];
+                [
+                    'title'        =>    $titleString,
+                    'only_for'    => [$this->hostId, $hostPartner]
+                ];
         }
 
         if (!empty($_POST['others']) && is_array($_POST['others'])) {
             foreach ($_POST['others'] as $attendee) {
                 $eventArray[] =
-                [
-                    'title'        =>"Attending $title with {$this->name}",
-                    'only_for'    =>[$attendee]
-                ];
+                    [
+                        'title'        => "Attending $title with {$this->name}",
+                        'only_for'    => [$attendee]
+                    ];
             }
         }
 
@@ -169,7 +175,7 @@ class CreateSchedule extends Schedules{
                 'event_ids'        => serialize($eventIds),
                 'meal'            => $title == 'lunch' || $title == 'dinner'
             ]
-       );
+        );
 
         // add to schedule
         if (!isset($this->currentSchedule->sessions[$this->date])) {
@@ -186,7 +192,8 @@ class CreateSchedule extends Schedules{
      *
      * @return    array                    Array containing the created post and event ids
      */
-    public function createPostsAndEvents($eventArray, $event) {
+    public function createPostsAndEvents($eventArray, $event)
+    {
         $eventIds    = [];
         $postIds    = [];
 
@@ -197,7 +204,7 @@ class CreateSchedule extends Schedules{
                 'post_content'  => $a['title'],
                 'post_status'   => "publish",
                 'post_author'   => $this->hostId
-           );
+            );
 
             $postId     = wp_insert_post($post, true, false);
             if (is_wp_error($postId)) {
@@ -238,8 +245,9 @@ class CreateSchedule extends Schedules{
 
     /**
      * Updates events in the db
-    */
-    protected function updateScheduleEvents($addHostPartner=true, $addPartner=true) {
+     */
+    protected function updateScheduleEvents($addHostPartner = true, $addPartner = true)
+    {
         global $wpdb;
         $family        = new TSJIPPY\FAMILY\Family();
 
@@ -249,10 +257,10 @@ class CreateSchedule extends Schedules{
         if (is_numeric($this->hostId)) {
             if ($addHostPartner) {
                 $organizer                = $family->getFamilyName($this->hostId, false, $hostPartner);
-            }else{
+            } else {
                 $organizer                = get_userdata($this->hostId)->display_name;
             }
-        }elseif (!empty($_POST['host'])) {
+        } elseif (!empty($_POST['host'])) {
             $organizer                = $_POST['host'];
         }
 
@@ -293,12 +301,12 @@ class CreateSchedule extends Schedules{
                 wp_update_post(array(
                     'ID'           => $event->post_id,
                     'post_title'   => "{$this->title} with $organizer",
-               ));
+                ));
 
                 $updated            = true;
             }
 
-            if ($event->organizer-id != $this->hostId) {
+            if ($event->organizer - id != $this->hostId) {
                 $args['organizer-id']    = $this->hostId;
                 $updated                = true;
             }
@@ -322,8 +330,8 @@ class CreateSchedule extends Schedules{
                 $args,
                 array(
                     'id'        => $event->id
-               ),
-           );
+                ),
+            );
         }
 
         // update the schedule
@@ -336,7 +344,8 @@ class CreateSchedule extends Schedules{
     /**
      * Updates the session atendees and the posts and events related to that
      */
-    public function updateSessionAtendees() {
+    public function updateSessionAtendees()
+    {
         global $wpdb;
 
         if ($this->sessionAtendeesUpdated) {
@@ -349,16 +358,16 @@ class CreateSchedule extends Schedules{
         $eventArray                        = [];
 
         // remove old events
-        foreach ($this->currentSession->events as $i=>$ev) {
+        foreach ($this->currentSession->events as $i => $ev) {
 
             if (
                 $ev->only_for != $this->currentSchedule->target     &&         // not an event for the target of the schedule
-                $ev->only_for != $event->organizer-id                &&        // not organizer of the event
+                $ev->only_for != $event->organizer - id                &&        // not organizer of the event
                 !in_array($ev->only_for, $_POST['others'])                // and not one of the atendees
-           ) {
+            ) {
                 // remove the event and all posts related to it
                 $this->currentSession->event_ids        = array_diff($this->currentSession->event_ids, [$event->id]);
-                foreach ($this->currentSession->posts as $index=>$post) {
+                foreach ($this->currentSession->posts as $index => $post) {
                     if ($ev->post_id == $post->ID) {
                         $this->currentSession->post_ids        = array_diff($this->currentSession->post_ids, [$post->ID]);
 
@@ -376,8 +385,8 @@ class CreateSchedule extends Schedules{
         foreach ($_POST['others'] as $atendee) {
             if (is_numeric($atendee) && !in_array($atendee, (array)$event->atendees)) {
                 $eventArray[] = [
-                    'title'        =>"Attending {$this->title} with {$this->name}",
-                    'only_for'    =>[$atendee]
+                    'title'        => "Attending {$this->title} with {$this->name}",
+                    'only_for'    => [$atendee]
                 ];
             }
         }
@@ -406,16 +415,16 @@ class CreateSchedule extends Schedules{
             [
                 'id'        => $this->currentSession->id
             ],
-       );
-
+        );
     }
 
     /**
      * Add a new schedule
      *
      * @return array    text, new schedules list in html
-    */
-    public function addSchedule($update=false) {
+     */
+    public function addSchedule($update = false)
+    {
         global $wpdb;
 
         $name        = sanitize_text_field(wp_unslash($_POST['target-name']));
@@ -429,13 +438,13 @@ class CreateSchedule extends Schedules{
 
         if (empty($_POST['skiplunch'])) {
             $lunch    = true;
-        }else{
+        } else {
             $lunch    = false;
         }
 
         if (empty($_POST['skiporientation'])) {
             $orientation    = true;
-        }else{
+        } else {
             $orientation    = false;
         }
 
@@ -446,9 +455,9 @@ class CreateSchedule extends Schedules{
 
         if ($orientation) {
             $startTime    = '08:00';
-        }elseif ($lunch) {
+        } elseif ($lunch) {
             $startTime    = $this->lunchStartTime;
-        }else{
+        } else {
             $startTime    = $this->dinerTime;
         }
 
@@ -458,14 +467,14 @@ class CreateSchedule extends Schedules{
 
         if ($_POST['fixedtimeslotsize'] == 'yes') {
             $fixedTimeslotSize    = true;
-        }else{
+        } else {
             $fixedTimeslotSize    = false;
         }
 
         if (empty($_POST['subject'])) {
             $subject    = '';
             $diner        = !isset($_POST['skipdiner']);
-        }else{
+        } else {
             $subject    = $_POST['subject'];
             $lunch        = false;
             $diner        = false;
@@ -488,20 +497,20 @@ class CreateSchedule extends Schedules{
             'admin_roles'            => maybe_serialize($_POST['admin-roles']),
             'view_roles'            => maybe_serialize($_POST['view-roles']),
             'subject'                => $subject,
-       );
+        );
 
         if ($update) {
             $wpdb->update(
                 $this->tableName,
                 $arg,
                 array('id' => $_POST['schedule-id'])
-           );
+            );
             $action    = 'updated';
-        }else{
+        } else {
             $wpdb->insert(
                 $this->tableName,
                 $arg
-           );
+            );
 
             if ($wpdb->last_error !== '') {
                 return new WP_Error('schedules', $wpdb->last_error);
@@ -521,8 +530,9 @@ class CreateSchedule extends Schedules{
      * Publishes a new schedule
      *
      * @return string    success message
-    */
-    public function publishSchedule() {
+     */
+    public function publishSchedule()
+    {
         global $wpdb;
         $family        = new TSJIPPY\FAMILY\Family();
 
@@ -534,11 +544,11 @@ class CreateSchedule extends Schedules{
             $this->tableName,
             array(
                 'published'    => true
-           ),
+            ),
             array(
                 'id'        => $scheduleId
-           )
-       );
+            )
+        );
 
         return 'Succesfully published the schedule';
     }
@@ -549,8 +559,9 @@ class CreateSchedule extends Schedules{
      * @param int    $scheduleId    THe id of the schedule to remove
      *
      * @return string    success message
-    */
-    public function removeSchedule($scheduleId) {
+     */
+    public function removeSchedule($scheduleId)
+    {
         global $wpdb;
 
         $family    = new TSJIPPY\FAMILY\Family();
@@ -572,8 +583,8 @@ class CreateSchedule extends Schedules{
                 "SELECT * FROM %i WHERE schedule_id=%d",
                 $this->sessionTableName,
                 $scheduleId
-           )
-       );
+            )
+        );
         foreach ($sessions as $session) {
             $this->removeSession($session);
         }
@@ -583,7 +594,7 @@ class CreateSchedule extends Schedules{
             $this->tableName,
             ['id' => $scheduleId],
             ['%d'],
-       );
+        );
 
         //Remove the schedule from the schedules array
         return 'Succesfully removed the schedule';
@@ -594,13 +605,15 @@ class CreateSchedule extends Schedules{
      *
      * @param object|int    $session        A session or session id of a session, if not given the value of $this->currentSession will be used
      *
-    */
-    protected function removeSession($session=[]) {
+     */
+    protected function removeSession($session = [])
+    {
         global $wpdb;
 
         if (empty($session)) {
             $session    = $this->currentSession;
-        }if (is_numeric($session)) {
+        }
+        if (is_numeric($session)) {
             $session    = $this->getSessionEvent($session);
         }
 
@@ -614,7 +627,7 @@ class CreateSchedule extends Schedules{
             $this->sessionTableName,
             ['id' => $session->id],
             ['%d'],
-       );
+        );
     }
 
     /**
@@ -623,8 +636,9 @@ class CreateSchedule extends Schedules{
      * @param string $date    The date of the session to add a host for
      *
      * @return array    success message and new cell html
-    */
-    public function addHost($date) {
+     */
+    public function addHost($date)
+    {
         $family                = new TSJIPPY\FAMILY\Family();
         $message            = '';
         $this->scheduleId    = $_POST['schedule-id'];
@@ -646,16 +660,16 @@ class CreateSchedule extends Schedules{
                 !$this->admin                        &&            // We are not admin
                 $this->hostId != $this->user->ID    &&            // We are not the host
                 $this->hostId != $partnerId                        // Our partner is not the host
-           ) {
+            ) {
                 return new WP_Error('No permission', $this->noPermissionText);
             }
 
             if ($partnerId && !isset($_POST['subject'])) {
                 $hostName        = $family->getFamilyName($host);
-            }else{
+            } else {
                 $hostName        = $host->display_name;
             }
-        }else{
+        } else {
             $this->hostId    = '';
             $hostName        = $_POST['host'];
             if (!$this->admin) {
@@ -665,39 +679,39 @@ class CreateSchedule extends Schedules{
 
         $this->name            = $schedule->name;
         $this->date            = $date;
-        $dateStr            = gmdate('d F Y',strtotime($this->date));
+        $dateStr            = gmdate('d F Y', strtotime($this->date));
         $isMeal                = false;
         if ($this->startTime == $this->lunchStartTime && $schedule->lunch) {
             $this->endTime        = $this->lunchEndTime;
             $this->title        = 'lunch';
             $this->location        = "House of $hostName";
             $isMeal                = true;
-        }elseif ($this->startTime == $this->dinerTime && $schedule->dinner) {
+        } elseif ($this->startTime == $this->dinerTime && $schedule->dinner) {
             $this->endTime        = '19:30';
             $this->title        = 'dinner';
             $this->location        = "House of $hostName";
             $isMeal                = true;
-        }else{
+        } else {
             $this->title        = sanitize_text_field(wp_unslash($_POST['subject']));
             $this->location        = sanitize_text_field(wp_unslash($_POST['location']));
             if (empty($_POST['end_time'])) {
                 $this->endTime    = gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($this->startTime)));
-            }else{
+            } else {
                 $this->endTime        = $_POST['end_time'];
             }
         }
 
         if (!empty($_POST['session-id'])) {
             $message    = "Succesfully updated this entry";
-        }elseif ($this->admin && $hostName != $this->user->display_name) {
+        } elseif ($this->admin && $hostName != $this->user->display_name) {
             $name    = $hostName;
-        }else{
+        } else {
             $name    = "you";
         }
 
         if (empty($this->defaultSubject)) {
             $message    = "Succesfully added $name as a host for {$this->name} on $dateStr";
-        }else{
+        } else {
             $message    = "Succesfully scheduled $name for $dateStr";
         }
 
@@ -709,15 +723,15 @@ class CreateSchedule extends Schedules{
             if (is_wp_error($result)) {
                 return $result;
             }
-        }else{
+        } else {
             $this->addScheduleEvents($isMeal);
         }
 
         if ($this->mobile) {
             $html    = $this->getMobileDay($this->date);
-        }elseif ($isMeal) {
+        } elseif ($isMeal) {
             $html    = $this->writeMealCell($this->date, $this->startTime);
-        }else{
+        } else {
             $html    = $this->writeOrientationCell($this->date, $this->startTime);
         }
 
@@ -733,8 +747,9 @@ class CreateSchedule extends Schedules{
      * @param int $sessionId    The id of the session to remove the host from
      *
      * @return array    success message and new cell html
-    */
-    public function removeHost($sessionId) {
+     */
+    public function removeHost($sessionId)
+    {
         $family                    = new TSJIPPY\FAMILY\Family();
 
         $this->currentSession    = $this->getSessionEvent($sessionId);
@@ -744,14 +759,14 @@ class CreateSchedule extends Schedules{
         $date                = $this->currentSession->events[0]->start_date;
         $startTime            = $this->currentSession->events[0]->start_time;
 
-        $hostId                = $this->currentSession->events[0]->organizer-id;
+        $hostId                = $this->currentSession->events[0]->organizer - id;
 
         $partnerId            = $family->getPartner($this->user->ID);
         if (
             !$this->admin                 &&
             $hostId != $this->user->ID     &&
             $hostId != $partnerId
-       ) {
+        ) {
             return new \WP_Error('Permission error', $this->noPermissionText);
         }
 
@@ -763,15 +778,15 @@ class CreateSchedule extends Schedules{
         if ($this->admin) {
             $hostName    = $this->currentSession->events[0]->organizer;
             $message    = "Succesfully removed $hostName as a host on $dateStr";
-        }else{
+        } else {
             $message    = "Succesfully removed you as a host on $dateStr";
         }
 
         if ($this->mobile) {
             $html    = $this->getMobileDay($date);
-        }elseif ($this->currentSession->meal) {
+        } elseif ($this->currentSession->meal) {
             $html    = $this->writeMealCell($date, $startTime);
-        }else{
+        } else {
             $html    = $this->writeOrientationCell($date, $startTime);
         }
 
@@ -785,8 +800,9 @@ class CreateSchedule extends Schedules{
      * Adds a keyword to a meal session
      *
      * @return string    success message
-    */
-    public function addMenu() {
+     */
+    public function addMenu()
+    {
         $scheduleId        = $_POST['schedule-id'];
 
         $date            = sanitize_text_field(wp_unslash($_POST['date']));

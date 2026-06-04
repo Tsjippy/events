@@ -1,12 +1,14 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
 /**
  * The content of an event.
-**/
+ **/
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
@@ -14,12 +16,12 @@ if ( ! defined('ABSPATH')) {
 $events        = new DisplayEvents();
 $event        = $events->retrieveSingleEvent(get_the_ID());
 if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
-    ?>
+?>
     <div class='error'>
         This event is not ment for you to see, sorry.
     </div>
 
-    <?php
+<?php
     return;
 }
 
@@ -27,7 +29,7 @@ if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="cat-card inside-article">
-        <?php do_action('tsjippy_before_content');?>
+        <?php do_action('tsjippy_before_content'); ?>
         <div class='entry-content'>
             <div class="description event">
                 <?php
@@ -39,8 +41,8 @@ if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
                     array(
                         'before' => '<div class="page-links">Pages:',
                         'after'  => '</div>',
-                   )
-               );
+                    )
+                );
                 ?>
             </div>
 
@@ -52,8 +54,9 @@ if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
 </article>
 
 <?php
-function displayEventCategories() {
-    $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH. 'pictures', __DIR__);
+function displayEventCategories()
+{
+    $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH . 'pictures', __DIR__);
 
     $categories = wp_get_post_terms(
         get_the_ID(),
@@ -62,19 +65,19 @@ function displayEventCategories() {
             'orderby'   => 'name',
             'order'     => 'ASC',
             'fields'    => 'id=>name'
-       )
-   );
+        )
+    );
 
     if (!empty($categories)) {
-        ?>
+?>
         <span class='category eventmeta'>
             <img src='<?php echo esc_url($baseUrl); ?>/event_category.png' alt='category' loading='lazy' class='event-icon'>
             <?php
 
             //First loop over the cat to see if any parent cat needs to be removed
-            foreach ($categories as $id=>$category) {
+            foreach ($categories as $id => $category) {
                 //Get the child categories of this category
-                $children = get_term_children($id,'events');
+                $children = get_term_children($id, 'events');
 
                 //Loop over the children to see if one of them is also in he cat array
                 foreach ($children as $child) {
@@ -87,26 +90,27 @@ function displayEventCategories() {
 
             //now loop over the array to print the categories
             $lastKey     = array_key_last($categories);
-            foreach ($categories as $id=>$category) {
+            foreach ($categories as $id => $category) {
                 //Only show the category if all of its subcats are not there
                 $url         = get_term_link($id);
                 $category     = ucfirst($category);
-                ?>
+            ?>
                 <a href='<?php echo esc_url($url); ?>'>
                     <?php echo esc_html($category); ?>
                 </a>
-                <?php
+            <?php
                 if ($id != $lastKey) {
                     echo ', ';
                 }
             }
             ?>
         </span>
-        <?php
-        }
+    <?php
+    }
 }
 
-function displayEventMeta() {
+function displayEventMeta()
+{
     global $events;
     global $event;
 
@@ -120,11 +124,11 @@ function displayEventMeta() {
     if (!is_array($meta)) {
         if (!empty($meta)) {
             $meta    = (array)json_decode($meta, true);
-        }else{
+        } else {
             $meta    = [];
         }
     }
-    $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH. 'pictures');
+    $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH . 'pictures');
 
     ?>
     <div class='event metas' style='margin-top:10px;'>
@@ -165,13 +169,13 @@ function displayEventMeta() {
                             if ($meta['repeat']['type'] == 'custom_days') {
                                 $type    = '';
                                 foreach ($meta['repeat']['includedates'] as $date) {
-                                    $type    .= gmdate('j F Y', strtotime($date)). '<br>';
+                                    $type    .= gmdate('j F Y', strtotime($date)) . '<br>';
                                 }
                             }
                             echo esc_html(ucfirst($type));
 
                             if (!empty($meta['repeat']['end_date'])) {
-                                echo esc_html(" until " .gmdate('j F Y',strtotime($meta['repeat']['end_date'])));
+                                echo esc_html(" until " . gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
                             }
                             if (!empty($meta['repeat']['amount'])) {
                                 $repeatAmount = $meta['repeat']['amount'];

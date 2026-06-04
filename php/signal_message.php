@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 add_filter('tsjippy_after_bot_payer', __NAMESPACE__ . '\afterBotPrayer');
-function afterBotPrayer($args) {
+function afterBotPrayer($args)
+{
     $family    = new TSJIPPY\FAMILY\Family();
 
     // calendar events
@@ -20,7 +23,7 @@ function afterBotPrayer($args) {
 
         //only add events which are not a celebration and start today after curent time
         if (empty($startYear) && $event->start_date == gmdate('Y-m-d') && $event->start_time > gmdate('H:i', current_time('U'))) {
-            $args['message']    .= "\n\n" .$event->post_title. ' starts today at ' .$event->start_time;
+            $args['message']    .= "\n\n" . $event->post_title . ' starts today at ' . $event->start_time;
             if (!empty($event->location)) {
                 $args['message']    .= "\nIt takes place at $event->location";
             }
@@ -38,7 +41,7 @@ function afterBotPrayer($args) {
         $messageString    = '';
 
         //Loop over the anniversary_messages
-        foreach ($anniversaryMessages as $userId=>$msg) {
+        foreach ($anniversaryMessages as $userId => $msg) {
             $msg            = html_entity_decode($msg);
 
             $userdata        = get_userdata($userId);
@@ -75,16 +78,16 @@ function afterBotPrayer($args) {
                 if (is_numeric($picture)) {
                     $args['pictures'][] = get_attached_file($picture);
                 }
-            }else{
+            } else {
                 $profilePicture    = get_user_meta($userId, 'profile_picture', true);
                 if (is_array($profilePicture) && isset($profilePicture[0])) {
                     $args['pictures'][] = get_attached_file($profilePicture[0]);
-                }elseif (is_numeric($profilePicture)) {
+                } elseif (is_numeric($profilePicture)) {
                     $args['pictures'][] = get_attached_file($profilePicture);
                 }
             }
         }
-        $args['message'] .= $messageString. ' . ';
+        $args['message'] .= $messageString . ' . ';
     }
 
     $arrivalUsers = getArrivingUsers();
@@ -92,9 +95,9 @@ function afterBotPrayer($args) {
     //If there are arrivals
     if (!empty($arrivalUsers)) {
         if (count($arrivalUsers) == 1) {
-            $args['message']     .= "\n\n" .$arrivalUsers[0]->display_name. " arrives today. ";
-            $args['urls'][]        = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID)). "\n";
-        }else{
+            $args['message']     .= "\n\n" . $arrivalUsers[0]->display_name . " arrives today. ";
+            $args['urls'][]        = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID)) . "\n";
+        } else {
             $args['message'] .= "\n\nToday the following people will arrive: ";
 
             //Loop over the arrival_users to find any families
@@ -114,7 +117,7 @@ function afterBotPrayer($args) {
                     if ($picture) {
                         $args['pictures'][] = get_attached_file($picture);
                     }
-                }else{
+                } else {
                     $profilePicture    = get_user_meta($user->ID, 'profile_picture', true);
                     if (isset($profilePicture[0])) {
                         $args['pictures'][] = get_attached_file($profilePicture[0]);

@@ -1,13 +1,16 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
-class Schedules{
+class Schedules
+{
     public $tableName;
     public $sessionTableName;
     public $user;
@@ -31,7 +34,8 @@ class Schedules{
     protected $adminRoles;
     protected $viewRoles;
 
-    public function __construct() {
+    public function __construct()
+    {
         global $wpdb;
 
         $this->tableName        = $wpdb->prefix . 'tsjippy_schedules';
@@ -53,18 +57,19 @@ class Schedules{
 
         $this->mobile                = wp_is_mobile();
 
-        if (array_intersect(['administrator','editor'], $this->user->roles)) {
+        if (array_intersect(['administrator', 'editor'], $this->user->roles)) {
             $this->admin            = true;
-        }else{
+        } else {
             $this->admin            = false;
         }
     }
 
     /**
      * Creates the table holding all schedules if it does not exist
-    */
-    public function createDbTable() {
-        if ( !function_exists('maybe_create_table')) {
+     */
+    public function createDbTable()
+    {
+        if (!function_exists('maybe_create_table')) {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }
 
@@ -110,16 +115,17 @@ class Schedules{
 
     /**
      * Get all schedules from the db
-    */
-    public function getSchedules() {
+     */
+    public function getSchedules()
+    {
         global $wpdb;
 
         $this->schedules    = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM %i WHERE 1",
                 $this->tableName
-           )
-       );
+            )
+        );
     }
 
     /**
@@ -128,8 +134,9 @@ class Schedules{
      * @param    int    $id        the schedule ID
      *
      * @return     object        the schedule
-    */
-    public function getScheduleById($id) {
+     */
+    public function getScheduleById($id)
+    {
         foreach ($this->schedules as $schedule) {
             if ($schedule->id == $id) {
                 $this->currentSchedule    = $schedule;
@@ -144,7 +151,8 @@ class Schedules{
     /**
      * Sets the variable values for the current schedule
      */
-    protected function parseScheduleVars() {
+    protected function parseScheduleVars()
+    {
         $this->timeSlotSize    = $this->currentSchedule->timeslot_size;
         if ($this->timeSlotSize    == 0) {
             $this->timeSlotSize    = 15;
@@ -163,7 +171,7 @@ class Schedules{
         $this->viewRoles    = maybe_unserialize($this->currentSchedule->view_roles);
 
         if (empty($this->adminRoles)) {
-            $this->adminRoles    = ['administrator','editor'];
+            $this->adminRoles    = ['administrator', 'editor'];
         }
 
         if (array_intersect($this->adminRoles, $this->user->roles)) {
@@ -184,7 +192,7 @@ class Schedules{
             $this->admin                                            ||    // We are an admin
             $this->currentSchedule->target == $this->user->ID        ||    // The schedule is meant for us
             $this->includedInSchedule()                                    // We are in the schedule
-       ) {
+        ) {
             $this->onlyMeals = false;
         }
     }
@@ -193,8 +201,9 @@ class Schedules{
      * Get all existing schedules
      *
      * @return     string        the schedules html
-    */
-    public function showschedules() {
+     */
+    public function showschedules()
+    {
         wp_enqueue_style('tsjippy_schedules_css');
         wp_enqueue_script('tsjippy_schedules_script');
 
@@ -208,19 +217,20 @@ class Schedules{
         }
 
         $html    = "<div class='schedules-wrapper' style='position: relative;'>";
-            if (empty($schedules) && empty($form)) {
-                $html    .= "There are currently no schedules set up. Please check again later";
-            }else{
-                $html    .= $this->addModals();
-                $html    .= $schedules;
-                $html    .= $form;
-            }
+        if (empty($schedules) && empty($form)) {
+            $html    .= "There are currently no schedules set up. Please check again later";
+        } else {
+            $html    .= $this->addModals();
+            $html    .= $schedules;
+            $html    .= $form;
+        }
         $html    .= "</div>";
 
         return $html;
     }
 
-    public function showSchedule() {
+    public function showSchedule()
+    {
         $family    = new TSJIPPY\FAMILY\Family();
         ob_start();
 
@@ -229,10 +239,10 @@ class Schedules{
             (
                 $this->currentSchedule->target == $this->user->ID                     ||        // Target is me
                 $this->currentSchedule->target == $family->getPartner($this->user->ID)            // Target is the partner
-           )                                                                         &&
+            )                                                                         &&
             !$this->admin                                                             &&         // We are not admin
             !$this->currentSchedule->published                                                // Schedule is not yet published
-       ) {
+        ) {
             return '';
         }
 
@@ -247,22 +257,22 @@ class Schedules{
                         'key'        => 'last_name',
                         'value'        => str_replace(' family', '', $this->currentSchedule->name),
                         'compare'    => 'LIKE'
-                   )
-               )
-           );
-        //Full name
-        }else{
+                    )
+                )
+            );
+            //Full name
+        } else {
             $args = array(
                 'search'            => $this->currentSchedule->name,
                 'search_columns'     => ['display_name'],
-           );
+            );
         }
 
         // Do not show dates in the past
         $this->currentSchedule->start_date    = max([gmdate('Y-m-d'), $this->currentSchedule->start_date]);
 
-        ?>
-        <div class='schedules-div table-wrapper' data-schedule-id="<?php echo esc_attr($this->currentSchedule->id); ?>" data-target="<?php echo esc_attr($this->currentSchedule->name); ?>" data-slotsize="<?php echo esc_attr($this->timeSlotSize);?>" data-fixedslotsize="<?php echo esc_attr($this->fixedTimeSlotSize);?>" data-hide_names="<?php echo esc_attr($this->hideNames);?>" data-subject="<?php echo esc_attr($this->defaultSubject);?>">
+?>
+        <div class='schedules-div table-wrapper' data-schedule-id="<?php echo esc_attr($this->currentSchedule->id); ?>" data-target="<?php echo esc_attr($this->currentSchedule->name); ?>" data-slotsize="<?php echo esc_attr($this->timeSlotSize); ?>" data-fixedslotsize="<?php echo esc_attr($this->fixedTimeSlotSize); ?>" data-hide_names="<?php echo esc_attr($this->hideNames); ?>" data-subject="<?php echo esc_attr($this->defaultSubject); ?>">
             <div class="modal publish-schedule hidden">
                 <div class="modal-content">
                     <span id="modal-close" class="close">&times;</span>
@@ -273,7 +283,7 @@ class Schedules{
                             The schedule will show up on the dashboard of these persons after publish.
                         </p>
                         <?php
-                        TSJIPPY\userSelect(onlyAdults:true, families:true, id:'schedule-target', args:$args, echo: true);
+                        TSJIPPY\userSelect(onlyAdults: true, families: true, id: 'schedule-target', args: $args, echo: true);
                         TSJIPPY\addSaveButton('publish-schedule', 'Publish this schedule');
                         ?>
                     </form>
@@ -281,20 +291,20 @@ class Schedules{
             </div>
             <?php
             if ($this->admin && (!is_numeric($this->currentSchedule->target) || !get_userdata($this->currentSchedule->target))) {
-                ?>
+            ?>
                 <div class='warning'>
                     This schedule has no website user connected to it.<br>
-                    Please <button type="button" class="button small schedule-action edit-schedule" data-schedule-id="<?php echo esc_attr($this->currentSchedule->id);?>">Edit</button> the schedule to add one.
+                    Please <button type="button" class="button small schedule-action edit-schedule" data-schedule-id="<?php echo esc_attr($this->currentSchedule->id); ?>">Edit</button> the schedule to add one.
                 </div>
-                <?php
+            <?php
             }
             ?>
             <div style='display:inline-block;'>
                 <h3 class="table-title">
-                    Schedule for <?php echo esc_attr($this->currentSchedule->name);?>
+                    Schedule for <?php echo esc_attr($this->currentSchedule->name); ?>
                 </h3>
                 <h3 class="table-title sub-title">
-                    <?php echo esc_attr($this->currentSchedule->info);?>
+                    <?php echo esc_attr($this->currentSchedule->info); ?>
                 </h3>
             </div>
 
@@ -302,19 +312,19 @@ class Schedules{
             // Only render when not on a mobile device
             if ($this->mobile) {
                 $this->showMobileSchedule();
-            }else{
+            } else {
                 if (!$this->currentSchedule->published && $this->currentSchedule->target != 0) {
                     $name    = $this->currentSchedule->name;
                     if (str_contains($name, 'Family')) {
                         $name    = "the $name";
                     }
-                    ?>
+            ?>
                     <div class='schedule publish warning'>
                         This schedule is currently not scheduled.<br>
-                        Publish it for <?php echo esc_attr($name);?> to see it.<br>
-                        <button type='button' class='button schedule-action publish' data-target='<?php echo esc_attr($this->currentSchedule->target);?>' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Publish</button>
+                        Publish it for <?php echo esc_attr($name); ?> to see it.<br>
+                        <button type='button' class='button schedule-action publish' data-target='<?php echo esc_attr($this->currentSchedule->target); ?>' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id); ?>'>Publish</button>
                     </div>
-                    <?php
+                <?php
                 }
 
                 ?>
@@ -332,25 +342,25 @@ class Schedules{
                 }
 
                 ?>
-                <table class="tsjippy table schedule" <?php echo esc_attr($dataSet);?>>
+                <table class="tsjippy table schedule" <?php echo esc_attr($dataSet); ?>>
                     <thead>
                         <tr>
                             <th class='sticky'>Dates</th>
                             <?php
                             $date        = $this->currentSchedule->start_date;
-                            while(true) {
+                            while (true) {
                                 $dateStr        = gmdate('d F Y', strtotime($date));
                                 $dateTime        = strtotime($date);
                                 $dayName        = gmdate('l', $dateTime);
                                 $formatedDate    = gmdate(DATEFORMAT, $dateTime);
-                                ?>
-                                <th data-date='<?php echo esc_attr($dateStr);?>' data-isodate='<?php echo esc_attr($date);?>'>
-                                    <?php echo esc_html($dayName);?>
+                            ?>
+                                <th data-date='<?php echo esc_attr($dateStr); ?>' data-isodate='<?php echo esc_attr($date); ?>'>
+                                    <?php echo esc_html($dayName); ?>
                                     <br>
-                                    <?php echo esc_html($formatedDate);?>
+                                    <?php echo esc_html($formatedDate); ?>
                                 </th>
 
-                                <?php
+                            <?php
                                 if ($date == $this->currentSchedule->end_date) {
                                     break;
                                 }
@@ -369,52 +379,52 @@ class Schedules{
 
                 <?php
                 if ($this->admin) {
-                    ?>
+                ?>
                     <div class='schedule-actions'>
-                        <button type='button' class='button schedule-action edit-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Edit</button>
-                        <button type='button' class='button schedule-action remove-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'>Remove</button>
+                        <button type='button' class='button schedule-action edit-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id); ?>'>Edit</button>
+                        <button type='button' class='button schedule-action remove-schedule' data-schedule-id='<?php echo esc_attr($this->currentSchedule->id); ?>'>Remove</button>
                         <?php
                         //schedule is not yet set.
                         if (!$this->currentSchedule->published && $this->currentSchedule->target != 0) {
-                            ?>
+                        ?>
                             <button
                                 type='button'
                                 class='button schedule-action publish'
-                                data-target='<?php echo esc_attr($this->currentSchedule->target);?>'
-                                data-schedule-id='<?php echo esc_attr($this->currentSchedule->id);?>'
-                            >
+                                data-target='<?php echo esc_attr($this->currentSchedule->target); ?>'
+                                data-schedule-id='<?php echo esc_attr($this->currentSchedule->id); ?>'>
                                 Publish
                             </button>
-                            <?php
+                        <?php
                         }
                         ?>
                     </div>
-                    <?php
+            <?php
                 }
             }
             ?>
         </div>
-        <?php
+    <?php
 
         return ob_get_clean();
     }
 
-    public function showMobileSchedule() {
-        ?>
+    public function showMobileSchedule()
+    {
+    ?>
         <div class="add-host-mobile-wrapper modal hidden">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <form action="" method="post">
-                    <input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($this->currentSchedule->id);?>'>
+                    <input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($this->currentSchedule->id); ?>'>
 
                     <?php
                     if ($this->currentSchedule->lunch) {
-                        ?>
+                    ?>
                         <label>
                             For what are you hosting?
                         </label>
                         <br>
-                        <label >
+                        <label>
                             <input type='radio' id='lunch' name='start_time' value='12:00'>
                             Lunch
                         </label>
@@ -424,17 +434,17 @@ class Schedules{
                         </label>
                         <br>
                         <br>
-                        <?php
-                    }else{
-                        ?>
+                    <?php
+                    } else {
+                    ?>
                         <input type='hidden' class='no-reset' name='start_time' value='18:00'>
-                        <?php
+                    <?php
                     }
                     $date                = $this->currentSchedule->start_date;
                     $availableLunches    = [];
                     $availableDiners    = [];
 
-                    while(true) {
+                    while (true) {
                         $dateTime        = strtotime($date);
 
                         if ($this->currentSchedule->lunch) {
@@ -462,52 +472,54 @@ class Schedules{
                     ?>
                     <div class='lunch select-wrapper hidden'>
                         <label>
-                            Select the gmdate(s) to host <?php echo esc_attr($nameString);?> for lunch
+                            Select the gmdate(s) to host <?php echo esc_attr($nameString); ?> for lunch
                         </label>
                         <br>
 
                         <?php
                         foreach ($availableLunches as $availableLunch) {
-                            ?>
+                        ?>
                             <label class='date'>
-                                <input type='checkbox' name='date[]' value='<?php echo esc_attr($availableLunch);?>'>
-                                <?php echo esc_html(gmdate('l j F', strtotime($availableLunch)));?>
+                                <input type='checkbox' name='date[]' value='<?php echo esc_attr($availableLunch); ?>'>
+                                <?php echo esc_html(gmdate('l j F', strtotime($availableLunch))); ?>
                             </label>
                             <br>
-                            <?php
+                        <?php
                         }
                         ?>
                     </div>
-                    <div class='diner select-wrapper <?php if ($this->currentSchedule->lunch) {echo 'hidden';}?>'>
+                    <div class='diner select-wrapper <?php if ($this->currentSchedule->lunch) {
+                                                            echo 'hidden';
+                                                        } ?>'>
                         <label>
-                            Select the gmdate(s) to host <?php echo esc_attr($nameString);?> for diner
+                            Select the gmdate(s) to host <?php echo esc_attr($nameString); ?> for diner
                         </label>
                         <br>
                         <?php
                         foreach ($availableDiners as $availableDiner) {
-                            ?>
+                        ?>
                             <label class='date'>
-                                <input type='checkbox' name='date[]' value='<?php echo esc_attr($availableDiner);?>'>
-                                <?php echo esc_html(gmdate('l j F', strtotime($availableDiner)));?>
+                                <input type='checkbox' name='date[]' value='<?php echo esc_attr($availableDiner); ?>'>
+                                <?php echo esc_html(gmdate('l j F', strtotime($availableDiner))); ?>
                             </label>
                             <br>
-                            <?php
+                        <?php
                         }
                         ?>
                     </div>
                     <br>
                     <br>
 
-                        <?php
+                    <?php
                     if ($this->admin) {
-                        ?>
+                    ?>
                         <p>Please select the user or family who is hosting</p>
-                        <?php
-                        TSJIPPY\userSelect(onlyAdults: true, families:true,  id:'host-id', type:'list', echo: true);
-                    }else{
-                        ?>
-                        <input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($this->user->ID);?>'>
-                        <?php
+                    <?php
+                        TSJIPPY\userSelect(onlyAdults: true, families: true,  id: 'host-id', type: 'list', echo: true);
+                    } else {
+                    ?>
+                        <input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($this->user->ID); ?>'>
+                    <?php
                     }
                     TSJIPPY\addSaveButton('add-host-mobile', 'Save', 'update_schedule');
                     ?>
@@ -517,9 +529,9 @@ class Schedules{
         <?php
 
         $date        = $this->currentSchedule->start_date;
-        while(true) {
+        while (true) {
             // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $this->getMobileDay($date). '<br>';
+            echo $this->getMobileDay($date) . '<br>';
 
             if ($date == $this->currentSchedule->end_date) {
                 break;
@@ -529,24 +541,25 @@ class Schedules{
         }
 
         if ($this->onlyMeals) {
-            ?>
+        ?>
             <br>
             <button class='button' name='add-host'>Add me as a host</button>
-            <?php
-        }else{
-            ?>
+        <?php
+        } else {
+        ?>
             <br>
             <button class='button' name='add-session'>Add a session</button>
             <br>
             <br>
             <button class='button' name='add-host'>Add a meal host</button>
-            <?php
+        <?php
         }
         ?>
         <?php
     }
 
-    protected function parsePostsAndEvents(&$result) {
+    protected function parsePostsAndEvents(&$result)
+    {
         global $wpdb;
 
         $result->post_ids    = unserialize($result->post_ids);
@@ -558,20 +571,20 @@ class Schedules{
             $wpdb->prepare(
                 "SELECT * FROM $wpdb->posts WHERE ID IN ($placeholders)",
                 ...$result->post_ids
-           )
-       );
+            )
+        );
 
         $placeholders   = implode(', ', array_fill(0, count($result->event_ids), '%d'));
         if (empty($ids)) {
             $result->events        = [];
-        }else{
+        } else {
             $result->events        = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT * FROM %i WHERE id IN ($placeholders)",
                     $this->events->tableName,
                     ...$result->event_ids
-               )
-           );
+                )
+            );
         }
         // phpcs:enable
     }
@@ -580,8 +593,9 @@ class Schedules{
      * Get all sessions of a schedule
      *
      * @return     object|false            The event or false if no event
-    */
-    public function getScheduleSessions() {
+     */
+    public function getScheduleSessions()
+    {
         global $wpdb;
 
         if (!empty($this->currentSchedule->sessions)) {
@@ -593,16 +607,16 @@ class Schedules{
                 "SELECT * FROM %i WHERE `schedule_id`=%d",
                 $this->sessionTableName,
                 $this->currentSchedule->id
-           )
-       );
+            )
+        );
 
         $this->currentSchedule->sessions    = [];
 
         // update the current schedule
-        foreach ($results as $index=>&$result) {
+        foreach ($results as $index => &$result) {
             if ($this->onlyMeals && !$result->meal && empty($this->defaultSubject)) {
                 unset($results[$index]);
-            }else{
+            } else {
                 $this->parsePostsAndEvents($result);
 
                 $date                = $result->events[0]->start_date;
@@ -626,15 +640,16 @@ class Schedules{
      * @param    string    #startTime    The time the event starts
      *
      * @return     object|false        The event or false if no event
-    */
-    public function getScheduleSession($startDate, $startTime) {
+     */
+    public function getScheduleSession($startDate, $startTime)
+    {
         //get event which starts on this date and time
         $this->getScheduleSessions();
 
         if (
             !isset($this->currentSchedule->sessions[$startDate])    ||
             !isset($this->currentSchedule->sessions[$startDate][$startTime])
-       ) {
+        ) {
             return false;
         }
 
@@ -649,8 +664,9 @@ class Schedules{
      * @param    int        $sessionId        the session id
      *
      * @return     object|false            The event or false if no event
-    */
-    public function getSessionEvent($sessionId) {
+     */
+    public function getSessionEvent($sessionId)
+    {
 
         if ($this->currentSession->id == $sessionId) {
             return $this->currentSession;
@@ -663,8 +679,8 @@ class Schedules{
                 "SELECT * FROM %i WHERE id=%d",
                 $this->sessionTableName,
                 $sessionId
-           )
-       );
+            )
+        );
 
         if (empty($results)) {
             return false;
@@ -684,8 +700,9 @@ class Schedules{
      * @param    object    $schedule        the Schedule
      *
      * @return     array                    Array of objects
-    */
-    public function includedInSchedule() {
+     */
+    public function includedInSchedule()
+    {
         $this->getScheduleSessions();
 
         global $wpdb;
@@ -711,8 +728,8 @@ class Schedules{
             $wpdb->prepare(
                 $query,
                 $values
-           )
-       );
+            )
+        );
         // phpcs:enable
 
         if (!empty($events)) {
@@ -739,8 +756,9 @@ class Schedules{
      * @param    string    $startTime        time string
      *
      * @return     string                    Cell html
-    */
-    public function writeMealCell($date, $startTime) {
+     */
+    public function writeMealCell($date, $startTime)
+    {
         $family    = new TSJIPPY\FAMILY\Family();
 
         //get event which starts on this date and time
@@ -748,7 +766,7 @@ class Schedules{
 
         $rowSpan = '';
         if ($startTime == $this->lunchStartTime) {
-            $rows                            = 60/$this->timeSlotSize;
+            $rows                            = 60 / $this->timeSlotSize;
 
             if ($rows > 1) {
                 $rowSpan                        = "rowspan='$rows'";
@@ -761,12 +779,12 @@ class Schedules{
         $hostData        = "";
         if (isset($this->currentSchedule->sessions[$date][$startTime])) {
             $data            = $this->currentSchedule->sessions[$date][$startTime];
-            $hostId            = $data->events[0]->organizer-id;
+            $hostId            = $data->events[0]->organizer - id;
             $partnerId         = $family->getPartner($this->user->ID);
 
             if ($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId) {
                 $cellText    = 'Taken';
-            }else{
+            } else {
                 $title            = $data->posts[0]->post_title;
                 $url            = get_permalink($data->posts[0]->ID);
                 $cellText        = "<a href='$url'>$title</a>";
@@ -795,10 +813,10 @@ class Schedules{
                 $hostId        = get_current_user_id();
 
                 $cellText    = "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
-                    $cellText .= 'Available   ';
-                    $cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
+                $cellText .= 'Available   ';
+                $cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
                 $cellText .= "</span>";
-            }else{
+            } else {
                 $cellText     = 'Available';
                 $class         .= ' available';
             }
@@ -830,8 +848,9 @@ class Schedules{
      * @param    string    $startTime        time string
      *
      * @return     string                    Cell html
-    */
-    public function writeOrientationCell($date, $startTime) {
+     */
+    public function writeOrientationCell($date, $startTime)
+    {
         $family    = new TSJIPPY\FAMILY\Family();
 
         $this->getScheduleSessions();
@@ -844,10 +863,10 @@ class Schedules{
             $this->currentSession        = $this->currentSchedule->sessions[$date][$startTime];
             $event                        = $this->currentSession->events[0];
 
-            $hostId        = $event->organizer-id;
+            $hostId        = $event->organizer - id;
             $dataset    = "data-start_time='{$event->start_time}' data-end_time='{$event->end_time}' data-session-id='{$this->currentSession->id}'";
             if (is_numeric($hostId)) {
-                $dataset    .= " data-host='" .get_userdata($hostId)->display_name. "' data-host-id='$hostId'";
+                $dataset    .= " data-host='" . get_userdata($hostId)->display_name . "' data-host-id='$hostId'";
             }
 
             if (!empty($event->atendees)) {
@@ -867,12 +886,12 @@ class Schedules{
                         }
                     }
                 }
-                $dataset    .= " data-atendees='" .json_encode($atendees). "'";
+                $dataset    .= " data-atendees='" . json_encode($atendees) . "'";
             }
 
             $reminders        = (array)get_post_meta($event->post_id, 'reminders', true);
             if (!empty($reminders)) {
-                $dataset    .= " data-reminders='" .json_encode($reminders). "'";
+                $dataset    .= " data-reminders='" . json_encode($reminders) . "'";
             }
 
             $endTime    = $event->end_time;
@@ -880,7 +899,7 @@ class Schedules{
             $partnerId     = $family->getPartner($this->user->ID);
             if ($this->hideNames && !$this->admin && $this->currentSchedule->target != $this->user->ID && $hostId != $this->user->ID && $hostId != $partnerId) {
                 $cellText    = 'Taken';
-            }else{
+            } else {
                 $baseTitle    = $this->getBaseTitle();
                 $dataset    .= " data-subject='$baseTitle'";
                 $url        = get_permalink($event->post_id);
@@ -909,16 +928,16 @@ class Schedules{
             }
 
             $this->nextStartTimes[$date] = $endTime;
-        }else{
+        } else {
             if ($this->mobile) {
                 $dateStr    = gmdate(DATEFORMAT, strtotime($date));
                 $hostId        = get_current_user_id();
 
                 $cellText    = "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
-                    $cellText .= 'Available   ';
-                    $cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
+                $cellText .= 'Available   ';
+                $cellText .= '<svg fill="#000000" height="20px" width="20px" version="1.1" id="Layer-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"> <g> <g><path d="M256,0C114.611,0,0,114.611,0,256s114.611,256,256,256s256-114.611,256-256S397.389,0,256,0z M256,486.4 C128.759,486.4,25.6,383.249,25.6,256S128.759,25.6,256,25.6S486.4,128.759,486.4,256S383.241,486.4,256,486.4z"/> </g> </g> <g> <g> <path d="M384,243.2H268.8V128c0-7.066-5.734-12.8-12.8-12.8c-7.066,0-12.8,5.734-12.8,12.8v115.2H128 c-7.066,0-12.8,5.734-12.8,12.8c0,7.066,5.734,12.8,12.8,12.8h115.2V384c0,7.066,5.734,12.8,12.8,12.8 c7.066,0,12.8-5.734,12.8-12.8V268.8H384c7.066,0,12.8-5.734,12.8-12.8C396.8,248.934,391.066,243.2,384,243.2z"/> </g> </g> </svg>';
                 $cellText .= "</span>";
-            }else{
+            } else {
                 $cellText     = 'Available';
             }
         }
@@ -935,9 +954,9 @@ class Schedules{
         //Make the cell editable if:
         if (
             $this->admin                            ||        // we are admin
-            $this->user->ID == $event->organizer-id ||         // We are the organizer
+            $this->user->ID == $event->organizer - id ||         // We are the organizer
             $cellText == 'Available'                        // This cell  is available
-       ) {
+        ) {
             $class .= ' available';
         }
 
@@ -961,21 +980,22 @@ class Schedules{
 
     /**
      * Write all rows of a schedule table
-    */
-    public function writeRows() {
+     */
+    public function writeRows()
+    {
         $this->nextStartTimes    = [];
 
         //loop over the rows
         $startTime    = $this->currentSchedule->start_time;
 
         //loop until we are at the end_time
-        while(true) {
+        while (true) {
             //If we do not have an orientation schedule, go strait to the dinner row
             if (
                 $startTime >= $this->lunchEndTime    &&
                 $startTime < $this->dinerTime        &&
                 !$this->currentSchedule->orientation
-           ) {
+            ) {
                 $startTime = $this->dinerTime;
             }
 
@@ -987,29 +1007,29 @@ class Schedules{
             if (
                 $startTime == $this->lunchStartTime    &&        // Starttime of the lunch
                 $this->currentSchedule->lunch                // And the schedule includes a lunch
-           ) {
-                $rows                = 60/$this->timeSlotSize;
+            ) {
+                $rows                = 60 / $this->timeSlotSize;
                 if ($rows > 1) {
                     $extra                = "rowspan='$rows'";    // Span 1 hour
                 }
                 $description        = 'Lunch';
-            }elseif (
+            } elseif (
                 $startTime > $this->lunchStartTime    &&        // Time is past the start lunch time
                 $startTime < $this->lunchEndTime    &&         // but before the end
                 $this->currentSchedule->lunch                // And the schedule includes a lunch
-           ) {
+            ) {
                 $description        = 'Lunch';
                 $extra                = "class='hidden'";        // These rows should be hidden as the first spans 4 rows
-            }elseif ($startTime == $this->dinerTime && $this->currentSchedule->diner) {
+            } elseif ($startTime == $this->dinerTime && $this->currentSchedule->diner) {
                 $description        = 'Dinner';
-            }else{
+            } else {
                 $mealScheduleRow    = false;
                 $description        = $startTime;
             }
 
             //Show the row if we can see all rows or the row is a mealschedule row
             if (!$this->onlyMeals || $mealScheduleRow || !empty($this->defaultSubject)) {
-                ?>
+        ?>
                 <tr class='table-row' data-startTime='<?php echo esc_attr($startTime); ?>' data-endTime='<?php echo esc_attr($endTime); ?>'>
                     <td <?php echo esc_attr($extra); ?> class='sticky'>
                         <strong>
@@ -1019,19 +1039,19 @@ class Schedules{
 
                     <?php
                     //loop over the dates to write a cell per date in this timerow
-                    while(true) {
+                    while (true) {
                         if ($this->nextStartTimes[$date] > $startTime) {
-                            ?>
+                    ?>
                             <td class='hidden'>
                                 Available
                             </td>
-                            <?php
-                        }else{
+                    <?php
+                        } else {
                             //mealschedule
                             if ($mealScheduleRow) {
                                 echo wp_kses_post($this->writeMealCell($date, $startTime));
-                            //Orientation schedule
-                            }else{
+                                //Orientation schedule
+                            } else {
                                 echo wp_kses_post($this->writeOrientationCell($date, $startTime));
                             }
                         }
@@ -1044,14 +1064,14 @@ class Schedules{
                     }
                     ?>
                 </tr>
-                <?php
+        <?php
             }
 
             if ($startTime >= $this->currentSchedule->end_time) {
                 break;
             }
             $startTime        = $endTime;
-        }//end row
+        } //end row
     }
 
     /**
@@ -1060,139 +1080,141 @@ class Schedules{
      * @param    string    $date        the date
      *
      * @return     string                    Rows html
-    */
-    public function getMobileDay($date) {
+     */
+    public function getMobileDay($date)
+    {
         $dateTime        = strtotime($date);
         $dayName        = gmdate('l', $dateTime);
         $formatedDate    = gmdate(DATEFORMAT, $dateTime);
 
         $html     = "<div class='day-wrapper-mobile' data-isodate='$date'>";
-            $html     .= "<strong>$dayName $formatedDate</strong><br>";
+        $html     .= "<strong>$dayName $formatedDate</strong><br>";
 
-            //loop over the rows
-            $startTime    = $this->currentSchedule->start_time;
+        //loop over the rows
+        $startTime    = $this->currentSchedule->start_time;
 
-            //loop until we are at the end_time
-            while(true) {
-                $isMeal    = false;
+        //loop until we are at the end_time
+        while (true) {
+            $isMeal    = false;
 
-                //If we do not have an orientation schedule, go strait to the dinner row
-                if (
-                    $startTime >= $this->lunchEndTime    &&
-                    $startTime < $this->dinerTime        &&
-                    !$this->currentSchedule->orientation
-               ) {
-                    $startTime = $this->dinerTime;
+            //If we do not have an orientation schedule, go strait to the dinner row
+            if (
+                $startTime >= $this->lunchEndTime    &&
+                $startTime < $this->dinerTime        &&
+                !$this->currentSchedule->orientation
+            ) {
+                $startTime = $this->dinerTime;
+            }
+
+            $mealScheduleRow    = true;
+            $endTime            = gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
+
+            if (
+                $startTime >= $this->lunchStartTime    &&        // Time is past the start lunch time
+                $startTime < $this->lunchEndTime    &&         // but before the end
+                $this->currentSchedule->lunch                // And the schedule includes a lunch
+            ) {
+                if ($startTime != $this->lunchStartTime) {
+                    $startTime        = $endTime;
+                    continue;
                 }
+                $isMeal                = true;
+                $description        = 'Lunch';
+            } elseif ($startTime == $this->dinerTime) {
+                $isMeal                = true;
+                $description        = 'Dinner';
+            } else {
+                $mealScheduleRow    = false;
+                $description        = $startTime;
+            }
 
-                $mealScheduleRow    = true;
-                $endTime            = gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($startTime)));
-
-                if (
-                    $startTime >= $this->lunchStartTime    &&        // Time is past the start lunch time
-                    $startTime < $this->lunchEndTime    &&         // but before the end
-                    $this->currentSchedule->lunch                // And the schedule includes a lunch
-               ) {
-                    if ($startTime != $this->lunchStartTime) {
-                        $startTime        = $endTime;
-                        continue;
-                    }
-                    $isMeal                = true;
-                    $description        = 'Lunch';
-                }elseif ($startTime == $this->dinerTime) {
-                    $isMeal                = true;
-                    $description        = 'Dinner';
-                }else{
-                    $mealScheduleRow    = false;
-                    $description        = $startTime;
-                }
-
-                //Show the row if we can see all rows or the row is a mealschedule row
-                if (!$this->onlyMeals || $mealScheduleRow  || !empty($this->defaultSubject)) {
-                    //mealschedule
-                    $data            = [];
-                    if ($mealScheduleRow) {
-                        $data            = $this->writeMealCell($date, $startTime, true);
+            //Show the row if we can see all rows or the row is a mealschedule row
+            if (!$this->onlyMeals || $mealScheduleRow  || !empty($this->defaultSubject)) {
+                //mealschedule
+                $data            = [];
+                if ($mealScheduleRow) {
+                    $data            = $this->writeMealCell($date, $startTime, true);
                     //Orientation schedule
-                    }elseif (!$this->onlyMeals || !empty($this->defaultSubject)) {
-                        $data            = $this->writeOrientationCell($date, $startTime, true);
-                        if ($data['event']) {
-                            $description    .=    ' - ' .$data['event']->end_time;
-                        }
+                } elseif (!$this->onlyMeals || !empty($this->defaultSubject)) {
+                    $data            = $this->writeOrientationCell($date, $startTime, true);
+                    if ($data['event']) {
+                        $description    .=    ' - ' . $data['event']->end_time;
                     }
-                    $content    = $data['text'] ?? '';
+                }
+                $content    = $data['text'] ?? '';
+
+                if (
+                    $content != 'Available'        ||    // There is something scheduled
+                    (
+                        $mealScheduleRow        &&    // Or it is a mealschedule row
+                        (
+                            $startTime == $this->lunchStartTime    ||    // and this is the lunch
+                            $startTime == $this->dinerTime            // or diner time
+                        )
+                    )
+                ) {
+                    $class    = '';
+                    if ($this->admin) {
+                        $class = 'admin';
+                    }
+
+                    if ($isMeal) {
+                        $class    .= ' meal';
+                    } else {
+                        $class    .= ' orientation';
+                    }
+
+                    $html     .= "<div class='session-wrapper-mobile $class' data-session-id='{$this->currentSchedule->sessions[$date][$startTime]->id}' style='display:flex;'>";
+                    $html     .= "<div style='padding-right:10px;'>";
+                    $html     .= "<strong>$description</strong>:<br>";
+                    $html     .=    $content . '<br>';
+                    $html     .= "</div>";
 
                     if (
-                        $content != 'Available'        ||    // There is something scheduled
+                        $this->admin    ||    // We can change any event
                         (
-                            $mealScheduleRow        &&    // Or it is a mealschedule row
-                            (
-                                $startTime == $this->lunchStartTime    ||    // and this is the lunch
-                                $startTime == $this->dinerTime            // or diner time
-                           )
-                       )
-                   ) {
+                            isset($data['event']->organizer_id)    &&                        // an organizer id is set
+                            $data['event']->organizer - id    == get_current_user_id()    // we are the organizer
+                        )
+                    ) {
+                        $icon    = '';
                         $class    = '';
                         if ($this->admin) {
-                            $class = 'admin';
+                            $class    = 'admin ';
                         }
-
-                        if ($isMeal) {
-                            $class    .= ' meal';
-                        }else{
-                            $class    .= ' orientation';
-                        }
-
-                        $html     .= "<div class='session-wrapper-mobile $class' data-session-id='{$this->currentSchedule->sessions[$date][$startTime]->id}' style='display:flex;'>";
-                            $html     .= "<div style='padding-right:10px;'>";
-                                $html     .= "<strong>$description</strong>:<br>";
-                                $html     .=    $content. '<br>';
-                            $html     .= "</div>";
-
-                            if (
-                                $this->admin    ||    // We can change any event
-                                (
-                                    isset($data['event']->organizer_id)    &&                        // an organizer id is set
-                                    $data['event']->organizer-id    == get_current_user_id()    // we are the organizer
-                               )
-                           ) {
-                                $icon    = '';
-                                $class    = '';
-                                if ($this->admin) {
-                                    $class    = 'admin ';
-                                }
-                                if ($mealScheduleRow) {
-                                    if (!str_contains($content, 'Available')) {
-                                        $icon    = '<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px">    <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>';
-                                        $class    .= 'remove-host-mobile';
-                                    }
-                                }else{
-                                    $icon    = '<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M 22.828125 3 C 22.316375 3 21.804562 3.1954375 21.414062 3.5859375 L 19 6 L 24 11 L 26.414062 8.5859375 C 27.195062 7.8049375 27.195062 6.5388125 26.414062 5.7578125 L 24.242188 3.5859375 C 23.851688 3.1954375 23.339875 3 22.828125 3 z M 17 8 L 5.2597656 19.740234 C 5.2597656 19.740234 6.1775313 19.658 6.5195312 20 C 6.8615312 20.342 6.58 22.58 7 23 C 7.42 23.42 9.6438906 23.124359 9.9628906 23.443359 C 10.281891 23.762359 10.259766 24.740234 10.259766 24.740234 L 22 13 L 17 8 z M 4 23 L 3.0566406 25.671875 A 1 1 0 0 0 3 26 A 1 1 0 0 0 4 27 A 1 1 0 0 0 4.328125 26.943359 A 1 1 0 0 0 4.3378906 26.939453 L 4.3632812 26.931641 A 1 1 0 0 0 4.3691406 26.927734 L 7 26 L 5.5 24.5 L 4 23 z"/></svg>';;
-                                    $class    .= 'edit-session-mobile orientation';
-                                }
-
-                                if (!empty($icon)) {
-                                    $dateStr    = gmdate(DATEFORMAT, strtotime($date));
-                                    $html     .= "<div class='$class' {$data['data']} data-date='$dateStr' data-isodate='$date' style='margin-left: auto;'>";
-                                        $html     .= $icon;
-                                    $html     .= "</div>";
-                                }
+                        if ($mealScheduleRow) {
+                            if (!str_contains($content, 'Available')) {
+                                $icon    = '<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px">    <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 22 L 19 22 L 19 7 L 5 7 z M 8 9 L 10 9 L 10 20 L 8 20 L 8 9 z M 14 9 L 16 9 L 16 20 L 14 20 L 14 9 z"/></svg>';
+                                $class    .= 'remove-host-mobile';
                             }
-                        $html     .= "</div>";
-                    }
-                }
+                        } else {
+                            $icon    = '<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">    <path d="M 22.828125 3 C 22.316375 3 21.804562 3.1954375 21.414062 3.5859375 L 19 6 L 24 11 L 26.414062 8.5859375 C 27.195062 7.8049375 27.195062 6.5388125 26.414062 5.7578125 L 24.242188 3.5859375 C 23.851688 3.1954375 23.339875 3 22.828125 3 z M 17 8 L 5.2597656 19.740234 C 5.2597656 19.740234 6.1775313 19.658 6.5195312 20 C 6.8615312 20.342 6.58 22.58 7 23 C 7.42 23.42 9.6438906 23.124359 9.9628906 23.443359 C 10.281891 23.762359 10.259766 24.740234 10.259766 24.740234 L 22 13 L 17 8 z M 4 23 L 3.0566406 25.671875 A 1 1 0 0 0 3 26 A 1 1 0 0 0 4 27 A 1 1 0 0 0 4.328125 26.943359 A 1 1 0 0 0 4.3378906 26.939453 L 4.3632812 26.931641 A 1 1 0 0 0 4.3691406 26.927734 L 7 26 L 5.5 24.5 L 4 23 z"/></svg>';;
+                            $class    .= 'edit-session-mobile orientation';
+                        }
 
-                if ($startTime == $this->currentSchedule->end_time) {
-                    break;
+                        if (!empty($icon)) {
+                            $dateStr    = gmdate(DATEFORMAT, strtotime($date));
+                            $html     .= "<div class='$class' {$data['data']} data-date='$dateStr' data-isodate='$date' style='margin-left: auto;'>";
+                            $html     .= $icon;
+                            $html     .= "</div>";
+                        }
+                    }
+                    $html     .= "</div>";
                 }
-                $startTime        = $endTime;
-            }//end true
+            }
+
+            if ($startTime == $this->currentSchedule->end_time) {
+                break;
+            }
+            $startTime        = $endTime;
+        } //end true
 
         $html     .= "</div>";
         return $html;
     }
 
-    public function getBaseTitle() {
+    public function getBaseTitle()
+    {
         if (empty($this->currentSession->posts[0]->post_title)) {
             return false;
         }
@@ -1204,8 +1226,9 @@ class Schedules{
      * Create all modals
      *
      * @return     string        the modal html
-    */
-    public function addModals() {
+     */
+    public function addModals()
+    {
         ob_start();
         ?>
         <!-- Add host modal for admins -->
@@ -1219,22 +1242,22 @@ class Schedules{
                     <input type='hidden' class='no-reset' name='start_time'>
                     <input type='hidden' class='no-reset' name='end_time'>
                     <input type='hidden' class='no-reset' name='date'>
-                        <?php
+                    <?php
                     if ($this->admin) {
-                        ?>
+                    ?>
                         <p>Please select the user or family who is hosting</p>
-                        <?php
-                        TSJIPPY\userSelect(onlyAdults:true, families:true, id:'host', type:'list', echo:true);
-                    }else{
-                        ?>
-                        <input type='hidden' class='no-reset' name='host' value='<?php echo esc_attr($this->user->ID);?>'>
-                        <?php
+                    <?php
+                        TSJIPPY\userSelect(onlyAdults: true, families: true, id: 'host', type: 'list', echo: true);
+                    } else {
+                    ?>
+                        <input type='hidden' class='no-reset' name='host' value='<?php echo esc_attr($this->user->ID); ?>'>
+                    <?php
                     }
                     $id    = 'add-host';
                     if ($this->mobile) {
                         $id    = 'add-host-mobile';
                     }
-                    TSJIPPY\addSaveButton($id,'Add host','update_schedule');
+                    TSJIPPY\addSaveButton($id, 'Add host', 'update_schedule');
                     ?>
                 </form>
             </div>
@@ -1250,11 +1273,11 @@ class Schedules{
                     <input type='hidden' class='no-reset' name='start_time'>
 
                     <p>Enter one or two keywords for the meal you are planning to serve<br>
-                    For instance 'pasta', 'rice', 'Nigerian', 'salad'</p>
+                        For instance 'pasta', 'rice', 'Nigerian', 'salad'</p>
                     <input type='text' class='wide' name='recipe-keyword'>
 
                     <?php
-                    TSJIPPY\addSaveButton('add_recipe-keyword','Add recipe keywords','update_schedule');
+                    TSJIPPY\addSaveButton('add_recipe-keyword', 'Add recipe keywords', 'update_schedule');
                     ?>
                 </form>
             </div>
@@ -1284,7 +1307,7 @@ class Schedules{
 
             $schdeuleId        = $_REQUEST['schedule'];
             $sessionId        = $_REQUEST['session'];
-            $hostId            = $session->events[0]->organizer-id;
+            $hostId            = $session->events[0]->organizer - id;
             $date            = $session->events[0]->start_date;
             $startTime        = $session->events[0]->start_time;
             $endTime        = $session->events[0]->end_time;
@@ -1307,52 +1330,52 @@ class Schedules{
         }
         ?>
         <!-- Add session modal -->
-        <div name='add-session' class="modal <?php echo esc_attr($hidden);?>">
+        <div name='add-session' class="modal <?php echo esc_attr($hidden); ?>">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <form action="" method="post">
-                    <input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($schdeuleId);?>'>
-                    <input type='hidden' class='no-reset' name='session-id' value='<?php echo esc_attr($sessionId);?>'>
-                    <input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($hostId);?>'>
+                    <input type='hidden' class='no-reset' name='schedule-id' value='<?php echo esc_attr($schdeuleId); ?>'>
+                    <input type='hidden' class='no-reset' name='session-id' value='<?php echo esc_attr($sessionId); ?>'>
+                    <input type='hidden' class='no-reset' name='host-id' value='<?php echo esc_attr($hostId); ?>'>
 
                     <h3>Add a session</h3>
 
                     <label>
                         <h4>Date:</h4>
-                        <input type='date' name='date' class='wide'  value='<?php echo esc_attr($date);?>' required>
+                        <input type='date' name='date' class='wide' value='<?php echo esc_attr($date); ?>' required>
                     </label>
 
                     <label>
                         <h4>Select a start time:</h4>
-                        <input type="time" name="start_time" class="time wide"  value='<?php echo esc_attr($startTime);?>' step="900" min="08:00" max="18:00" required>
+                        <input type="time" name="start_time" class="time wide" value='<?php echo esc_attr($startTime); ?>' step="900" min="08:00" max="18:00" required>
                     </label>
 
                     <label>
                         <h4>Select an end time:</h4>
-                        <input type="time" name="end_time" class="time wide" value='<?php echo esc_attr($endTime);?>' step="900" min="08:00" max="18:00" required>
+                        <input type="time" name="end_time" class="time wide" value='<?php echo esc_attr($endTime); ?>' step="900" min="08:00" max="18:00" required>
                     </label>
 
                     <label>
                         <h4>Subject</h4>
-                        <input type="text" name="subject" class="wide" value='<?php echo esc_attr($subject);?>' required>
+                        <input type="text" name="subject" class="wide" value='<?php echo esc_attr($subject); ?>' required>
                     </label>
 
                     <label>
                         <h4>Location</h4>
-                        <input type="text"  name="location" class="wide" value='<?php echo esc_attr($location);?>'>
+                        <input type="text" name="location" class="wide" value='<?php echo esc_attr($location); ?>'>
                     </label>
 
                     <?php
                     //select for person in charge if an admin
                     if ($this->admin) {
-                        ?>
+                    ?>
                         <label>
                             <h4>Who is in charge</h4>
                             <?php
-                            TSJIPPY\userSelect(onlyAdults:true, class:'wide', id:'host', userId:$host, type:'list', listId:'admin_host', echo:true);
+                            TSJIPPY\userSelect(onlyAdults: true, class: 'wide', id: 'host', userId: $host, type: 'list', listId: 'admin_host', echo: true);
                             ?>
                         </label>
-                        <?php
+                    <?php
                     }
                     ?>
 
@@ -1360,23 +1383,23 @@ class Schedules{
                         <h4>Other people involved</h4>
                     </label>
                     <?php
-                    TSJIPPY\userSelect(onlyAdults:true, class:'wide', id:'others', userId:$others, type:'list', listId:'admin_host', multiple:true, echo:true);
+                    TSJIPPY\userSelect(onlyAdults: true, class: 'wide', id: 'others', userId: $others, type: 'list', listId: 'admin_host', multiple: true, echo: true);
                     ?>
 
                     <h4>Warnings</h4>
                     <label>
-                        <input type="checkbox" name="reminders[]" value="15" <?php echo esc_attr($checked1);?>>
+                        <input type="checkbox" name="reminders[]" value="15" <?php echo esc_attr($checked1); ?>>
                         Send a remider 15 minutes before the start
                     </label>
                     <br>
                     <label>
-                        <input type="checkbox" name="reminders[]" value="1440" <?php echo esc_attr($checked2);?>>
+                        <input type="checkbox" name="reminders[]" value="1440" <?php echo esc_attr($checked2); ?>>
                         Send a remider 1 day before the start
                     </label>
                     <br>
                     <?php
 
-                    TSJIPPY\addSaveButton('add-timeslot', "$action time slot",'update_event add_schedule_row');
+                    TSJIPPY\addSaveButton('add-timeslot', "$action time slot", 'update_event add_schedule_row');
                     ?>
                 </form>
             </div>
@@ -1384,13 +1407,13 @@ class Schedules{
 
         <?php
         if ($this->admin) {
-            ?>
+        ?>
             <!-- Edit schedule modal -->
             <div id='edit-schedule_modal' class="modal hidden">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <?php
-                        echo wp_kses_post($this->addScheduleForm(true));
+                    echo wp_kses_post($this->addScheduleForm(true));
                     ?>
                 </div>
             </div>
@@ -1404,8 +1427,9 @@ class Schedules{
      * Create the form to add a schedule
      *
      * @return     string        the form html
-    */
-    public function addScheduleForm($update=false) {
+     */
+    public function addScheduleForm($update = false)
+    {
         global $wp_roles;
         ob_start();
         if (!$this->admin) {
@@ -1423,7 +1447,7 @@ class Schedules{
         <form class='add-schedule-form'>
             <input type="hidden" class="no-reset" name="schedule-id">
             <input type="hidden" class="no-reset" name="target-id">
-            <input type="hidden" class="no-reset" name="update" value="<?php echo esc_attr($update);?>">
+            <input type="hidden" class="no-reset" name="update" value="<?php echo esc_attr($update); ?>">
 
             <label>
                 <h4>Name of the person the schedule is for</h4>
@@ -1433,9 +1457,9 @@ class Schedules{
             <datalist id="website-users">
                 <?php
                 foreach (TSJIPPY\getUserAccounts(true) as $user) {
-                    ?>
+                ?>
                     <option value='<?php echo esc_attr($user->display_name); ?>' data-value='<?php echo esc_attr($user->ID); ?>'></option>
-                    <?php
+                <?php
                 }
                 ?>
             </datalist>
@@ -1513,12 +1537,12 @@ class Schedules{
                     <option value=''>---</option>
 
                     <?php
-                    foreach ($userRoles as $key=>$roleName) {
-                        ?>
+                    foreach ($userRoles as $key => $roleName) {
+                    ?>
                         <option value='<?php echo esc_attr($key); ?>'>
                             <?php echo esc_html($roleName); ?>
                         </option>
-                        <?php
+                    <?php
                     }
                     ?>
                 </select>
@@ -1532,24 +1556,24 @@ class Schedules{
                         <option value='everyone'>Everyone</option>
 
                         <?php
-                        foreach ($userRoles as $key=>$roleName) {
-                            ?>
+                        foreach ($userRoles as $key => $roleName) {
+                        ?>
                             <option value='<?php echo esc_attr($key); ?>'>
                                 <?php echo esc_html($roleName); ?>
                             </option>
-                            <?php
+                        <?php
                         }
                         ?>
                     </select>
                 </label>
             </div>
 
-            <?php
-            $action = 'Add';
-            if ($update) {
-                $action = 'Update';
-            }
-            TSJIPPY\addSaveButton('add_schedule', "$action schedule");
+    <?php
+        $action = 'Add';
+        if ($update) {
+            $action = 'Update';
+        }
+        TSJIPPY\addSaveButton('add_schedule', "$action schedule");
         echo '</form>';
         return ob_get_clean();
     }

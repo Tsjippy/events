@@ -1,8 +1,10 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -10,22 +12,24 @@ if ( ! defined('ABSPATH')) {
  * Get all the users arriving today
  *
  * @return    array    The WP_Users arriving today
-*/
-function getArrivingUsers() {
+ */
+function getArrivingUsers()
+{
     $date   = new \DateTime();
     return get_users(array(
         'meta_key'     => 'arrival_date',
         'meta_value'   => $date->format('Y-m-d'),
         'meta_compare' => '=',
-   ));
+    ));
 }
 
 /**
  * Get all the anniversary events
  *
  * @return    array    all messages
-*/
-function getAnniversaries() {
+ */
+function getAnniversaries()
+{
     $messages = [];
 
     $events = new DisplayEvents();
@@ -65,7 +69,7 @@ function getAnniversaries() {
                     $messages[$event->post_author]    = trim(str_replace($name, '', $messages[$event->post_author]));
                 }
                 $messages[$event->post_author]    .= ' and the ';
-            }else{
+            } else {
                 $messages[$event->post_author]    = '';
             }
             $messages[$event->post_author] .= trim("$age $title");
@@ -81,16 +85,17 @@ add_action('delete_user', __NAMESPACE__ . '\deleteUser');
  *
  * @param    int    $userId    The user ID to delete
  */
-function deleteUser($userId) {
+function deleteUser($userId)
+{
     $events = new CreateEvents();
 
     //Remove birthday events
-    $birthdayPostId = get_user_meta($userId,'birthday_event_id',true);
+    $birthdayPostId = get_user_meta($userId, 'birthday_event_id', true);
     if (is_numeric($birthdayPostId)) {
         $events->removeDbRows($birthdayPostId);
     }
 
-    $anniversaryId    = get_user_meta($userId, SITENAME. ' anniversary_event_id',true);
+    $anniversaryId    = get_user_meta($userId, SITENAME . ' anniversary_event_id', true);
     if (is_numeric($anniversaryId)) {
         $events->removeDbRows($anniversaryId);
     }
@@ -102,7 +107,7 @@ function deleteUser($userId) {
  *
  * @return   string|false     Birthday and arrining usrs html or false if there are no events
  *
-**/
+ **/
 add_filter('tsjippy_prayer_message', __NAMESPACE__ . '\prayerMessage');
 /**
  * Adds the birthday and arrining users message to the prayer message
@@ -111,7 +116,8 @@ add_filter('tsjippy_prayer_message', __NAMESPACE__ . '\prayerMessage');
  *
  * @return    string    the prayer message with the birthday and arrining users message
  */
-function prayerMessage($html) {
+function prayerMessage($html)
+{
 
     $html    .= anniversaryMessages();
 
@@ -128,7 +134,8 @@ function prayerMessage($html) {
  *
  * @return    string                    The couple string
  */
-function getCoupleString($user, $partner='') {
+function getCoupleString($user, $partner = '')
+{
     if (is_numeric($user)) {
         $user    = get_userdata($user);
     }
@@ -161,7 +168,8 @@ function getCoupleString($user, $partner='') {
  *
  * @return    string                    The modified message
  */
-function replaceCoupleString($string, $replaceString, $user, $partner='') {
+function replaceCoupleString($string, $replaceString, $user, $partner = '')
+{
     $family    = new TSJIPPY\FAMILY\Family();
     if (is_numeric($user)) {
         $user    = get_userdata($user);
@@ -188,7 +196,8 @@ function replaceCoupleString($string, $replaceString, $user, $partner='') {
  * @return   string|false     Anniversary html
  *
  */
-function anniversaryMessages() {
+function anniversaryMessages()
+{
     $family                    = new TSJIPPY\FAMILY\Family();
     $currentUser            = wp_get_current_user();
     $anniversaryMessages     = getAnniversaries();
@@ -221,7 +230,7 @@ function anniversaryMessages() {
             $link        = str_replace($currentUser->display_name, "of you my dear $currentUser->first_name!<br>", $message);
 
             $addImage    = false;
-        }else{
+        } else {
             //Get the url of the user page
             $url        = TSJIPPY\maybeGetUserPageUrl($userId);
 
@@ -267,10 +276,10 @@ function anniversaryMessages() {
     }
 
     $html = '<div name="anniversaries" style="font-size: 18px;">';
-        $html .= '<h3>Celebrations</h3>';
-        $html .= '<p>';
-            $html .= "Today is the $messageString";
-        $html .= ' .</p>';
+    $html .= '<h3>Celebrations</h3>';
+    $html .= '<p>';
+    $html .= "Today is the $messageString";
+    $html .= ' .</p>';
     $html .= '</div>';
 
     return $html;
@@ -282,8 +291,9 @@ function anniversaryMessages() {
  *
  * @return   string     Arrining users html
  *
-*/
-function arrivingUsersMessage() {
+ */
+function arrivingUsersMessage()
+{
     $family            = new TSJIPPY\FAMILY\Family();
     $arrivingUsers    = getArrivingUsers();
     $html            = '';
@@ -291,36 +301,36 @@ function arrivingUsersMessage() {
     //If there are arrivals
     if (!empty($arrivingUsers)) {
         $html     .= '<div name="arrivals" style="font-size: 18px;margin-top:20px;">';
-            $html     .= '<h3>Arrivals</h3>';
+        $html     .= '<h3>Arrivals</h3>';
 
-            $html .= '<p>';
+        $html .= '<p>';
 
-                if (count($arrivingUsers)==1) {
-                    //Get the url of the user page
-                    $url     = TSJIPPY\maybeGetUserPageUrl($arrivingUsers[0]->ID);
-                    $html    .= "<a href='$url'>{$arrivingUsers[0]->display_name}</a> arrives today!";
-                }else{
-                    $html     .= 'The following people arrive today:<br><br>';
+        if (count($arrivingUsers) == 1) {
+            //Get the url of the user page
+            $url     = TSJIPPY\maybeGetUserPageUrl($arrivingUsers[0]->ID);
+            $html    .= "<a href='$url'>{$arrivingUsers[0]->display_name}</a> arrives today!";
+        } else {
+            $html     .= 'The following people arrive today:<br><br>';
 
-                    $skip    = [];
-                    //Loop over the arrivals
-                    foreach ($arrivingUsers as $user) {
-                        if (in_array($user->ID, $skip)) {
-                            continue;
-                        }
-
-                        $partnerId    = false;
-
-                        $name        = $family->getFamilyName($user, false, $partnerId);
-
-                        if ($partnerId) {
-                            $skip[]        = $partnerId;
-                        }
-                        $url      = TSJIPPY\maybeGetUserPageUrl($user->ID);
-                        $html     .= "<a href='$url'>$name</a><br>";
-                    }
+            $skip    = [];
+            //Loop over the arrivals
+            foreach ($arrivingUsers as $user) {
+                if (in_array($user->ID, $skip)) {
+                    continue;
                 }
-            $html .= ' .</p>';
+
+                $partnerId    = false;
+
+                $name        = $family->getFamilyName($user, false, $partnerId);
+
+                if ($partnerId) {
+                    $skip[]        = $partnerId;
+                }
+                $url      = TSJIPPY\maybeGetUserPageUrl($user->ID);
+                $html     .= "<a href='$url'>$name</a><br>";
+            }
+        }
+        $html .= ' .</p>';
         $html .= '</div>';
     }
 

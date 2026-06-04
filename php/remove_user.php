@@ -1,14 +1,17 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
 // remove all events related to the user to be deleted
 add_action('delete_user', __NAMESPACE__ . '\userDeleted', 10, 2);
-function userDeleted($userId, $reassign) {
+function userDeleted($userId, $reassign)
+{
     $events     = new Events();
 
     $allMeta    = get_user_meta($userId);
@@ -30,17 +33,17 @@ function userDeleted($userId, $reassign) {
             'numberposts'   => -1,
             'post_type'     => 'any'
         ]
-   );
+    );
 
     foreach ($eventIds as $id) {
         if (empty($reassign)) {
             wp_trash_post($id);
-        }else{
+        } else {
             // update the autho
             $arg = array(
                 'ID'            => $id,
                 'post_author'   => $reassign,
-           );
+            );
             wp_update_post($arg, false, false);
         }
     }

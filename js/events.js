@@ -1,351 +1,437 @@
-async function requestMonth(target, month, year){
-    url.searchParams.set('month', month);
-    url.searchParams.set('yr', year);
-    window.history.pushState({}, '', url);
+async function requestMonth(target, month, year) {
+  url.searchParams.set("month", month);
+  url.searchParams.set("yr", year);
+  window.history.pushState({}, "", url);
 
-    //hide all
-    document.querySelectorAll('#monthview .events-wrap:not(hidden)').forEach(el=>el.classList.add('hidden'));
+  //hide all
+  document
+    .querySelectorAll("#monthview .events-wrap:not(hidden)")
+    .forEach((el) => el.classList.add("hidden"));
 
-    let calendarPage   = document.querySelector(`.events-wrap[data-date="${year}-${month}"]`);
-    if(calendarPage == null){
-        let wrapper = target.closest('.calendar-wrap');
+  let calendarPage = document.querySelector(
+    `.events-wrap[data-date="${year}-${month}"]`,
+  );
+  if (calendarPage == null) {
+    let wrapper = target.closest(".calendar-wrap");
 
-        Main.showLoader(wrapper.lastChild, false, 100);
-        
-        let formData = new FormData();
-        formData.append('month', month);
-        formData.append('year', year);
+    Main.showLoader(wrapper.lastChild, false, 100);
 
-        let response    = await FormSubmit.fetchRestApi('events/get_month_html', formData);
-        
-        if(response) {
-            target.closest('.calendar-wrap').querySelector('.loader').remove();
-            document.querySelector('#monthview').insertAdjacentHTML('beforeEnd', response);
-        }
-    }else{
-        calendarPage.classList.remove('hidden');
-    }
-
-    document.querySelector('div.month-selector .current').textContent = document.querySelector('select.month-selector').options[month-1].text;
-    document.querySelector('div.year-selector .current').textContent = year;
-}
-
-async function requestWeek(target, wknr, year){
-    url.searchParams.set('yr', year);
-    url.searchParams.set('week', wknr);
-    window.history.pushState({}, '', url);
-
-    wknr    = String(wknr).padStart(2, '0');
-
-    //hide all
-    document.querySelectorAll('#weekview .events-wrap:not(hidden)').forEach(el=>el.classList.add('hidden'));
-
-    let calendarPage   = document.querySelector(`.events-wrap[data-weeknr="${wknr}"]`);
-    if(calendarPage == null){
-
-        let wrapper = target.closest('.calendar-wrap');
-
-        Main.showLoader(wrapper.lastChild, false, 100);
-        
-        let formData = new FormData();
-        formData.append('wknr',wknr);
-        formData.append('year',year);
-
-        let response    = await FormSubmit.fetchRestApi('events/get_week_html', formData);
-        
-        if(response) {
-            target.closest('.calendar-wrap').querySelector('.loader').remove();
-            document.querySelector('#weekview').insertAdjacentHTML('beforeEnd',response);
-        }
-    }else{
-        calendarPage.classList.remove('hidden');
-    }
-
-    document.querySelector('div.week-selector .current').textContent = wknr;
-    document.querySelector('div.year-selector .current').textContent = year;
-}
-
-async function requestExpandList(offset, month='', year=''){
-    //remove any existing element when requesting specific date
-    if(month != '' || year != ''){
-        document.querySelectorAll('#listview article').forEach(el=>el.remove());
-
-        url.searchParams.set('yr', year);
-        url.searchParams.set('month', month);
-        window.history.pushState({}, '', url);
-    }
-
-    Main.showLoader(document.getElementById('listview').lastChild, false, 100);
-    
     let formData = new FormData();
-    formData.append('offset',offset);
-    formData.append('month',month);
-    formData.append('year',year);
-    
-    let response    = await FormSubmit.fetchRestApi('events/get_list_html', formData);
-        
-    if(response) {
-        document.querySelector('#listview').querySelector('.loader').remove();
-        document.querySelector('#listview').insertAdjacentHTML('beforeEnd', response);
+    formData.append("month", month);
+    formData.append("year", year);
+
+    let response = await FormSubmit.fetchRestApi(
+      "events/get_month_html",
+      formData,
+    );
+
+    if (response) {
+      target.closest(".calendar-wrap").querySelector(".loader").remove();
+      document
+        .querySelector("#monthview")
+        .insertAdjacentHTML("beforeEnd", response);
     }
-}                                                    
-                                                                           
+  } else {
+    calendarPage.classList.remove("hidden");
+  }
+
+  document.querySelector("div.month-selector .current").textContent =
+    document.querySelector("select.month-selector").options[month - 1].text;
+  document.querySelector("div.year-selector .current").textContent = year;
+}
+
+async function requestWeek(target, wknr, year) {
+  url.searchParams.set("yr", year);
+  url.searchParams.set("week", wknr);
+  window.history.pushState({}, "", url);
+
+  wknr = String(wknr).padStart(2, "0");
+
+  //hide all
+  document
+    .querySelectorAll("#weekview .events-wrap:not(hidden)")
+    .forEach((el) => el.classList.add("hidden"));
+
+  let calendarPage = document.querySelector(
+    `.events-wrap[data-weeknr="${wknr}"]`,
+  );
+  if (calendarPage == null) {
+    let wrapper = target.closest(".calendar-wrap");
+
+    Main.showLoader(wrapper.lastChild, false, 100);
+
+    let formData = new FormData();
+    formData.append("wknr", wknr);
+    formData.append("year", year);
+
+    let response = await FormSubmit.fetchRestApi(
+      "events/get_week_html",
+      formData,
+    );
+
+    if (response) {
+      target.closest(".calendar-wrap").querySelector(".loader").remove();
+      document
+        .querySelector("#weekview")
+        .insertAdjacentHTML("beforeEnd", response);
+    }
+  } else {
+    calendarPage.classList.remove("hidden");
+  }
+
+  document.querySelector("div.week-selector .current").textContent = wknr;
+  document.querySelector("div.year-selector .current").textContent = year;
+}
+
+async function requestExpandList(offset, month = "", year = "") {
+  //remove any existing element when requesting specific date
+  if (month != "" || year != "") {
+    document.querySelectorAll("#listview article").forEach((el) => el.remove());
+
+    url.searchParams.set("yr", year);
+    url.searchParams.set("month", month);
+    window.history.pushState({}, "", url);
+  }
+
+  Main.showLoader(document.getElementById("listview").lastChild, false, 100);
+
+  let formData = new FormData();
+  formData.append("offset", offset);
+  formData.append("month", month);
+  formData.append("year", year);
+
+  let response = await FormSubmit.fetchRestApi(
+    "events/get_list_html",
+    formData,
+  );
+
+  if (response) {
+    document.querySelector("#listview").querySelector(".loader").remove();
+    document
+      .querySelector("#listview")
+      .insertAdjacentHTML("beforeEnd", response);
+  }
+}
+
 function handleTouchStart(evt) {
-    const firstTouch = evt.touches[0];                                      
-    xDown = firstTouch.clientX;                                      
-    yDown = firstTouch.clientY;                                      
-}                                              
-                                                                           
+  const firstTouch = evt.touches[0];
+  xDown = firstTouch.clientX;
+  yDown = firstTouch.clientY;
+}
+
 function handleTouchMove(evt) {
-    if ( ! xDown || ! yDown ) {
-        return;
+  if (!xDown || !yDown) {
+    return;
+  }
+
+  let target;
+
+  let xUp = evt.touches[0].clientX;
+  let yUp = evt.touches[0].clientY;
+
+  let xDiff = xDown - xUp;
+  let yDiff = yDown - yUp;
+
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    let selected_view = document.querySelector(".viewselector.selected").dataset
+      .type;
+
+    if (xDiff > 0) {
+      /* right swipe */
+      target = evt.target.closest(".events-wrap").querySelector(".next a");
+    } else {
+      /* left swipe */
+      target = evt.target.closest(".events-wrap").querySelector(".prev a");
     }
+    let month = target.dataset.month;
+    let week = target.dataset.weeknr;
+    let year = target.dataset.year;
 
-    let target;
-
-    let xUp = evt.touches[0].clientX;                                    
-    let yUp = evt.touches[0].clientY;
-
-    let xDiff = xDown - xUp;
-    let yDiff = yDown - yUp;
-                                                                        
-    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
-        let selected_view   = document.querySelector('.viewselector.selected').dataset.type;
-
-        if ( xDiff > 0 ) {
-            /* right swipe */
-            target  = evt.target.closest('.events-wrap').querySelector('.next a');
-        } else {
-            /* left swipe */
-            target  = evt.target.closest('.events-wrap').querySelector('.prev a');
-        }
-        let month = target.dataset.month;
-        let week  = target.dataset.weeknr;
-        let year  = target.dataset.year;
-        
-        if(selected_view == 'weekview'){
-            requestWeek(evt.target, week, year);
-        }else if(selected_view == 'monthview'){
-            requestMonth(target, month, year);
-        }
+    if (selected_view == "weekview") {
+      requestWeek(evt.target, week, year);
+    } else if (selected_view == "monthview") {
+      requestMonth(target, month, year);
     }
-    /* reset values */
-    xDown = null;
-    yDown = null;                                             
+  }
+  /* reset values */
+  xDown = null;
+  yDown = null;
 }
 
 const url = new URL(window.location);
-var xDown = null;                                                        
+var xDown = null;
 var yDown = null;
 
 console.log("Events.js loaded");
 
-function prevNext(target){
-    let requestedMonth = target.dataset.month;
-    let requestedWeek  = target.dataset.weeknr;
-    let requestedYear  = target.dataset.year;
+function prevNext(target) {
+  let requestedMonth = target.dataset.month;
+  let requestedWeek = target.dataset.weeknr;
+  let requestedYear = target.dataset.year;
 
-    if(requestedMonth != null){
-        requestMonth(target, requestedMonth, requestedYear);
-    }else if(requestedWeek != null){
-        requestWeek(target, requestedWeek, requestedYear);
-    }
+  if (requestedMonth != null) {
+    requestMonth(target, requestedMonth, requestedYear);
+  } else if (requestedWeek != null) {
+    requestWeek(target, requestedWeek, requestedYear);
+  }
 }
 
-function calendarDayClicked(target){
-    let date    = target.dataset.date;
+function calendarDayClicked(target) {
+  let date = target.dataset.date;
 
-    //hide events of all days
-    document.querySelectorAll('.event-details-wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
-    
-    //show the events of this day
-    let details = target.closest('.events-wrap').querySelector(`.event-details-wrapper[data-date="${date}"]`);
-    details.classList.remove('hidden');
+  //hide events of all days
+  document
+    .querySelectorAll(".event-details-wrapper:not(.hidden)")
+    .forEach((el) => el.classList.add("hidden"));
 
-    //unselect previous slected date
-    document.querySelectorAll('.calendar-day.selected').forEach(el=>el.classList.remove('selected'));
+  //show the events of this day
+  let details = target
+    .closest(".events-wrap")
+    .querySelector(`.event-details-wrapper[data-date="${date}"]`);
+  details.classList.remove("hidden");
 
+  //unselect previous slected date
+  document
+    .querySelectorAll(".calendar-day.selected")
+    .forEach((el) => el.classList.remove("selected"));
+
+  //make this date selected
+  target.classList.add("selected");
+
+  // scroll to the event
+  details.scrollIntoView({
+    behavior: "auto",
+    block: "start",
+    inline: "center",
+  });
+}
+
+function hourClicked(target) {
+  let date = target.dataset.date;
+  let startTime = target.dataset.starttime;
+
+  //hide all other events
+  document
+    .querySelectorAll(".event-details-wrapper:not(.hidden)")
+    .forEach((el) => el.classList.add("hidden"));
+
+  //show the event
+  let eventDetail = target
+    .closest(".events-wrap")
+    .querySelector(
+      `.event-details-wrapper[data-date="${date}"][data-starttime="${startTime}"]`,
+    );
+  if (eventDetail == null) {
+    target
+      .closest(".events-wrap")
+      .querySelector('.event-details-wrapper[data-date="empty"]')
+      .classList.remove("hidden");
+  } else {
+    eventDetail.classList.remove("hidden");
+
+    //unselect previous selected date
+    document
+      .querySelectorAll(".calendar-hour.selected")
+      .forEach((el) => el.classList.remove("selected"));
     //make this date selected
-    target.classList.add('selected');
+    target.classList.add("selected");
 
-    // scroll to the event
-    details.scrollIntoView({behavior:'auto', block:'start', inline:'center'});
+    if (Main.isMobileDevice()) {
+      window.scrollTo(0, eventDetail.offsetTop);
+
+      console.log("scrolling");
+    } else {
+      //scroll the detail into view
+      eventDetail.scrollIntoView({
+        behavior: "auto",
+        block: "start",
+        inline: "center",
+      });
+
+      // make sure the vertical scroll is ok too
+      window.scrollTo(0, eventDetail.offsetHeight);
+
+      console.log("scrolling");
+    }
+  }
 }
 
-function hourClicked(target){
-    let date        = target.dataset.date;
-    let startTime   = target.dataset.starttime;
+function viewChanged(target) {
+  let parent = target.closest(".search-form");
+  if (target.dataset.type == "weekview" || target.dataset.type == "monthview") {
+    parent.querySelector("div.week-selector").classList.toggle("hidden");
+    parent.querySelector("div.month-selector").classList.toggle("hidden");
+  }
 
-    //hide all other events
-    document.querySelectorAll('.event-details-wrapper:not(.hidden)').forEach(el=>el.classList.add('hidden'));
-    
-    //show the event
-    let eventDetail = target.closest('.events-wrap').querySelector(`.event-details-wrapper[data-date="${date}"][data-starttime="${startTime}"]`);
-    if(eventDetail == null){
-        target.closest('.events-wrap').querySelector('.event-details-wrapper[data-date="empty"]').classList.remove('hidden');
-    }else{
-        eventDetail.classList.remove('hidden');
+  //select class
+  document
+    .querySelectorAll(".viewselector.selected")
+    .forEach((el) => el.classList.remove("selected"));
+  target.classList.add("selected");
 
-        //unselect previous selected date
-        document.querySelectorAll('.calendar-hour.selected').forEach(el=>el.classList.remove('selected'));
-        //make this date selected
-        target.classList.add('selected');
+  //show view
+  document
+    .querySelectorAll(".calendarview")
+    .forEach((el) => el.classList.add("hidden"));
+  document.getElementById(target.dataset.type).classList.remove("hidden");
 
-        if(Main.isMobileDevice()){
-            window.scrollTo(0, eventDetail.offsetTop);
-            
-		    console.log('scrolling')
-        }else{
-            //scroll the detail into view
-            eventDetail.scrollIntoView({behavior:'auto', block:'start', inline:'center'});
-            
-            // make sure the vertical scroll is ok too
-            window.scrollTo(0, eventDetail.offsetHeight);
-            
-		console.log('scrolling')
-        }
-    }
+  // request data for the view if not already there
+  let year = document.querySelector("select.year-selector").value;
+  if (target.dataset.type == "weekview") {
+    requestWeek(
+      target,
+      document.querySelector("select.week-selector").value,
+      year,
+    );
+  } else if (target.dataset.type == "listview") {
+    requestExpandList(
+      0,
+      document.querySelector("select.month-selector").value,
+      year,
+    );
+  } else if (target.dataset.type == "monthview") {
+    requestMonth(
+      target,
+      document.querySelector("select.month-selector").value,
+      year,
+    );
+  }
 
+  //change url
+  url.searchParams.set("view", target.dataset.type.replace("view", ""));
+  window.history.pushState({}, "", url);
 }
 
-function viewChanged(target){
-    let parent  = target.closest('.search-form');
-    if(target.dataset.type  == 'weekview' || target.dataset.type  == 'monthview'){
-        parent.querySelector('div.week-selector').classList.toggle('hidden');
-        parent.querySelector('div.month-selector').classList.toggle('hidden');
+document.addEventListener("click", function (event) {
+  let target = event.target;
+
+  if (target.classList.contains("prevnext")) {
+    prevNext(target);
+  } else if (target.classList.contains("calendar-day")) {
+    event.stopPropagation();
+
+    calendarDayClicked(target);
+  } else if (target.classList.contains("calendar-hour")) {
+    event.stopPropagation();
+    hourClicked(target);
+  } else if (target.classList.contains("viewselector")) {
+    event.stopPropagation();
+    viewChanged(target);
+  } else if (target.id == "add-calendar") {
+    document.getElementById("calendaraddingoptions").classList.toggle("hidden");
+  } else if (target.classList.contains("calendarurl")) {
+    event.stopPropagation();
+    if (target.textContent != "") {
+      navigator.clipboard.writeText(target.textContent);
+
+      let options = {
+        title: "Success",
+        timer: 1500,
+      };
+
+      new Main.Alert(`Copied ${target.textContent}`, "success", options);
     }
+  } else {
+    return;
+  }
 
-    //select class
-    document.querySelectorAll('.viewselector.selected').forEach(el=>el.classList.remove('selected'));
-    target.classList.add('selected');
+  event.stopImmediatePropagation();
+});
 
-    //show view
-    document.querySelectorAll('.calendarview').forEach(el=>el.classList.add('hidden'));
-    document.getElementById(target.dataset.type).classList.remove('hidden');
+document.addEventListener("change", function (event) {
+  let target = event.target;
+  if (target.classList.contains("week-selector")) {
+    event.stopPropagation();
 
-    // request data for the view if not already there
-    let year    = document.querySelector('select.year-selector').value;
-    if(target.dataset.type == 'weekview'){
-        requestWeek(target, document.querySelector('select.week-selector').value, year);
-    }else if(target.dataset.type == 'listview'){
-        requestExpandList(0, document.querySelector('select.month-selector').value, year);
-    }else if(target.dataset.type == 'monthview'){
-        requestMonth(target, document.querySelector('select.month-selector').value, year);
+    let year = target
+      .closest(".date-search")
+      .querySelector(".year-selector").value;
+    if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "weekview"
+    ) {
+      requestWeek(target, target.value, year);
+    } else if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "listview"
+    ) {
+      requestExpandList(0, target.value, year);
     }
 
     //change url
-    url.searchParams.set('view', target.dataset.type.replace('view',''));
-    window.history.pushState({}, '', url);
-}
+    url.searchParams.set("week", target.value);
+  } else if (target.classList.contains("month-selector")) {
+    event.stopPropagation();
 
-document.addEventListener("click", function(event) {
-	let target  = event.target;
-
-    if(target.classList.contains('prevnext')){
-        prevNext(target);
+    let year = target
+      .closest(".date-search")
+      .querySelector(".year-selector").value;
+    if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "monthview"
+    ) {
+      requestMonth(target, target.value, year);
+    } else if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "listview"
+    ) {
+      requestExpandList(0, target.value, year);
     }
+    url.searchParams.set("month", target.value);
+  } else if (target.classList.contains("year-selector")) {
+    event.stopPropagation();
 
-    else if(target.classList.contains('calendar-day')){
-        event.stopPropagation();
-
-        calendarDayClicked(target)
+    let month = target
+      .closest(".date-search")
+      .querySelector(".month-selector").value;
+    if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "monthview"
+    ) {
+      requestMonth(target, month, target.value);
+    } else if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "listview"
+    ) {
+      requestExpandList(0, month, target.value);
+    } else if (
+      document.querySelector(".viewselector.selected").dataset.type ==
+      "weekview"
+    ) {
+      let wknr = target
+        .closest(".date-search")
+        .querySelector(".week-selector").value;
+      requestWeek(target, wknr, target.value);
     }
+    url.searchParams.set("yr", target.value);
+  } else {
+    return;
+  }
 
-    else if(target.classList.contains('calendar-hour')){
-        event.stopPropagation();
-        hourClicked(target);
-    }
+  event.stopImmediatePropagation();
 
-    else if(target.classList.contains('viewselector')){
-        event.stopPropagation();
-        viewChanged(target);
-    }
-
-    else if(target.id=='add-calendar'){
-        document.getElementById('calendaraddingoptions').classList.toggle('hidden');   
-    }
-    
-    else if(target.classList.contains('calendarurl')){
-        event.stopPropagation();
-        if(target.textContent != ''){
-            navigator.clipboard.writeText(target.textContent);
-
-            let options	= {
-                title: 'Success',
-                timer: 1500, 
-            };
-
-            new Main.Alert(`Copied ${target.textContent}`, 'success', options);
-        }
-    }else{
-        return;
-    }
-
-    event.stopImmediatePropagation();
+  window.history.pushState({}, "", url);
 });
 
-document.addEventListener("change", function(event) {
-	let target = event.target;
-    if(target.classList.contains('week-selector')){
-        event.stopPropagation();
+window.onscroll = function () {
+  let d = document.documentElement;
+  let offset = d.scrollTop + window.innerHeight;
+  let height = d.offsetHeight;
 
-        let year    = target.closest('.date-search').querySelector('.year-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type == 'weekview'){
-            requestWeek(target, target.value, year);
-        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
-            requestExpandList(0, target.value, year);
-        }
+  //if we scrolled to the bottom of the page and the list view is actve, and we are not currently loading, load more
+  if (
+    offset >= height - 2 &&
+    document.querySelector(".viewselector.selected").dataset.type ==
+      "listview" &&
+    document.querySelector("#listview .loader") == null
+  ) {
+    let skipcount = document
+      .querySelector("#listview")
+      .querySelectorAll("article").length;
 
-        //change url
-        url.searchParams.set('week', target.value);
-    }
-
-    else if(target.classList.contains('month-selector')){
-        event.stopPropagation();
-
-        let year    = target.closest('.date-search').querySelector('.year-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type == 'monthview'){
-            requestMonth(target, target.value, year);
-        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
-            requestExpandList(0,target.value, year);
-        }
-        url.searchParams.set('month', target.value);
-    }
-
-    else if(target.classList.contains('year-selector')){
-        event.stopPropagation();
-        
-        let month   = target.closest('.date-search').querySelector('.month-selector').value;
-        if(document.querySelector('.viewselector.selected').dataset.type == 'monthview'){
-            requestMonth(target, month, target.value);
-        }else if(document.querySelector('.viewselector.selected').dataset.type == 'listview'){
-            requestExpandList(0,month, target.value);
-        }else if(document.querySelector('.viewselector.selected').dataset.type == 'weekview'){
-            let wknr  = target.closest('.date-search').querySelector('.week-selector').value;
-            requestWeek(target, wknr, target.value);
-        }
-        url.searchParams.set('yr', target.value);
-    }else{
-        return;
-    }
-
-    event.stopImmediatePropagation();
-    
-    window.history.pushState({}, '', url);
-});
-
-window.onscroll = function() {
-    let d       = document.documentElement;
-    let offset  = d.scrollTop + window.innerHeight;
-    let height  = d.offsetHeight;
-  
-    //if we scrolled to the bottom of the page and the list view is actve, and we are not currently loading, load more
-    if (offset >= height-2 && document.querySelector('.viewselector.selected').dataset.type == 'listview' && document.querySelector('#listview .loader') == null) {
-        let skipcount  = document.querySelector("#listview").querySelectorAll('article').length;
-
-        requestExpandList(skipcount);
-    }
+    requestExpandList(skipcount);
+  }
 };
 
-document.addEventListener('touchstart', handleTouchStart);        
-document.addEventListener('touchmove', handleTouchMove);
+document.addEventListener("touchstart", handleTouchStart);
+document.addEventListener("touchmove", handleTouchMove);

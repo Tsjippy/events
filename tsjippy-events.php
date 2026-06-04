@@ -1,5 +1,7 @@
 <?php
+
 namespace TSJIPPY\EVENTS;
+
 use TSJIPPY;
 
 /**
@@ -20,7 +22,7 @@ use TSJIPPY;
  *
  * @author Ewald Harmsen
  */
-if ( ! defined('ABSPATH')) {
+if (! defined('ABSPATH')) {
     exit;
 }
 
@@ -32,7 +34,7 @@ define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FIL
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_events_settings', []));
 
 // run right before activation
-register_activation_hook(__FILE__, function () {// Create the dbs
+register_activation_hook(__FILE__, function () { // Create the dbs
     $events    = new Events();
     $events->createEventsTable();
 
@@ -56,4 +58,3 @@ register_deactivation_hook(__FILE__, function () {
     wp_clear_scheduled_hook('add_repeated_events_action');
     wp_clear_scheduled_hook('remove_old_events_action');
 });
-
