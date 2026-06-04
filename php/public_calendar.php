@@ -2,26 +2,26 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_action( 'init', __NAMESPACE__.'\init');
+add_action('init', __NAMESPACE__ . '\init');
 function init() {
-    add_rewrite_endpoint( 'public_calendar', EP_ROOT);
+    add_rewrite_endpoint('public_calendar', EP_ROOT);
 }
 
-add_action( 'template_redirect', __NAMESPACE__.'\templateRedirect' );
+add_action('template_redirect', __NAMESPACE__ . '\templateRedirect');
 function templateRedirect() {
     global $wp_query;
- 
+
     // if this is not a request for json or a singular object then bail
-    if ( ! isset( $wp_query->query_vars['public_calendar'] )){
-		return;
-	}
- 
+    if ( ! isset($wp_query->query_vars['public_calendar'])) {
+        return;
+    }
+
     // include custom template
-	$icalFeed	= new IcalFeed();
+    $icalFeed    = new IcalFeed();
     $icalFeed->calendarStream();
 }
 

@@ -3,95 +3,95 @@ namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 use WP_Error;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class Events{
-	public $tableName;
-	public $dayStartTime;
-	public $dayEndTime;
-	public $postId;
-	
-	public function __construct(){
-		global $wpdb;
-		$this->tableName		= $wpdb->prefix.'tsjippy_events';
-		$this->dayStartTime		= '00:00';
-		$this->dayEndTime		= '23:59';
-	}
-	
-	/**
-	 * Creates the table holding all events if it does not exist
-	*/
-	public function createEventsTable(){
-		if ( !function_exists( 'maybe_create_table' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		}
+    public $tableName;
+    public $dayStartTime;
+    public $dayEndTime;
+    public $postId;
 
-		global $wpdb;
-		
-		$charsetCollate = $wpdb->get_charset_collate();
+    public function __construct() {
+        global $wpdb;
+        $this->tableName        = $wpdb->prefix. 'tsjippy_events';
+        $this->dayStartTime        = '00:00';
+        $this->dayEndTime        = '23:59';
+    }
 
-		$sql = "CREATE TABLE {$this->tableName}(
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			post_id mediumint(9) NOT NULL,
-			start_date varchar(80) NOT NULL,
-			end_date varchar(80) NOT NULL,
-			start_time varchar(80) NOT NULL,
-			end_time varchar(80) NOT NULL,
-			location varchar(80),
-			organizer varchar(80),
-			location_id mediumint(9),
-			organizer_id mediumint(9),
-			atendees varchar(80),
-			only_for mediumint(9),
-			PRIMARY KEY  (id)
-		) $charsetCollate;";
+    /**
+     * Creates the table holding all events if it does not exist
+    */
+    public function createEventsTable() {
+        if ( !function_exists('maybe_create_table')) {
+            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        }
 
-		maybe_create_table($this->tableName, $sql );
-	}
+        global $wpdb;
 
-	/**
-	 * Gets an event from the db
-	 * @param	int			$postId		WP_Post id
-	 *
-	 * @return	object|false			The event or false if no event found
-	*/
-	public function retrieveSingleEvent($postId){
-		global $wpdb;
-		$results	= $wpdb->get_results($wpdb->prepare(
-			"SELECT * FROM %i as posts INNER JOIN %i as events ON posts.ID = events.post_id WHERE post_id=%d ORDER BY ABS( DATEDIFF( start_date, CURDATE() ) ) LIMIT 1",
-			$wpdb->posts,
-			$this->tableName,
-			$postId
-		));
-		
-		if(empty($results)){
-			return false;
-		}
-		return $results[0];
-	}
+        $charsetCollate = $wpdb->get_charset_collate();
 
-	/**
-	 * Removes all events connected to an certain event post
-	 * @param  	int  	$postId		Optional post id
-	 * @param	bool	$delPost	Wheter to delete the post as well
-	*/
-	public function removeDbRows($postId = null, $delPost=false){
-		global $wpdb;
- 
-		if(!is_numeric($postId)){
-			$postId = $this->postId;
-		}
+        $sql = "CREATE TABLE {$this->tableName}(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            post_id mediumint(9) NOT NULL,
+            start_date varchar(80) NOT NULL,
+            end_date varchar(80) NOT NULL,
+            start_time varchar(80) NOT NULL,
+            end_time varchar(80) NOT NULL,
+            location varchar(80),
+            organizer varchar(80),
+            location_id mediumint(9),
+            organizer_id mediumint(9),
+            atendees varchar(80),
+            only_for mediumint(9),
+            PRIMARY KEY  (id)
+       ) $charsetCollate;";
 
-		if($delPost){
-			wp_delete_post($postId);
-		}
+        maybe_create_table($this->tableName, $sql);
+    }
 
-		return $wpdb->delete(
-			$this->tableName,
-			['post_id' => $postId],
-			['%d']
-		);
-	}
+    /**
+     * Gets an event from the db
+     * @param    int            $postId        WP_Post id
+     *
+     * @return    object|false            The event or false if no event found
+    */
+    public function retrieveSingleEvent($postId) {
+        global $wpdb;
+        $results    = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM %i as posts INNER JOIN %i as events ON posts.ID = events.post_id WHERE post_id=%d ORDER BY ABS(DATEDIFF(start_date, CURDATE())) LIMIT 1",
+            $wpdb->posts,
+            $this->tableName,
+            $postId
+       ));
+
+        if (empty($results)) {
+            return false;
+        }
+        return $results[0];
+    }
+
+    /**
+     * Removes all events connected to an certain event post
+     * @param      int      $postId        Optional post id
+     * @param    bool    $delPost    Wheter to delete the post as well
+    */
+    public function removeDbRows($postId = null, $delPost=false) {
+        global $wpdb;
+
+        if (!is_numeric($postId)) {
+            $postId = $this->postId;
+        }
+
+        if ($delPost) {
+            wp_delete_post($postId);
+        }
+
+        return $wpdb->delete(
+            $this->tableName,
+            ['post_id' => $postId],
+            ['%d']
+       );
+    }
 }

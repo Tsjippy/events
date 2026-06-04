@@ -2,23 +2,23 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 // remove all events related to the user to be deleted
-add_action('delete_user', __NAMESPACE__.'\userDeleted', 10, 2);
-function userDeleted($userId, $reassign){
+add_action('delete_user', __NAMESPACE__ . '\userDeleted', 10, 2);
+function userDeleted($userId, $reassign) {
     $events     = new Events();
 
     $allMeta    = get_user_meta($userId);
 
-    $celebrationIds = array_filter($allMeta, function($key){
+    $celebrationIds = array_filter($allMeta, function ($key) {
         return str_contains($key, '_event_id');
     }, ARRAY_FILTER_USE_KEY);
 
     // Remove the celebration events
-    foreach($celebrationIds as $id){
+    foreach ($celebrationIds as $id) {
         $events->removeDbRows($id[0], true);
     }
 
@@ -30,18 +30,18 @@ function userDeleted($userId, $reassign){
             'numberposts'   => -1,
             'post_type'     => 'any'
         ]
-    );
+   );
 
-    foreach($eventIds as $id){
-        if(empty($reassign)){
+    foreach ($eventIds as $id) {
+        if (empty($reassign)) {
             wp_trash_post($id);
         }else{
             // update the autho
             $arg = array(
                 'ID'            => $id,
                 'post_author'   => $reassign,
-            );
-            wp_update_post( $arg, false, false );
+           );
+            wp_update_post($arg, false, false);
         }
     }
 }

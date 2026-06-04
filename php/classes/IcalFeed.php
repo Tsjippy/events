@@ -2,78 +2,79 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class IcalFeed{
-	public $icalFormat;
+    public $icalFormat;
 
-	public function __construct(){
-		//see https://gist.github.com/jakebellacera/635416
-		$this->icalFormat = 'Ymd\THis\Z';
-	}
+    public function __construct() {
+        //see https://gist.github.com/jakebellacera/635416
+        $this->icalFormat = 'Ymd\THis\Z';
+    }
 
-	/**
-	 * Creates an iCal feed
-	*/
-	public function calendarStream(){
-		$userId		= $_GET['id'];
-		if(!is_numeric($userId)){
-			$userId	= -1;
-		}
+    /**
+     * Creates an iCal feed
+    */
+    public function calendarStream() {
+        $userId        = $_GET['id'];
+        if (!is_numeric($userId)) {
+            $userId    = -1;
+        }
 
-		$events		= get_posts(
-			array(
-				'post_type'      => 'event',
-				'posts_per_page' => -1
-			)
-		);
-		
-		$icalStart		 = "BEGIN:VCALENDAR\r\n";
-		$icalStart		.= "VERSION:2.0\r\n";
-		$icalStart		.= "METHOD:PUBLISH\r\n";
-		$icalStart		.= "PRODID:-//tsjippy//website//EN\r\n";
-		$icalStart		.= "X-WR-CALNAME: Events\r\n";
-		$icalEvents	 = '';
-		
-		foreach($events as $event){
-			// sometimes only_for has a false or true value keep only the numbers
-			$onlyFor		= array_filter((array)get_post_meta($event->ID, 'only_for', true), 'is_numeric');
+        $events        = get_posts(
+            array(
+                'post_type'      => 'event',
+                'posts_per_page' => -1
+           )
+       );
 
-			//do not show events which are not meant for us
-			if(!empty($onlyFor) && !in_array($userId, $onlyFor)){
-				continue;
-			}
+        $icalStart         = "BEGIN:VCALENDAR\r\n";
+        $icalStart        .= "VERSION:2.0\r\n";
+        $icalStart        .= "METHOD:PUBLISH\r\n";
+        $icalStart        .= "PRODID:-//tsjippy//website//EN\r\n";
+        $icalStart        .= "X-WR-CALNAME: Events\r\n";
+        $icalEvents     = '';
 
-			//skip events without meta data
-			$meta		= get_post_meta($event->ID, 'eventdetails', true);
-			if(!is_array($meta) && !empty($meta)){
-				$meta	= (array)json_decode($meta, true);
-			}
-			if(!is_array($meta)){
-				continue;
-			}
+        foreach ($events as $event) {
+            // sometimes only_for has a false or true value keep only the numbers
+            $onlyFor        = array_filter((array)get_post_meta($event->ID, 'only_for', true), 'is_numeric');
 
-			$icalEvents .= $this->createIcalEvent($meta, $event);
-		}
-		
-		// close calendar
-		$icalEnd = "END:VCALENDAR\r\n";
+            //do not show events which are not meant for us
+            if (!empty($onlyFor) && !in_array($userId, $onlyFor)) {
+                continue;
+            }
 
-		// Set the headers
-		header('Content-type: text/calendar; charset=utf-8');
-		header('Content-Disposition: attachment; filename="tsjippy_events.ics"');
-		
-		for ($i = 0; $i < ob_get_level(); $i++) {
-			ob_get_clean();
-		}
-		ob_start();
-		echo $icalStart.$icalEvents.$icalEnd;
-		ob_end_flush();
-		exit;
-		die();
-	}
+            //skip events without meta data
+            $meta        = get_post_meta($event->ID, 'eventdetails', true);
+            if (!is_array($meta) && !empty($meta)) {
+                $meta    = (array)json_decode($meta, true);
+            }
+            if (!is_array($meta)) {
+                continue;
+            }
+
+            $icalEvents .= $this->createIcalEvent($meta, $event);
+        }
+
+        // close calendar
+        $icalEnd = "END:VCALENDAR\r\n";
+
+        // Set the headers
+        header('Content-type: text/calendar; charset=utf-8');
+        header('Content-Disposition: attachment; filename="tsjippy_events.ics"');
+
+        for ($i = 0; $i < ob_get_level(); $i++) {
+            ob_get_clean();
+        }
+        ob_start();
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $icalStart.$icalEvents.$icalEnd;
+        ob_end_flush();
+        exit;
+        die();
+    }
 
     /**
      * Creates an ical entry for a specific event
@@ -83,161 +84,161 @@ class IcalFeed{
      *
      * @return  string              The ical data
      */
-	public function createIcalEvent($meta, $event){
-		$icalEvent	= "BEGIN:VEVENT\r\n";
+    public function createIcalEvent($meta, $event) {
+        $icalEvent    = "BEGIN:VEVENT\r\n";
 
-		if(!isset($meta['start_date']) || !isset($meta['end_date'])){
-			return '';
-		}
+        if (!isset($meta['start_date']) || !isset($meta['end_date'])) {
+            return '';
+        }
 
-		//between times
-		if(empty($meta['allday'])){
-			$start			= get_gmt_from_date($meta['start_date'].' '.$meta['start_time'], $this->icalFormat);
-			$end			= get_gmt_from_date($meta['end_date'].' '.$meta['end_time'], $this->icalFormat);
-			$start			= "DTSTART:$start\r\n";
-			$end			= "DTEND:$end\r\n";
-		//all day
-		}else{
-			$start			= strtotime($meta['start_date']);
-			$startDate		= gmdate('Ymd', $start);
+        //between times
+        if (empty($meta['allday'])) {
+            $start            = get_gmt_from_date($meta['start_date']. ' ' .$meta['start_time'], $this->icalFormat);
+            $end            = get_gmt_from_date($meta['end_date']. ' ' .$meta['end_time'], $this->icalFormat);
+            $start            = "DTSTART:$start\r\n";
+            $end            = "DTEND:$end\r\n";
+        //all day
+        }else{
+            $start            = strtotime($meta['start_date']);
+            $startDate        = gmdate('Ymd', $start);
 
-			if($meta['start_date'] == $meta['end_date']){
-				$endDate		= gmdate('Ymd', strtotime('+1 day', $start));
-			}else{
-				$endDate		= gmdate('Ymd', strtotime($meta['end_date']));
-			}
-			$start				="DTSTART;VALUE=DATE:$startDate\r\n";
-			$end				="DTEND;VALUE=DATE:$endDate\r\n";
-		}
-		$icalEvent		.= $start.$end;
-		
-		$creationdate	 = gmdate($this->icalFormat,strtotime($event->post_date_gmt));
-		$icalEvent		.="DTSTAMP:$creationdate\r\n";
-		$icalEvent		.="SUMMARY:{$event->post_title}\r\n";
+            if ($meta['start_date'] == $meta['end_date']) {
+                $endDate        = gmdate('Ymd', strtotime('+1 day', $start));
+            }else{
+                $endDate        = gmdate('Ymd', strtotime($meta['end_date']));
+            }
+            $start                ="DTSTART;VALUE=DATE:$startDate\r\n";
+            $end                ="DTEND;VALUE=DATE:$endDate\r\n";
+        }
+        $icalEvent        .= $start.$end;
 
-		$url			 = get_permalink($event->ID);
-		//maxline length is 75
-		$icalEvent		.= trim(chunk_split("DESCRIPTION:$event->post_title read more on $url", 74, "\r\n "))."\r\n";
+        $creationdate     = gmdate($this->icalFormat,strtotime($event->post_date_gmt));
+        $icalEvent        .="DTSTAMP:$creationdate\r\n";
+        $icalEvent        .="SUMMARY:{$event->post_title}\r\n";
 
-		$uid			 = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
-		$icalEvent		.="UID:$uid\r\n";
+        $url             = get_permalink($event->ID);
+        //maxline length is 75
+        $icalEvent        .= trim(chunk_split("DESCRIPTION:$event->post_title read more on $url", 74, "\r\n ")). "\r\n";
 
-		$moddate		 = gmdate($this->icalFormat, strtotime($event->post_modified_gmt));
-		$icalEvent		.="LAST-MODIFIED:$moddate\r\n";
-		$icalEvent		.="LOCATION:".$meta['location'] ?? ''."\r\n";
+        $uid             = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
+        $icalEvent        .="UID:$uid\r\n";
 
-		$icalEvent	.= trim(chunk_split("URL:$url",74,"\r\n "))."\r\n";
+        $moddate         = gmdate($this->icalFormat, strtotime($event->post_modified_gmt));
+        $icalEvent        .="LAST-MODIFIED:$moddate\r\n";
+        $icalEvent        .="LOCATION:" .$meta['location'] ?? '' . "\r\n";
 
-		if(is_array($meta['repeat'])){
-			$this->addRepeatDetails($meta, $start, $end, $uid, $icalEvent);
-		}
+        $icalEvent    .= trim(chunk_split("URL:$url",74,"\r\n ")). "\r\n";
 
-		$icalEvent	.="END:VEVENT\r\n";
+        if (is_array($meta['repeat'])) {
+            $this->addRepeatDetails($meta, $start, $end, $uid, $icalEvent);
+        }
 
-		return		$icalEvent;
-	}
+        $icalEvent    .="END:VEVENT\r\n";
 
-	public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent){
-		if(empty($meta['repeat'])){
-			return $icalEvent;
-		}
-		$freq			 = strtoupper($meta['repeat']['type']);
+        return        $icalEvent;
+    }
 
-		if($freq == 'CUSTOM_DAYS'){
-			if(is_array($meta['repeat']['includedates'])){
-				$icalEvent .= $this->addIcalCustomDates($meta, $start, $end, $uid, $icalEvent);
-			}
-		}else{
-			$intval		= $meta['repeat']['interval'];
+    public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent) {
+        if (empty($meta['repeat'])) {
+            return $icalEvent;
+        }
+        $freq             = strtoupper($meta['repeat']['type']);
 
-			$icalEvent	.= "RRULE:FREQ=$freq;INTERVAL=$intval;";
+        if ($freq == 'CUSTOM_DAYS') {
+            if (is_array($meta['repeat']['includedates'])) {
+                $icalEvent .= $this->addIcalCustomDates($meta, $start, $end, $uid, $icalEvent);
+            }
+        }else{
+            $intval        = $meta['repeat']['interval'];
 
-			if(
-				$freq == 'YEARLY' || 
-				(
-					//!empty($meta['repeat']['datetype']) &&
-					$meta['repeat']['datetype'] ?? '' == 'samedate'
-				)
-			){
-				$month	= gmdate('m', strtotime($meta['start_date']));
-				$day	= gmdate('d', strtotime($meta['start_date']));
-				if($freq == 'YEARLY'){
-					$icalEvent	.="BYMONTH=$month;";
-				}
-				$icalEvent	.="BYMONTHDAY=$day;";
-			}elseif($freq == 'MONTHLY' || $freq == 'WEEKLY'){
-				$weeks			 = $meta['repeat']['weeks'];
-				$weekDays		 = $meta['repeat']['weekdays'];
-				if(is_array($weeks)){
-					$icalEvent	.="BYDAY=";
+            $icalEvent    .= "RRULE:FREQ=$freq;INTERVAL=$intval;";
 
-					foreach($weeks as $index=>$week){
-						if($index>0){
-							$icalEvent	.=",";
-						}
+            if (
+                $freq == 'YEARLY' ||
+                (
+                    //!empty($meta['repeat']['datetype']) &&
+                    $meta['repeat']['datetype'] ?? '' == 'samedate'
+               )
+           ) {
+                $month    = gmdate('m', strtotime($meta['start_date']));
+                $day    = gmdate('d', strtotime($meta['start_date']));
+                if ($freq == 'YEARLY') {
+                    $icalEvent    .="BYMONTH=$month;";
+                }
+                $icalEvent    .="BYMONTHDAY=$day;";
+            }elseif ($freq == 'MONTHLY' || $freq == 'WEEKLY') {
+                $weeks             = $meta['repeat']['weeks'];
+                $weekDays         = $meta['repeat']['weekdays'];
+                if (is_array($weeks)) {
+                    $icalEvent    .="BYDAY=";
 
-						if($freq == 'MONTHLY'){
-							//number of the week in the month
-							$icalEvent	.= TSJIPPY\numberToWords($week);
-						}
+                    foreach ($weeks as $index=>$week) {
+                        if ($index>0) {
+                            $icalEvent    .=",";
+                        }
 
-						//add the first two letters of the weekday of the start_date as capitals (FR)
-						if(empty($weekDays[$index])){
-							$icalEvent	.= strtoupper(substr(gmdate('D', strtotime($meta['start_date'])), 0, 2));
-						//add the first two letters as capitals (FR)
-						}else{
-							$icalEvent	.= strtoupper(substr($weekDays[$index], 0, 2));
-						}
-					}
+                        if ($freq == 'MONTHLY') {
+                            //number of the week in the month
+                            $icalEvent    .= TSJIPPY\numberToWords($week);
+                        }
 
-					$icalEvent	.=";";
-				}
-			}
+                        //add the first two letters of the weekday of the start_date as capitals (FR)
+                        if (empty($weekDays[$index])) {
+                            $icalEvent    .= strtoupper(substr(gmdate('D', strtotime($meta['start_date'])), 0, 2));
+                        //add the first two letters as capitals (FR)
+                        }else{
+                            $icalEvent    .= strtoupper(substr($weekDays[$index], 0, 2));
+                        }
+                    }
 
-			if(!empty($meta['repeat']['end_date'])){
-				$endDate		 = gmdate($this->icalFormat,strtotime($meta['repeat']['end_date']));
-				$icalEvent		.="UNTIL=$endDate;";
-			}elseif(is_numeric($meta['repeat']['amount'])){
-				$icalEvent		.="COUNT={$meta['repeat']['amount']};";
-			}
+                    $icalEvent    .=";";
+                }
+            }
 
-			$icalEvent	.="\r\n";
+            if (!empty($meta['repeat']['end_date'])) {
+                $endDate         = gmdate($this->icalFormat,strtotime($meta['repeat']['end_date']));
+                $icalEvent        .="UNTIL=$endDate;";
+            }elseif (is_numeric($meta['repeat']['amount'])) {
+                $icalEvent        .="COUNT={$meta['repeat']['amount']};";
+            }
 
-			if(!empty($meta['repeat']['excludedates'])){
-				$excludeDates		= $meta['repeat']['excludedates'];
-				array_filter($excludeDates);
-				if(!empty($excludeDates)){
-					$icalEvent	.="EXDATE:";
-					
-					foreach($excludeDates as $i=>$exdate){
-						if($i>0){
-							$icalEvent	.= ',';
-						}
-						$icalEvent	.= gmdate($this->icalFormat, strtotime($exdate));
-					}
-					$icalEvent	.= "\r\n";
-				}
-			}
-		}
+            $icalEvent    .="\r\n";
 
-		return $icalEvent;
-	}
+            if (!empty($meta['repeat']['excludedates'])) {
+                $excludeDates        = $meta['repeat']['excludedates'];
+                array_filter($excludeDates);
+                if (!empty($excludeDates)) {
+                    $icalEvent    .="EXDATE:";
 
-	public function addIcalCustomDates($meta, $start, $end, $uid, $icalEvent){
-		//copy the event for each includes date
-		$extraIcalEvents	= '';
-		foreach($meta['repeat']['includedates'] as $date){
-			$extraIcalEvents	.= "END:VEVENT\r\n";
-			$newStart			 = gmdate($this->icalFormat, strtotime("$date ".$meta['start_time']));
-			$newEnd			 	 = gmdate($this->icalFormat, strtotime("$date ".$meta['end_time']));
-			$newStart			 = "DTSTART:$newStart\r\n";
-			$newEnd			 	 = "DTEND:$newEnd\r\n";
-	
-			$newUid			 = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
-	
-			$extraIcalEvents 	.= str_replace([$start, $end, $uid], [$newStart, $newEnd, $newUid], $icalEvent);
-		}
-	
-		return $extraIcalEvents;
-	}
+                    foreach ($excludeDates as $i=>$exdate) {
+                        if ($i>0) {
+                            $icalEvent    .= ',';
+                        }
+                        $icalEvent    .= gmdate($this->icalFormat, strtotime($exdate));
+                    }
+                    $icalEvent    .= "\r\n";
+                }
+            }
+        }
+
+        return $icalEvent;
+    }
+
+    public function addIcalCustomDates($meta, $start, $end, $uid, $icalEvent) {
+        //copy the event for each includes date
+        $extraIcalEvents    = '';
+        foreach ($meta['repeat']['includedates'] as $date) {
+            $extraIcalEvents    .= "END:VEVENT\r\n";
+            $newStart             = gmdate($this->icalFormat, strtotime("$date " .$meta['start_time']));
+            $newEnd                  = gmdate($this->icalFormat, strtotime("$date " .$meta['end_time']));
+            $newStart             = "DTSTART:$newStart\r\n";
+            $newEnd                  = "DTEND:$newEnd\r\n";
+
+            $newUid             = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
+
+            $extraIcalEvents     .= str_replace([$start, $end, $uid], [$newStart, $newEnd, $newUid], $icalEvent);
+        }
+
+        return $extraIcalEvents;
+    }
 }

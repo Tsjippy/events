@@ -2,87 +2,87 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_action( 'rest_api_init', __NAMESPACE__.'\restApiInit' );
+add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
 function restApiInit() {
-	// Month calendar
-	register_rest_route(
-		RESTAPIPREFIX.'/events',
-		'/get_month_html',
-		array(
-			'methods' 				=> 'POST',
-			'callback' 				=> function(){
-				$events		= new DisplayEvents();
-				return $events->monthCalendar();
-			},
-			'permission_callback' 	=> '__return_true',				// Allow public access
-			'args'					=> array(
-				'month'		=> array(
-					'required'	=> true,
-					'validate_callback' => function($param) {
-						return is_numeric( $param );
-					}
-				),
-				'year'		=> array(
-					'required'	=> true,
-					'validate_callback' => function($param) {
-						return is_numeric( $param );
-					}
-				),
-			)
-		)
-	);
+    // Month calendar
+    register_rest_route(
+        RESTAPIPREFIX. '/events',
+        '/get_month_html',
+        array(
+            'methods'                 => 'POST',
+            'callback'                 => function () {
+                $events        = new DisplayEvents();
+                return $events->monthCalendar();
+            },
+            'permission_callback'     => '__return_true',                // Allow public access
+            'args'                    => array(
+                'month'        => array(
+                    'required'    => true,
+                    'validate_callback' => function ($param) {
+                        return is_numeric($param);
+                    }
+               ),
+                'year'        => array(
+                    'required'    => true,
+                    'validate_callback' => function ($param) {
+                        return is_numeric($param);
+                    }
+               ),
+           )
+       )
+   );
 
-	// Week calendar
-	register_rest_route(
-		RESTAPIPREFIX.'/events',
-		'/get_week_html',
-		array(
-			'methods' 				=> 'POST',
-			'callback' 				=> function (){
-				$events		= new DisplayEvents();
-				return $events->weekCalendar();
-			},
-			'permission_callback' 	=> '__return_true',				// Allow public access
-			'args'					=> array(
-				'wknr'		=> array(
-					'required'	=> true,
-					'validate_callback' => function($weekNr){
-						return is_numeric($weekNr);
-					}
-				),
-				'year'		=> array(
-					'required'	=> true,
-					'validate_callback' => function($year){
-						return is_numeric($year);
-					}
-				),
-			)
-		)
-	);
+    // Week calendar
+    register_rest_route(
+        RESTAPIPREFIX. '/events',
+        '/get_week_html',
+        array(
+            'methods'                 => 'POST',
+            'callback'                 => function () {
+                $events        = new DisplayEvents();
+                return $events->weekCalendar();
+            },
+            'permission_callback'     => '__return_true',                // Allow public access
+            'args'                    => array(
+                'wknr'        => array(
+                    'required'    => true,
+                    'validate_callback' => function ($weekNr) {
+                        return is_numeric($weekNr);
+                    }
+               ),
+                'year'        => array(
+                    'required'    => true,
+                    'validate_callback' => function ($year) {
+                        return is_numeric($year);
+                    }
+               ),
+           )
+       )
+   );
 
-	// List calendar
-	register_rest_route(
-		RESTAPIPREFIX.'/events',
-		'/get_list_html',
-		array(
-			'methods' 				=> 'POST,GET',
-			'callback' 				=> function(){
-				$events		= new DisplayEvents();
-				return $events->listCalendar();
-			},
-			'permission_callback' 	=> '__return_true',				// Allow public access
-			'args'					=> array(
-				'offset'		=> array(
-					'required'	=> true,
-					'validate_callback' => function($offset){
-						return is_numeric($offset);
-					}
-				),
-			)
-		)
-	);
+    // List calendar
+    register_rest_route(
+        RESTAPIPREFIX. '/events',
+        '/get_list_html',
+        array(
+            'methods'                 => 'POST,GET',
+            'callback'                 => function () {
+                $events        = new DisplayEvents();
+                return $events->listCalendar();
+            },
+            'permission_callback'     => '__return_true',                // Allow public access
+            'args'                    => array(
+                'offset'        => array(
+                    'required'    => true,
+                    'validate_callback' => function ($offset) {
+                        return is_numeric($offset);
+                    }
+               ),
+           )
+       )
+   );
 }

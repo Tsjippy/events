@@ -6,23 +6,23 @@ use TSJIPPY\ADMIN;
 use function TSJIPPY\addElement;
 use function TSJIPPY\addRawHtml;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
 class AdminMenu extends ADMIN\SubAdminMenu{
 
     /**
      * AdminMenu constructor.
-     * 
+     *
      * @param array $settings The settings for the plugin
      * @param string $name The name of the plugin
      */
-    public function __construct($settings, $name){
+    public function __construct($settings, $name) {
         parent::__construct($settings, $name);
     }
 
-    public function settings($parent){
+    public function settings($parent) {
         $this->recurrenceSelector('freq', $this->settings['freq'] ?? '', 'How often should we check for expired events?', $parent);
 
         addElement('br', $parent);
@@ -31,7 +31,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
 
         $select = addElement('select', $parent, ['name' => 'max-age']);
 
-        $strings	= [
+        $strings    = [
             '1 day',
             '1 week',
             '1 month',
@@ -40,16 +40,16 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         ];
 
         $maxAge     = $this->settings["max-age"] ?? '';
-        foreach($strings as $string){
+        foreach ($strings as $string) {
             addElement(
-                'option', 
-                $select, 
+                'option',
+                $select,
                 [
                     'value'     => $string,
                     'selected'  => $string == $maxAge ? 'selected' : ''
                 ],
                 $string
-            );
+           );
         }
 
         addElement('br', $parent);
@@ -67,54 +67,54 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         return true;
     }
 
-    public function emails($parent){
+    public function emails($parent) {
         return false;
     }
 
-    public function data($parent=''){
-        $family					= new TSJIPPY\FAMILY\Family();
+    public function data($parent='') {
+        $family                    = new TSJIPPY\FAMILY\Family();
 
         /**
          * Get all aniversary events
          */
         $posts = get_posts(
             array(
-                'post_type'		=> 'event',
-                'numberposts'	=> -1,
+                'post_type'        => 'event',
+                'numberposts'    => -1,
                 'tax_query'     => [
                     [
                         'taxonomy'          => 'events',
-                        'field'             => 'slug', 
+                        'field'             => 'slug',
                         'terms'             => 'anniversary',
                         'include_children'  => true
                     ]
                 ]
-            )
-        );
+           )
+       );
 
         $anniversaryRows    = [];
         $weddingRows        = [];
         $birthdayRows       = [];
 
-        foreach($posts as $post){
+        foreach ($posts as $post) {
             $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
 
             $author     = get_user_by('id', $post->post_author);
-            if(!$author){
+            if (!$author) {
                 wp_delete_post($post->ID);
                 continue;
             }
 
-            if ( !empty($celDate)){
+            if ( !empty($celDate)) {
                 $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
 
                 $arrivalDate    = get_user_meta($post->post_author, 'arrival_date', true);
-                if(!empty($arrivalDate)){
+                if (!empty($arrivalDate)) {
                     $arrivalDate    = gmdate(DATEFORMAT, strtotime($arrivalDate));
                 }
-                if($celDate != $arrivalDate){
+                if ($celDate != $arrivalDate) {
                     // this is a rogue event
-                    if( get_user_meta($post->post_author, 'SIM Nigeria anniversary_event_id', true) != $post->ID ){
+                    if ( get_user_meta($post->post_author, 'SIM Nigeria anniversary_event_id', true) != $post->ID) {
                         wp_delete_post($post->ID);
                     }else{
 
@@ -129,9 +129,9 @@ class AdminMenu extends ADMIN\SubAdminMenu{
 
                 $weddingDate    = $family->getWeddingDate($post->post_author);
                 $weddingDate    = gmdate(DATEFORMAT, strtotime($weddingDate));
-                if( $celDate != $weddingDate){
+                if ( $celDate != $weddingDate) {
                     // this is a rogue event
-                    if( get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID ){
+                    if ( get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID) {
                         wp_delete_post($post->ID);
                     }else{
 
@@ -151,76 +151,76 @@ class AdminMenu extends ADMIN\SubAdminMenu{
          */
         $posts = get_posts(
             array(
-                'post_type'		=> 'event',
-                'numberposts'	=> -1,
+                'post_type'        => 'event',
+                'numberposts'    => -1,
                 'tax_query'     => [
                     [
                         'taxonomy'          => 'events',
-                        'field'             => 'slug', 
+                        'field'             => 'slug',
                         'terms'             => 'birthday',
                         'include_children'  => true
                     ]
                 ]
-            )
-        );
+           )
+       );
 
-        foreach($posts as $post){
-            if(get_user_meta($post->post_author, 'birthday_event_id', true) != $post->ID){
+        foreach ($posts as $post) {
+            if (get_user_meta($post->post_author, 'birthday_event_id', true) != $post->ID) {
                 wp_delete_post($post->ID);
                 continue;
             }
 
             $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
-            if(!empty($celDate)){
+            if (!empty($celDate)) {
                 $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
             }
 
             $author     = get_user_by('id', $post->post_author);
-            if(!$author){
+            if (!$author) {
                 wp_delete_post($post->ID);
                 continue;
             }
 
-            if (!empty($celDate)){
+            if (!empty($celDate)) {
                 $birthday   = get_user_meta($post->post_author, 'birthday', true);
-                if(!empty($birthday)){
+                if (!empty($birthday)) {
                     $birthday    = gmdate(DATEFORMAT, strtotime($birthday));
                 }
 
-                if($celDate != $birthday){
+                if ($celDate != $birthday) {
                     $birthdayRows[]  = [
                         $author,
                         $celDate,
                         $birthday,
                         $post->ID
-                    ];               
-                }            
+                    ];
+                }
             }
         }
 
         ob_start();
 
-        if(!empty($anniversaryRows)){
+        if (!empty($anniversaryRows)) {
             ?>
             <h4>SIM Anniversaries</h4>
             <?php
             $this->tableBody($anniversaryRows);
         }
 
-        if(!empty($weddingRows)){
+        if (!empty($weddingRows)) {
             ?>
             <h4>Wedding Anniversaries</h4>
             <?php
             $this->tableBody($weddingRows);
         }
 
-        if(!empty($birthdayRows)){
+        if (!empty($birthdayRows)) {
             ?>
             <h4>Birthdays</h4>
             <?php
             $this->tableBody($birthdayRows);
         }
-    
+
         ?>
         <h4>Missing Events</h4>
         <table class='tsjippy table'>
@@ -230,8 +230,8 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             </thead>
             <tbody>
                 <?php
-                foreach(get_users() as $user){
-                    if(empty(get_user_meta($user->ID, 'birthday_event_id', true))){
+                foreach (get_users() as $user) {
+                    if (empty(get_user_meta($user->ID, 'birthday_event_id', true))) {
                         ?>
                         <tr>
                             <td>Birthdays</td>
@@ -244,7 +244,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                         <?php
                     }
 
-                    if(empty(get_user_meta($user->ID, SITENAME.' anniversary_event_id', true))){
+                    if (empty(get_user_meta($user->ID, SITENAME. ' anniversary_event_id', true))) {
                         ?>
                         <tr>
                             <td>Anniversary</td>
@@ -257,7 +257,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
                         <?php
                     }
 
-                    if($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))){
+                    if ($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))) {
                         ?>
                         <tr>
                             <td>Wedding</td>
@@ -276,7 +276,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
 
         <?php
 
-        if(empty($parent)){
+        if (empty($parent)) {
             return ob_get_clean();
         }
 
@@ -285,7 +285,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         return true;
     }
 
-    private function tableBody($data){
+    private function tableBody($data) {
         ?>
         <table class='tsjippy table'>
             <thead>
@@ -296,18 +296,18 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             </thead>
             <tbody>
                 <?php
-                foreach($data as $row){
+                foreach ($data as $row) {
                     ?>
                     <tr>
                         <?php
-                        foreach($row as $index=>$d){
-                            if($index == 0){
+                        foreach ($row as $index=>$d) {
+                            if ($index == 0) {
                                 ?>
                                 <td>
                                     <?php echo esc_attr($d->display_name); ?>
                                 </td>
                                 <?php
-                            }elseif($index == 1 || $index == 2){
+                            }elseif ($index == 1 || $index == 2) {
                                 ?>
                                 <td>
                                     <?php echo esc_attr($d); ?>
@@ -333,34 +333,41 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         <?php
     }
 
-    public function functions($parent){
+    public function functions($parent) {
         global $wpdb;
 
         $events     = new Events();
-    
+
         /**
          * Get events of which the author account no longer exists
          */
-        $query  	= "SELECT * FROM %i as events INNER JOIN %i as posts ON post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)";
-
-        $orphans	= $wpdb->get_results(
-            $wpdb->prepare($query, [$events->tableName, $wpdb->posts, $wpdb->users])
-        );
+        $orphans    = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM %i as events INNER JOIN %i as posts ON post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)",
+                $events->tableName,
+                $wpdb->posts,
+                $wpdb->users
+           )
+       );
 
         /**
          * Get events of which the post no longer exists
          */
-        $query  	= "SELECT * FROM %i WHERE post_id NOT IN (SELECT ID FROM %i)";
-
-        $orphans	= array_merge(
-            $wpdb->get_results($wpdb->prepare($query, [$events->tableName, $wpdb->posts])), 
+        $orphans    = array_merge(
+            $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM %i WHERE post_id NOT IN (SELECT ID FROM %i)",
+                    $events->tableName,
+                    $wpdb->posts
+               )
+           ),
             $orphans
-        );
+       );
 
-        if(empty($orphans)){
+        if (empty($orphans)) {
             return false;
         }
-        
+
         ob_start();
         ?>
         <h4>Orphan events</h4>
@@ -377,7 +384,7 @@ class AdminMenu extends ADMIN\SubAdminMenu{
             </thead>
             <tbody>
                 <?php
-                foreach($orphans as $orphan){
+                foreach ($orphans as $orphan) {
                     ?>
                     <tr>
                         <th><?php echo esc_attr($orphan->post_title);?></th>
@@ -401,17 +408,23 @@ class AdminMenu extends ADMIN\SubAdminMenu{
         return true;
     }
 
-    public function postActions(){
+    public function postActions() {
 
-        if(isset($_POST['delete-orphans'])){
+        if (isset($_POST['delete-orphans'])) {
             global $wpdb;
 
             $events = new Events();
-            $query  	= "DELETE %i FROM %i as events INNER JOIN $wpdb->posts as posts ON events.post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)";
 
-            $wpdb->query($wpdb->prepare($query, $events->tableName, $events->tableName, $wpdb->users));
+            $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE %i FROM %i as events INNER JOIN $wpdb->posts as posts ON events.post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)",
+                    $events->tableName,
+                    $events->tableName,
+                    $wpdb->users
+               )
+           );
 
-            return "Succesfully deleted $wpdb->rows_affected orphan events.";
+            return "Succesfully deleted $wpdb->rows_affected orphan events. ";
         }
 
         return '';
@@ -421,14 +434,14 @@ class AdminMenu extends ADMIN\SubAdminMenu{
      * Schedules the tasks for this plugin
      *
     */
-    public function postSettingsSave(){
+    public function postSettingsSave() {
         TSJIPPY\scheduleTask('anniversary_check_action', 'daily');
         TSJIPPY\scheduleTask('remove_old_schedules_action', 'daily');
         TSJIPPY\scheduleTask('add_repeated_events_action', 'yearly');
 
         $freq   = SETTINGS['freq'] ?? false;
 
-        if($freq){
+        if ($freq) {
             TSJIPPY\scheduleTask('remove_old_events_action', $freq);
         }
     }

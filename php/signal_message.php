@@ -2,130 +2,130 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if ( ! defined('ABSPATH')) {
+    exit;
 }
 
-add_filter('tsjippy_after_bot_payer', __NAMESPACE__.'\afterBotPrayer');
-function afterBotPrayer($args){
-	$family	= new TSJIPPY\FAMILY\Family();
+add_filter('tsjippy_after_bot_payer', __NAMESPACE__ . '\afterBotPrayer');
+function afterBotPrayer($args) {
+    $family    = new TSJIPPY\FAMILY\Family();
 
     // calendar events
-    $events		= new DisplayEvents();
+    $events        = new DisplayEvents();
 
-	// add normal events
+    // add normal events
     $events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
-    foreach($events->events as $event){
-        $startYear	= get_post_meta($event->ID, 'celebrationdate', true);
+    foreach ($events->events as $event) {
+        $startYear    = get_post_meta($event->ID, 'celebrationdate', true);
 
         //only add events which are not a celebration and start today after curent time
-        if(empty($startYear) && $event->start_date == gmdate('Y-m-d') && $event->start_time > gmdate('H:i', current_time('U'))){
-            $args['message']    .= "\n\n".$event->post_title.' starts today at '.$event->start_time;
-            if(!empty($event->location)){
+        if (empty($startYear) && $event->start_date == gmdate('Y-m-d') && $event->start_time > gmdate('H:i', current_time('U'))) {
+            $args['message']    .= "\n\n" .$event->post_title. ' starts today at ' .$event->start_time;
+            if (!empty($event->location)) {
                 $args['message']    .= "\nIt takes place at $event->location";
             }
-            $args['urls'][]	    = get_permalink($event->ID);
+            $args['urls'][]        = get_permalink($event->ID);
         }
     }
 
     // add aniversaries
-	$anniversaryMessages = getAnniversaries();
+    $anniversaryMessages = getAnniversaries();
 
-	//If there are anniversaries
-	if(!empty($anniversaryMessages)){
-		$args['message'] .= "\n\nToday is the ";
+    //If there are anniversaries
+    if (!empty($anniversaryMessages)) {
+        $args['message'] .= "\n\nToday is the ";
 
-		$messageString	= '';
+        $messageString    = '';
 
-		//Loop over the anniversary_messages
-		foreach($anniversaryMessages as $userId=>$msg){
-			$msg	        = html_entity_decode($msg);
+        //Loop over the anniversary_messages
+        foreach ($anniversaryMessages as $userId=>$msg) {
+            $msg            = html_entity_decode($msg);
 
-			$userdata		= get_userdata($userId);
+            $userdata        = get_userdata($userId);
 
-			// user does not exist
-			if(!$userdata){
-				continue;
-			}
+            // user does not exist
+            if (!$userdata) {
+                continue;
+            }
 
             // Add to the message
-			if(!empty($messageString)){
-				$messageString .= " and the ";
-			}
+            if (!empty($messageString)) {
+                $messageString .= " and the ";
+            }
 
-			$coupleString	= getCoupleString($userdata);
+            $coupleString    = getCoupleString($userdata);
 
-			$msg	        = replaceCoupleString($msg, "of $coupleString", $userdata);
+            $msg            = replaceCoupleString($msg, "of $coupleString", $userdata);
 
-			$msg	        = str_replace($userdata->display_name, "of {$userdata->display_name}", $msg);
+            $msg            = str_replace($userdata->display_name, "of {$userdata->display_name}", $msg);
 
-			$messageString .= $msg;
+            $messageString .= $msg;
 
             // User page url
-			$url			= TSJIPPY\maybeGetUserPageUrl($userId);
-			if($url){
-				$args['urls'][]	= str_replace('https://', '', $url);
-			}
+            $url            = TSJIPPY\maybeGetUserPageUrl($userId);
+            if ($url) {
+                $args['urls'][]    = str_replace('https://', '', $url);
+            }
 
             // add appropriate picture
-			if(str_contains($msg, '&')){
-				$family	= new TSJIPPY\FAMILY\Family();
-				$picture	= $family->getFamilyMeta($userId, 'family_picture');
+            if (str_contains($msg, '&')) {
+                $family    = new TSJIPPY\FAMILY\Family();
+                $picture    = $family->getFamilyMeta($userId, 'family_picture');
 
-				if(is_numeric($picture)){
+                if (is_numeric($picture)) {
                     $args['pictures'][] = get_attached_file($picture);
-				}
-			}else{
-                $profilePicture	= get_user_meta($userId, 'profile_picture', true);
-                if(is_array($profilePicture) && isset($profilePicture[0])){
+                }
+            }else{
+                $profilePicture    = get_user_meta($userId, 'profile_picture', true);
+                if (is_array($profilePicture) && isset($profilePicture[0])) {
                     $args['pictures'][] = get_attached_file($profilePicture[0]);
-                }elseif(is_numeric($profilePicture)){
-					$args['pictures'][] = get_attached_file($profilePicture);
-				}
+                }elseif (is_numeric($profilePicture)) {
+                    $args['pictures'][] = get_attached_file($profilePicture);
+                }
             }
-		}
-		$args['message'] .= $messageString.'.';
-	}
+        }
+        $args['message'] .= $messageString. ' . ';
+    }
 
-	$arrivalUsers = getArrivingUsers();
-	
-	//If there are arrivals
-	if(!empty($arrivalUsers)){
-		if(count($arrivalUsers) == 1){
-			$args['message'] 	.= "\n\n".$arrivalUsers[0]->display_name." arrives today.";
-			$args['urls'][]		= str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID))."\n";
-		}else{
-			$args['message'] .= "\n\nToday the following people will arrive: ";
+    $arrivalUsers = getArrivingUsers();
 
-			//Loop over the arrival_users to find any families
-			$skip	= [];
-			foreach($arrivalUsers as $user){
-				if(in_array($user->ID, $skip)){
-					continue;
-				}
+    //If there are arrivals
+    if (!empty($arrivalUsers)) {
+        if (count($arrivalUsers) == 1) {
+            $args['message']     .= "\n\n" .$arrivalUsers[0]->display_name. " arrives today. ";
+            $args['urls'][]        = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID)). "\n";
+        }else{
+            $args['message'] .= "\n\nToday the following people will arrive: ";
 
-				$name		= $family->getFamilyName($user, false, $partnerId);
+            //Loop over the arrival_users to find any families
+            $skip    = [];
+            foreach ($arrivalUsers as $user) {
+                if (in_array($user->ID, $skip)) {
+                    continue;
+                }
 
-				if($partnerId){
-					$skip[]		= $partnerId;
+                $name        = $family->getFamilyName($user, false, $partnerId);
 
-                    $picture	= $family->getFamilyMeta($userId, 'family_picture');
+                if ($partnerId) {
+                    $skip[]        = $partnerId;
 
-                    if($picture){
+                    $picture    = $family->getFamilyMeta($userId, 'family_picture');
+
+                    if ($picture) {
                         $args['pictures'][] = get_attached_file($picture);
                     }
-				}else{
-                    $profilePicture	= get_user_meta($user->ID, 'profile_picture', true);
-                    if(isset($profilePicture[0])){
+                }else{
+                    $profilePicture    = get_user_meta($user->ID, 'profile_picture', true);
+                    if (isset($profilePicture[0])) {
                         $args['pictures'][] = get_attached_file($profilePicture[0]);
                     }
                 }
 
-				$args['message'] 	.= "$name\n";
-				$args['urls'][] 	= str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($user->ID));
-			}
-		}
-	}
+                $args['message']     .= "$name\n";
+                $args['urls'][]     = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($user->ID));
+            }
+        }
+    }
 
-	return $args;
+    return $args;
 }

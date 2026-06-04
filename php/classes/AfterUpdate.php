@@ -2,14 +2,14 @@
 namespace TSJIPPY\EVENTS;
 use TSJIPPY;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined('ABSPATH')) exit;
 
 class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
 
-    public function afterPluginUpdate($oldVersion){
+    public function afterPluginUpdate($oldVersion) {
         global $wpdb;
 
-        if(version_compare($oldVersion, '10.0.3') === 1){
+        if (version_compare($oldVersion, '10.0.3') === 1) {
             /**
              * Rename tables to tsjippy_
              */
@@ -20,7 +20,7 @@ class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
                 RENAME COLUMN `starttime` to `start_time`,
                 RENAME COLUMN `endtime` to `end_time`,
                 RENAME COLUMN `onlyfor` to `only_for`;"
-            );
+           );
 
             $wpdb->query(
                 "ALTER TABLE `{$wpdb->prefix}tsjippy_schedules`
@@ -29,7 +29,7 @@ class AfterUpdate extends TSJIPPY\AfterPluginUpdate {
                 RENAME COLUMN `starttime` to `start_time`,
                 RENAME COLUMN `endtime` to `end_time`,
                 RENAME COLUMN `hidenames` to `hide_names`;"
-            );
+           );
         }
     }
 }
