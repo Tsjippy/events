@@ -615,7 +615,7 @@ class DisplayEvents extends Events
 
         $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH . 'pictures');
 
-        //$detailHtml .= "<div class='event-details-wrapper hidden' data-date='" .gmdate('Ymd', strtotime($event->start_date)). "' data-start_time='{$event->start_time}'>";
+        //$detailHtml .= "<div class='event-details-wrapper hidden' data-date='".gmdate('Ymd', strtotime($event->start_date)). "' data-start_time='{$event->start_time}'>";
         $wrapper    = TSJIPPY\addElement('div', $details, ['class' => "event-details-wrapper $hidden", 'data-date' => gmdate('Ymd', $workingDate)]);
         $heading    = TSJIPPY\addElement('h6', $wrapper, ['class' => 'event-title'], "Events for ");
         TSJIPPY\addElement('span', $heading, ['class' => 'day'], gmdate('j', $workingDate) . "st");

@@ -1504,7 +1504,7 @@ class Schedules
             <br>
             <br>
 
-            <button type='button' class="button small" onClick='event.target.closest("form").querySelector(" .advanced-wrapper").classList.toggle("hidden")'>Advanced Options</button>
+            <button type='button' class="button small" onClick='event.target.closest("form").querySelector(".advanced-wrapper").classList.toggle("hidden")'>Advanced Options</button>
             <div class="advanced-wrapper hidden">
                 <label>
                     <h4>Privacy</h4>

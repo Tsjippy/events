@@ -61,7 +61,7 @@ function trashPost($postId)
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
 function loadAssets()
 {
-    if (str_contains($_SERVER['REQUEST_URI'], ' .map')) {
+    if (str_contains($_SERVER['REQUEST_URI'], '.map')) {
         return;
     }
 
