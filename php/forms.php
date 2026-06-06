@@ -11,7 +11,7 @@ if (! defined('ABSPATH')) {
 // Add meta keys to store in family meta table
 add_filter('tsjippy-family-meta-keys', function ($metaKeys) {
     $metaKeys[] = 'Wedding anniversary_event_id';
-    $metaKeys[] = SITENAME . ' anniversary_event_id';
+    $metaKeys[] = TSJIPPY\SITENAME . ' anniversary_event_id';
 
     return $metaKeys;
 });
@@ -23,7 +23,7 @@ function beforeSavingFormData($submission, $object)
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
         $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), $_POST['birthday']);
-        $events->createCelebrationEvent(SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), $_POST['arrival-date']);
+        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), $_POST['arrival-date']);
     }
 
     if ($object->formData->slug == 'user_family') {

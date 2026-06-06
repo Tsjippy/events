@@ -161,7 +161,7 @@ class DisplayEvents extends Events
             <?php
             }
             ?>
-            <a class='calendar button' href="<?php echo esc_url(SITEURL); ?>/events" class="button tsjippy">
+            <a class='calendar button' href="<?php echo esc_url(TSJIPPY\SITEURL); ?>/events" class="button tsjippy">
                 Calendar
             </a>
         </div>
@@ -233,9 +233,9 @@ class DisplayEvents extends Events
             $event->end_date    = $event->start_date;
         }
         if ($event->start_date != $event->end_date) {
-            $date        = gmdate(DATEFORMAT, strtotime($event->start_date)) . ' - ' . gmdate(DATEFORMAT, strtotime($event->end_date));
+            $date        = gmdate(TSJIPPY\DATEFORMAT, strtotime($event->start_date)) . ' - ' . gmdate(TSJIPPY\DATEFORMAT, strtotime($event->end_date));
         } else {
-            $date        = gmdate(DATEFORMAT, strtotime($event->start_date));
+            $date        = gmdate(TSJIPPY\DATEFORMAT, strtotime($event->start_date));
         }
 
         return $date;
@@ -257,7 +257,7 @@ class DisplayEvents extends Events
                 $time            = $event->start_time . ' - ' . $event->end_time;
             }
         } else {
-            $time            = gmdate(DATEFORMAT, strtotime($event->start_date)) . ' - ' . $event->start_time . ' - ' . gmdate(DATEFORMAT, strtotime($event->end_date)) . ' - ' . $event->end_time;
+            $time            = gmdate(TSJIPPY\DATEFORMAT, strtotime($event->start_date)) . ' - ' . $event->start_time . ' - ' . gmdate(TSJIPPY\DATEFORMAT, strtotime($event->end_date)) . ' - ' . $event->end_time;
         }
 
         return $time;
@@ -375,7 +375,7 @@ class DisplayEvents extends Events
         }
 
         $title            = urlencode($event->post_title);
-        $description    = urlencode("<a href='" . get_permalink($event->post_id) . "'>Read more on " . SITEURLWITHOUTSCHEME . "</a>");
+        $description    = urlencode("<a href='" . get_permalink($event->post_id) . "'>Read more on " . TSJIPPY\SITEURLWITHOUTSCHEME . "</a>");
         $location        = urlencode($event->location);
         $startDate        = gmdate('Ymd', strtotime($event->start_date));
         $endDate        = gmdate('Ymd', strtotime($event->end_date));
@@ -388,7 +388,7 @@ class DisplayEvents extends Events
             $enddt        = $endDate . "T" . gmdate('His', strtotime($event->end_time)) . 'Z';
         }
 
-        $gmail            = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=$title&dates={$startdt}/{$enddt}&details={$description}&location={$location}&ctz=Africa/Lagos&sprop=website:" . SITEURLWITHOUTSCHEME . "&sprop=name:TSJIPPY";
+        $gmail            = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=$title&dates={$startdt}/{$enddt}&details={$description}&location={$location}&ctz=Africa/Lagos&sprop=website:" . TSJIPPY\SITEURLWITHOUTSCHEME . "&sprop=name:TSJIPPY";
         if (!empty($eventMeta['isrepeated'])) {
             $gmail        .= "&recur=RRULE:FREQ=" . strtoupper($eventMeta['repeat']['type']) . ";INTERVAL=" . $eventMeta['repeat']['interval'] . ';';
             $weeks         = $eventMeta['repeat']['weeks'];

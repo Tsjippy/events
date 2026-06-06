@@ -66,15 +66,15 @@ function showCalendar()
         <div id='calendaraddingoptions' class='hidden'>
             <p>
                 To add the calendar to your outlook calendar go to <a href='https://outlook.office.com/calendar/addcalendar' target="_blank">outlook.office.com/mail</a>.<br>
-                Then add <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code> in the 'subscribe via internet' screen
+                Then add <code class='calendarurl'>webcal://<?php echo esc_url(TSJIPPY\SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code> in the 'subscribe via internet' screen
             </p>
             <p>
                 To add the calendar to your gmail calendar go to <a href='https://calendar.google.com/calendar/u/1/r/settings/addbyurl' target="_blank">calendar.google.com</a>.<br>
-                Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code>.
+                Then paste this url in the agenda-url field <code class='calendarurl'>webcal://<?php echo esc_url(TSJIPPY\SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code>.
             </p>
             <p>
                 To add the calendar to outlook click on 'open agenda'->'from the internet' .<br>
-                Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo esc_url(SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code>.
+                Then paste this url in the agenda field <code class='calendarurl'>webcal://<?php echo esc_url(TSJIPPY\SITEURLWITHOUTSCHEME); ?>/public_calendar/tsjippy_events.ics?id=<?php echo esc_attr(get_current_user_id()); ?></code>.
             </p>
         </div>
         <div class="search-form">

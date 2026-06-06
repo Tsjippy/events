@@ -9,7 +9,7 @@ function blockRestApiInit()
 {
     // show schedules
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/show_schedules',
         array(
             'methods'                 => 'GET',
@@ -22,7 +22,7 @@ function blockRestApiInit()
 
     // show upcoming arrivals
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/upcoming_arrivals',
         array(
             'methods'                 => 'POST',
@@ -35,7 +35,7 @@ function blockRestApiInit()
 
     // Upcoming events
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/upcoming_events',
         array(
             'methods'                 => 'GET',

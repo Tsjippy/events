@@ -13,7 +13,7 @@ function restApiInit()
 {
     // Month calendar
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/get_month_html',
         array(
             'methods'                 => 'POST',
@@ -41,7 +41,7 @@ function restApiInit()
 
     // Week calendar
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/get_week_html',
         array(
             'methods'                 => 'POST',
@@ -69,7 +69,7 @@ function restApiInit()
 
     // List calendar
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/get_list_html',
         array(
             'methods'                 => 'POST,GET',

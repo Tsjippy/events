@@ -95,7 +95,7 @@ function deleteUser($userId)
         $events->removeDbRows($birthdayPostId);
     }
 
-    $anniversaryId    = get_user_meta($userId, SITENAME . ' anniversary_event_id', true);
+    $anniversaryId    = get_user_meta($userId, TSJIPPY\SITENAME . ' anniversary_event_id', true);
     if (is_numeric($anniversaryId)) {
         $events->removeDbRows($anniversaryId);
     }

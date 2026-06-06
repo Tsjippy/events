@@ -13,7 +13,7 @@ function schedulesRestApiInit()
 {
     //add_schedule
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/add_schedule',
         array(
             'methods'                 => 'POST',
@@ -45,7 +45,7 @@ function schedulesRestApiInit()
 
     //publish_schedule
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/publish_schedule',
         array(
             'methods'                 => 'POST',
@@ -70,7 +70,7 @@ function schedulesRestApiInit()
 
     //remove_schedule
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/remove_schedule',
         array(
             'methods'                 => 'POST',
@@ -95,7 +95,7 @@ function schedulesRestApiInit()
 
     //add_host
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/add_host',
         array(
             'methods'                 => 'POST',
@@ -128,7 +128,7 @@ function schedulesRestApiInit()
 
     //remove_host
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/remove_host',
         array(
             'methods'                 => 'POST',
@@ -152,7 +152,7 @@ function schedulesRestApiInit()
 
     //add_menu
     register_rest_route(
-        RESTAPIPREFIX . '/events',
+        TSJIPPY\RESTAPIPREFIX . '/events',
         '/add_menu',
         array(
             'methods'                 => 'POST',
@@ -205,12 +205,12 @@ function addHost($param)
                 if (!empty($unSuccesFull)) {
                     $unSuccesFull        .= ' and ';
                 }
-                $unSuccesFull    .= gmdate(DATEFORMAT, strtotime($date));
+                $unSuccesFull    .= gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($date));
             } else {
                 if (!empty($succesFull)) {
                     $succesFull        .= ' and ';
                 }
-                $succesFull    .= gmdate(DATEFORMAT, strtotime($date));
+                $succesFull    .= gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($date));
 
                 $html[$date]    = $result['html'];
 

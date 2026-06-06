@@ -352,7 +352,7 @@ class Schedules
                                 $dateStr        = gmdate('d F Y', strtotime($date));
                                 $dateTime        = strtotime($date);
                                 $dayName        = gmdate('l', $dateTime);
-                                $formatedDate    = gmdate(DATEFORMAT, $dateTime);
+                                $formatedDate    = gmdate(TSJIPPY\DATEFORMAT, $dateTime);
                             ?>
                                 <th data-date='<?php echo esc_attr($dateStr); ?>' data-isodate='<?php echo esc_attr($date); ?>'>
                                     <?php echo esc_html($dayName); ?>
@@ -809,7 +809,7 @@ class Schedules
             }
         } else {
             if ($this->mobile) {
-                $dateStr    = gmdate(DATEFORMAT, strtotime($date));
+                $dateStr    = gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
                 $hostId        = get_current_user_id();
 
                 $cellText    = "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
@@ -930,7 +930,7 @@ class Schedules
             $this->nextStartTimes[$date] = $endTime;
         } else {
             if ($this->mobile) {
-                $dateStr    = gmdate(DATEFORMAT, strtotime($date));
+                $dateStr    = gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
                 $hostId        = get_current_user_id();
 
                 $cellText    = "<span class='add-me-as-host' data-date='$dateStr' data-start_time='$startTime' data-host-id='$hostId' data-isodate='$date'>";
@@ -973,7 +973,7 @@ class Schedules
             }
         }
 
-        $label    = gmdate(DATEFORMAT, strtotime($date));
+        $label    = gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
 
         return "<td class='$class' $rowSpan $dataset label='$label'>$cellText</td>";
     }
@@ -1085,7 +1085,7 @@ class Schedules
     {
         $dateTime        = strtotime($date);
         $dayName        = gmdate('l', $dateTime);
-        $formatedDate    = gmdate(DATEFORMAT, $dateTime);
+        $formatedDate    = gmdate(TSJIPPY\DATEFORMAT, $dateTime);
 
         $html     = "<div class='day-wrapper-mobile' data-isodate='$date'>";
         $html     .= "<strong>$dayName $formatedDate</strong><br>";
@@ -1193,7 +1193,7 @@ class Schedules
                         }
 
                         if (!empty($icon)) {
-                            $dateStr    = gmdate(DATEFORMAT, strtotime($date));
+                            $dateStr    = gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
                             $html     .= "<div class='$class' {$data['data']} data-date='$dateStr' data-isodate='$date' style='margin-left: auto;'>";
                             $html     .= $icon;
                             $html     .= "</div>";

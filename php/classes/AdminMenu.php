@@ -113,11 +113,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
             }
 
             if (!empty($celDate)) {
-                $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
 
                 $arrivalDate    = get_user_meta($post->post_author, 'arrival_date', true);
                 if (!empty($arrivalDate)) {
-                    $arrivalDate    = gmdate(DATEFORMAT, strtotime($arrivalDate));
+                    $arrivalDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($arrivalDate));
                 }
                 if ($celDate != $arrivalDate) {
                     // this is a rogue event
@@ -135,7 +135,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 }
 
                 $weddingDate    = $family->getWeddingDate($post->post_author);
-                $weddingDate    = gmdate(DATEFORMAT, strtotime($weddingDate));
+                $weddingDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($weddingDate));
                 if ($celDate != $weddingDate) {
                     // this is a rogue event
                     if (get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID) {
@@ -179,7 +179,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
             $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
             if (!empty($celDate)) {
-                $celDate    = gmdate(DATEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
             }
 
             $author     = get_user_by('id', $post->post_author);
@@ -191,7 +191,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             if (!empty($celDate)) {
                 $birthday   = get_user_meta($post->post_author, 'birthday', true);
                 if (!empty($birthday)) {
-                    $birthday    = gmdate(DATEFORMAT, strtotime($birthday));
+                    $birthday    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($birthday));
                 }
 
                 if ($celDate != $birthday) {
@@ -251,7 +251,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                     <?php
                     }
 
-                    if (empty(get_user_meta($user->ID, SITENAME . ' anniversary_event_id', true))) {
+                    if (empty(get_user_meta($user->ID, TSJIPPY\SITENAME . ' anniversary_event_id', true))) {
                     ?>
                         <tr>
                             <td>Anniversary</td>
