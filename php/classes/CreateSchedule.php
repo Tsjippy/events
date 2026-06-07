@@ -31,11 +31,12 @@ class CreateSchedule extends Schedules
     /**
      * Add a new event to the db
      *
-     * @param    object    $event            the event
+     * @param    object    $event           The event
+     * @param    array     $settings        The event settings
      *
      * @return     array                    Rows html
      */
-    protected function addEventToDb($event)
+    protected function addEventToDb($event, $settings)
     {
         global $wpdb;
 
@@ -50,9 +51,9 @@ class CreateSchedule extends Schedules
 
         $eventId   = $wpdb->insert_id;
 
-        //Create event warning
-        if (isset($_POST['reminders'])) {
-            foreach ($_POST['reminders'] as $minutes) {
+        // Create event warning
+        if (isset($settings['reminders'])) {
+            foreach ($settings['reminders'] as $minutes) {
                 $start    = new \DateTime($event['start_date'] . ' ' . $event['start_time'], new \DateTimeZone(wp_timezone_string()));
 
                 //Warn minutes in advance
@@ -71,20 +72,20 @@ class CreateSchedule extends Schedules
      * @param    bool    $addHostPartner    Whether to add an event for the host partner as well. Default true
      * @param    bool    $addPartner        Whether to add an event for the schedule target partner as well. Default true
      */
-    protected function addScheduleEvents($addHostPartner = true, $addPartner = true)
+    protected function addScheduleEvents($addHostPartner = true, $addPartner = true, $settings = [])
     {
-        $family                            = new TSJIPPY\FAMILY\Family();
+        $family                           = new TSJIPPY\FAMILY\Family();
         $event                            = [];
-        $event['start_date']                = $this->date;
-        $event['start_time']                = $this->startTime;
+        $event['start_date']              = $this->date;
+        $event['start_time']              = $this->startTime;
         $event['end_date']                = $this->date;
         $event['end_time']                = $this->endTime;
         $event['location']                = $this->location;
         $event['organizer-id']            = $this->hostId;
-        if (empty($_POST['others'])) {
+        if (empty($settings['others'])) {
             $event['atendees']            = serialize([]);
         } else {
-            $event['atendees']            = maybe_serialize($_POST['others']);
+            $event['atendees']            = maybe_serialize($settings['others']);
         }
 
         $hostPartner                    = false;
@@ -94,8 +95,8 @@ class CreateSchedule extends Schedules
             } else {
                 $event['organizer']                = get_userdata($this->hostId)->display_name;
             }
-        } elseif (!empty($_POST['host'])) {
-            $event['organizer']                    = $_POST['host'];
+        } elseif (!empty($settings['host'])) {
+            $event['organizer']                    = $settings['host'];
         }
 
         if ($addPartner) {
@@ -105,8 +106,8 @@ class CreateSchedule extends Schedules
         }
 
         //clean title
-        if (!empty($_POST['subject'])) {
-            $title    = sanitize_text_field(wp_unslash($_POST['subject']));
+        if (!empty($settings['subject'])) {
+            $title    = TSJIPPY\sanitize($settings['subject']);
         }
 
         if (!empty($event['organizer']) && empty($this->defaultSubject)) {
@@ -151,8 +152,8 @@ class CreateSchedule extends Schedules
                 ];
         }
 
-        if (!empty($_POST['others']) && is_array($_POST['others'])) {
-            foreach ($_POST['others'] as $attendee) {
+        if (!empty($settings['others']) && is_array($settings['others'])) {
+            foreach ($settings['others'] as $attendee) {
                 $eventArray[] =
                     [
                         'title'        => "Attending $title with {$this->name}",
@@ -161,7 +162,7 @@ class CreateSchedule extends Schedules
             }
         }
 
-        $events    = $this->createPostsAndEvents($eventArray, $event);
+        $events    = $this->createPostsAndEvents($eventArray, $event, $settings);
         extract($events, EXTR_OVERWRITE);
 
         // store the event and post ids in db
@@ -171,9 +172,9 @@ class CreateSchedule extends Schedules
             $this->sessionTableName,
             [
                 'schedule_id'    => $this->scheduleId,
-                'post_ids'        => serialize($postIds),
-                'event_ids'        => serialize($eventIds),
-                'meal'            => $title == 'lunch' || $title == 'dinner'
+                'post_ids'       => serialize($postIds),
+                'event_ids'      => serialize($eventIds),
+                'meal'           => $title == 'lunch' || $title == 'dinner'
             ]
         );
 
@@ -187,19 +188,20 @@ class CreateSchedule extends Schedules
     /**
      * Creates posts and events from an array
      *
-     * @param    array    $eventArray        Array containin a title and a only_for key
-     * @param    object    $event            Object with the event details
+     * @param    array    $eventArray     Array containing a title and a only_for key
+     * @param    object   $event          Object with the event details
+     * @param    array     $settings      The event settings
      *
-     * @return    array                    Array containing the created post and event ids
+     * @return    array                   Array containing the created post and event ids
      */
-    public function createPostsAndEvents($eventArray, $event)
+    public function createPostsAndEvents($eventArray, $event, $settings)
     {
-        $eventIds    = [];
+        $eventIds   = [];
         $postIds    = [];
 
         foreach ($eventArray as $a) {
             $post = array(
-                'post_type'        => 'event',
+                'post_type'     => 'event',
                 'post_title'    => $a['title'],
                 'post_content'  => $a['title'],
                 'post_status'   => "publish",
@@ -214,7 +216,7 @@ class CreateSchedule extends Schedules
             $postIds[]    = $postId;
             update_post_meta($postId, 'eventdetails', json_encode($event));
             update_post_meta($postId, 'only_for', $a['only_for']);
-            update_post_meta($postId, 'reminders', $_POST['reminders']);
+            update_post_meta($postId, 'reminders', $settings['reminders']);
 
             // setting the eventdetails meta value also creates the event. Remove it
             $events = new CreateEvents();
@@ -224,7 +226,7 @@ class CreateSchedule extends Schedules
                 if (is_numeric($userId)) {
                     $event['only_for']    = $userId;
                     $event['post-id']    = $postId;
-                    $eventId             = $this->addEventToDb($event);
+                    $eventId             = $this->addEventToDb($event, $settings);
 
                     if (is_wp_error($eventId)) {
                         return $eventId;
@@ -246,7 +248,7 @@ class CreateSchedule extends Schedules
     /**
      * Updates events in the db
      */
-    protected function updateScheduleEvents($addHostPartner = true, $addPartner = true)
+    protected function updateScheduleEvents($addHostPartner = true, $addPartner = true, $settings)
     {
         global $wpdb;
         $family        = new TSJIPPY\FAMILY\Family();
@@ -260,12 +262,12 @@ class CreateSchedule extends Schedules
             } else {
                 $organizer                = get_userdata($this->hostId)->display_name;
             }
-        } elseif (!empty($_POST['host'])) {
-            $organizer                = $_POST['host'];
+        } elseif (!empty($settings['host'])) {
+            $organizer                = $settings['host'];
         }
 
-        if ($this->currentSession->events[0]->atendees != $_POST['others']) {
-            $this->updateSessionAtendees();
+        if ($this->currentSession->events[0]->atendees != $settings['others']) {
+            $this->updateSessionAtendees($settings);
             $updated                = true;
         }
 
@@ -274,28 +276,28 @@ class CreateSchedule extends Schedules
             $event->atendees    = maybe_unserialize($event->atendees);
 
             if ($event->start_date != $this->date) {
-                $args['start_date']    = $this->date;
-                $args['end_date']    = $this->date;
+                $args['start_date'] = $this->date;
+                $args['end_date']   = $this->date;
                 $updated            = true;
             }
 
             if ($event->start_time != $this->startTime) {
-                $args['start_time']    = $this->startTime;
+                $args['start_time'] = $this->startTime;
                 $updated            = true;
             }
 
             if ($event->end_time != $this->endTime) {
-                $args['end_time']    = $this->endTime;
+                $args['end_time']   = $this->endTime;
                 $updated            = true;
             }
 
             if ($event->location != $this->location) {
-                $args['location']    = $this->location;
+                $args['location']   = $this->location;
                 $updated            = true;
             }
 
             if ($event->organizer != $organizer) {
-                $args['organizer']    = $organizer;
+                $args['organizer']  = $organizer;
 
                 // update the post title
                 wp_update_post(array(
@@ -307,17 +309,17 @@ class CreateSchedule extends Schedules
             }
 
             if ($event->organizer - id != $this->hostId) {
-                $args['organizer-id']    = $this->hostId;
-                $updated                = true;
+                $args['organizer-id']  = $this->hostId;
+                $updated               = true;
             }
 
-            if (!isset($_POST['others'])) {
-                $_POST['others']        = [];
+            if (!isset($settings['others'])) {
+                $settings['others']    = [];
             }
 
-            if (maybe_unserialize($event->atendees) != $_POST['others']) {
-                $args['atendees']         = maybe_serialize($_POST['others']);
-                $updated                = true;
+            if (maybe_unserialize($event->atendees) != $settings['others']) {
+                $args['atendees']      = maybe_serialize($settings['others']);
+                $updated               = true;
             }
 
             if (!$updated) {
@@ -344,7 +346,7 @@ class CreateSchedule extends Schedules
     /**
      * Updates the session atendees and the posts and events related to that
      */
-    public function updateSessionAtendees()
+    public function updateSessionAtendees($settings)
     {
         global $wpdb;
 
@@ -363,13 +365,13 @@ class CreateSchedule extends Schedules
             if (
                 $ev->only_for != $this->currentSchedule->target     &&         // not an event for the target of the schedule
                 $ev->only_for != $event->organizer - id                &&        // not organizer of the event
-                !in_array($ev->only_for, $_POST['others'])                // and not one of the atendees
+                !in_array($ev->only_for, $settings['others'])                // and not one of the atendees
             ) {
                 // remove the event and all posts related to it
                 $this->currentSession->event_ids        = array_diff($this->currentSession->event_ids, [$event->id]);
                 foreach ($this->currentSession->posts as $index => $post) {
                     if ($ev->post_id == $post->ID) {
-                        $this->currentSession->post_ids        = array_diff($this->currentSession->post_ids, [$post->ID]);
+                        $this->currentSession->post_ids  = array_diff($this->currentSession->post_ids, [$post->ID]);
 
                         unset($this->currentSession->posts[$index]);
                     }
@@ -382,7 +384,7 @@ class CreateSchedule extends Schedules
         }
 
         // prepare the new events
-        foreach ($_POST['others'] as $atendee) {
+        foreach ($settings['others'] as $atendee) {
             if (is_numeric($atendee) && !in_array($atendee, (array)$event->atendees)) {
                 $eventArray[] = [
                     'title'        => "Attending {$this->title} with {$this->name}",
@@ -395,7 +397,7 @@ class CreateSchedule extends Schedules
         if (!empty($eventArray)) {
             $arrayedEvent    = (array)$event;
             unset($arrayedEvent['id']);
-            $ids    = $this->createPostsAndEvents($eventArray, $arrayedEvent);
+            $ids    = $this->createPostsAndEvents($eventArray, $arrayedEvent, $settings);
             if (is_wp_error($ids)) {
                 return $ids;
             }
@@ -420,37 +422,48 @@ class CreateSchedule extends Schedules
 
     /**
      * Add a new schedule
+     * 
+     * @param array     $settings  settings for the schedule
      *
      * @return array    text, new schedules list in html
      */
-    public function addSchedule($update = false)
+    public function addSchedule($settings)
     {
         global $wpdb;
 
-        $name        = sanitize_text_field(wp_unslash($_POST['target-name']));
+        $name        = TSJIPPY\sanitize($settings['target-name']);
 
         //check if schedule already exists
-        if (!$update && $wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `name` = '$name'") != null) {
+        if (
+            empty($settings['update']) && 
+            $wpdb->get_var(
+                $wpdb->prepare(
+                    "SELECT * FROM %i WHERE `name` = %s",
+                    $this->tableName,
+                    $name
+                )
+            ) != null
+        ) {
             return new WP_Error('schedule', "A schedule for $name already exists!");
         }
 
-        $info        = sanitize_text_field(wp_unslash($_POST['schedule-info']));
+        $info        = TSJIPPY\sanitize($settings['schedule-info']);
 
-        if (empty($_POST['skiplunch'])) {
+        if (empty($settings['skiplunch'])) {
             $lunch    = true;
         } else {
             $lunch    = false;
         }
 
-        if (empty($_POST['skiporientation'])) {
+        if (empty($settings['skiporientation'])) {
             $orientation    = true;
         } else {
             $orientation    = false;
         }
 
-        $startDateStr    = $_POST['start_date'];
-        $startDate        = strtotime($startDateStr);
-        $endDateStr        = $_POST['end_date'];
+        $startDateStr   = $settings['start_date'];
+        $startDate      = strtotime($startDateStr);
+        $endDateStr     = $settings['end_date'];
         $endDate        = strtotime($endDateStr);
 
         if ($orientation) {
@@ -465,45 +478,45 @@ class CreateSchedule extends Schedules
             return new \WP_Error('schedule', "Ending date cannot be before starting date");
         }
 
-        if ($_POST['fixedtimeslotsize'] == 'yes') {
+        if ($settings['fixedtimeslotsize'] == 'yes') {
             $fixedTimeslotSize    = true;
         } else {
             $fixedTimeslotSize    = false;
         }
 
-        if (empty($_POST['subject'])) {
+        if (empty($settings['subject'])) {
             $subject    = '';
-            $diner        = !isset($_POST['skipdiner']);
+            $diner        = !isset($settings['skipdiner']);
         } else {
-            $subject    = $_POST['subject'];
+            $subject    = $settings['subject'];
             $lunch        = false;
             $diner        = false;
         }
 
         $arg    = array(
-            'target'                => $_POST['target-id'],
-            'name'                    => $name,
-            'info'                    => $info,
-            'lunch'                    => $lunch,
-            'diner'                    => $diner,
-            'orientation'            => $orientation,
-            'start_date'                => $startDateStr,
-            'end_date'                => $endDateStr,
-            'start_time'                => $startTime,
-            'end_time'                => $this->dinerTime,
-            'timeslot_size'            => $_POST['timeslotsize'],
-            'fixed_timeslot_size'    => $fixedTimeslotSize,
-            'hide_names'                => isset($_POST['hide_names']),
-            'admin_roles'            => maybe_serialize($_POST['admin-roles']),
-            'view_roles'            => maybe_serialize($_POST['view-roles']),
-            'subject'                => $subject,
+            'target'                => $settings['target-id'],
+            'name'                  => $name,
+            'info'                  => $info,
+            'lunch'                 => $lunch,
+            'diner'                 => $diner,
+            'orientation'           => $orientation,
+            'start_date'            => $startDateStr,
+            'end_date'              => $endDateStr,
+            'start_time'            => $startTime,
+            'end_time'              => $this->dinerTime,
+            'timeslot_size'         => $settings['timeslotsize'],
+            'fixed_timeslot_size'   => $fixedTimeslotSize,
+            'hide_names'            => isset($settings['hide_names']),
+            'admin_roles'           => maybe_serialize($settings['admin-roles']),
+            'view_roles'            => maybe_serialize($settings['view-roles']),
+            'subject'               => $subject,
         );
 
-        if ($update) {
+        if (!empty($settings['update'])) {
             $wpdb->update(
                 $this->tableName,
                 $arg,
-                array('id' => $_POST['schedule-id'])
+                array('id' => $settings['schedule-id'])
             );
             $action    = 'updated';
         } else {
@@ -531,19 +544,19 @@ class CreateSchedule extends Schedules
      *
      * @return string    success message
      */
-    public function publishSchedule()
+    public function publishSchedule($settings)
     {
         global $wpdb;
         $family        = new TSJIPPY\FAMILY\Family();
 
-        $scheduleId    = $_POST['schedule-id'];
+        $scheduleId    = $settings['schedule-id'];
 
-        $family->updateFamilyMeta($_POST['schedule-target'], 'schedule', $scheduleId);
+        $family->updateFamilyMeta($settings['schedule-target'], 'schedule', $scheduleId);
 
         $wpdb->update(
             $this->tableName,
             array(
-                'published'    => true
+                'published' => true
             ),
             array(
                 'id'        => $scheduleId
@@ -633,75 +646,77 @@ class CreateSchedule extends Schedules
     /**
      * Add a new host for a session
      *
-     * @param string $date    The date of the session to add a host for
+     * @param string $date     The date of the session to add a host for
+     * @param array  $settings Array of all settings needed
      *
-     * @return array    success message and new cell html
+     * @return array           Success message and new cell html
      */
-    public function addHost($date)
+    public function addHost($date, $settings)
     {
-        $family                = new TSJIPPY\FAMILY\Family();
+        $family             = new TSJIPPY\FAMILY\Family();
         $message            = '';
-        $this->scheduleId    = $_POST['schedule-id'];
-        $this->startTime    = $_POST['start_time'];
-        $schedule            = $this->getScheduleById($this->scheduleId);
+        $this->scheduleId   = $settings['schedule-id'];
+        $this->startTime    = $settings['start_time'];
+        $schedule           = $this->getScheduleById($this->scheduleId);
 
         // check if available
         $session    = $this->getScheduleSession($date, $this->startTime);
-        if ($session && $session->id != $_POST['session-id']) {
+        if ($session && $session->id != $settings['session-id']) {
             return new \WP_Error('schedules', 'This is already booked, sorry');
         }
 
-        if (is_numeric($_POST['host-id'])) {
-            $this->hostId    = $_POST['host-id'];
+        if (is_numeric($settings['host-id'])) {
+            $this->hostId    = $settings['host-id'];
             $host            = get_userdata($this->hostId);
-            $partnerId        = $family->getPartner($this->hostId);
+            $partnerId       = $family->getPartner($this->hostId);
 
             if (
-                !$this->admin                        &&            // We are not admin
+                !$this->admin                        &&           // We are not admin
                 $this->hostId != $this->user->ID    &&            // We are not the host
-                $this->hostId != $partnerId                        // Our partner is not the host
+                $this->hostId != $partnerId                       // Our partner is not the host
             ) {
                 return new WP_Error('No permission', $this->noPermissionText);
             }
 
-            if ($partnerId && !isset($_POST['subject'])) {
+            if ($partnerId && !isset($settings['subject'])) {
                 $hostName        = $family->getFamilyName($host);
             } else {
                 $hostName        = $host->display_name;
             }
         } else {
             $this->hostId    = '';
-            $hostName        = $_POST['host'];
+            $hostName        = $settings['host'];
             if (!$this->admin) {
                 return new WP_Error('No permission', $this->noPermissionText);
             }
         }
 
-        $this->name            = $schedule->name;
-        $this->date            = $date;
-        $dateStr            = gmdate('d F Y', strtotime($this->date));
-        $isMeal                = false;
+        $this->name      = $schedule->name;
+        $this->date      = $date;
+        $dateStr         = gmdate('d F Y', strtotime($this->date));
+        $isMeal          = false;
+
         if ($this->startTime == $this->lunchStartTime && $schedule->lunch) {
-            $this->endTime        = $this->lunchEndTime;
+            $this->endTime      = $this->lunchEndTime;
             $this->title        = 'lunch';
-            $this->location        = "House of $hostName";
-            $isMeal                = true;
+            $this->location     = "House of $hostName";
+            $isMeal             = true;
         } elseif ($this->startTime == $this->dinerTime && $schedule->dinner) {
-            $this->endTime        = '19:30';
+            $this->endTime      = '19:30';
             $this->title        = 'dinner';
-            $this->location        = "House of $hostName";
-            $isMeal                = true;
+            $this->location     = "House of $hostName";
+            $isMeal             = true;
         } else {
-            $this->title        = sanitize_text_field(wp_unslash($_POST['subject']));
-            $this->location        = sanitize_text_field(wp_unslash($_POST['location']));
-            if (empty($_POST['end_time'])) {
-                $this->endTime    = gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($this->startTime)));
+            $this->title        = $settings['subject'];
+            $this->location     = $settings['location'];
+            if (empty($settings['end_time'])) {
+                $this->endTime  = gmdate('H:i', strtotime("+$this->timeSlotSize minutes", strtotime($this->startTime)));
             } else {
-                $this->endTime        = $_POST['end_time'];
+                $this->endTime  = $settings['end_time'];
             }
         }
 
-        if (!empty($_POST['session-id'])) {
+        if (!empty($settings['session-id'])) {
             $message    = "Succesfully updated this entry";
         } elseif ($this->admin && $hostName != $this->user->display_name) {
             $name    = $hostName;
@@ -718,13 +733,13 @@ class CreateSchedule extends Schedules
         $message    .=  " at $this->startTime";
 
         if ($session) {
-            $result    = $this->updateScheduleEvents($isMeal);
+            $result    = $this->updateScheduleEvents($isMeal, true, $settings);
 
             if (is_wp_error($result)) {
                 return $result;
             }
         } else {
-            $this->addScheduleEvents($isMeal);
+            $this->addScheduleEvents($isMeal, true, $settings);
         }
 
         if ($this->mobile) {
@@ -801,17 +816,16 @@ class CreateSchedule extends Schedules
      *
      * @return string    success message
      */
-    public function addMenu()
+    public function addMenu($settings)
     {
-        $scheduleId        = $_POST['schedule-id'];
 
-        $date            = sanitize_text_field(wp_unslash($_POST['date']));
+        $date       = TSJIPPY\sanitize($settings['date']);
 
-        $startTime        = sanitize_text_field(wp_unslash($_POST['start_time']));
+        $startTime  = TSJIPPY\sanitize($settings['start_time']);
 
-        $menu            = sanitize_text_field(wp_unslash($_POST['recipe-keyword']));
+        $menu       = TSJIPPY\sanitize($settings['recipe-keyword']);
 
-        $events            = $this->getScheduleSession($date, $startTime);
+        $events     = $this->getScheduleSession($date, $startTime);
 
         if (empty($events)) {
             return 'No meal found';

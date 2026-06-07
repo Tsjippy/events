@@ -41,7 +41,7 @@ function showCalendar()
 {
 
     if (isset($_GET['view'])) {
-        $view         = $_GET['view'];
+        $view         = TSJIPPY\sanitize($_GET['view']);
     } else {
         $view = 'month';
     }
@@ -157,8 +157,20 @@ function showCalendar()
                                                 } ?>'>
             <?php
             if ($view == 'month') {
+                
+                $day    = gmdate('d');
+                $month  = TSJIPPY\sanitize($_GET['month'] ?? '');
+                $year   = TSJIPPY\sanitize($_GET['year'] ?? '');
+
+                if (!is_numeric($month) || strlen($month) != 2) {
+                    $month = gmdate('m');
+                }
+                if (!is_numeric($year) || strlen($year) != 4) {
+                    $year  = gmdate('Y');
+                }
+
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->monthCalendar($cat);
+                echo $events->monthCalendar($day, $month, $year, $cat);
             }
             ?>
         </div>
@@ -167,8 +179,18 @@ function showCalendar()
                                                 } ?>'>
             <?php
             if ($view == 'week') {
+                $weekNr = '';
+                $year   = '';
+                
+                if (strlen($_GET['week'] ?? '') == 2) {
+                    $weekNr = (int)$_GET['week'];
+                }
+                if (strlen($_GET['yr'] ?? '') == 4) {
+                    $year  = (int) $_GET['yr'];
+                }
+
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->weekCalendar($cat);
+                echo $events->weekCalendar($weekNr, $year, $cat);
             }
             ?>
         </div>
@@ -177,8 +199,10 @@ function showCalendar()
                                                 } ?>'>
             <?php
             if ($view == 'list') {
+                $month   = (int) $_GET['month'] ?? '';
+                $year    = (int) $_GET['yr'] ?? '';
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->listCalendar($cat);
+                echo $events->listCalendar('', $month, $year, $cat);
             }
             ?>
         </div>

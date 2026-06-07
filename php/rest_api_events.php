@@ -18,8 +18,11 @@ function restApiInit()
         array(
             'methods'                 => 'POST',
             'callback'                 => function () {
-                $events        = new DisplayEvents();
-                return $events->monthCalendar();
+                $events     = new DisplayEvents();
+                $month      = (int) $_POST['month'];
+                $year       = (int) $_POST['year'];
+
+                return $events->monthCalendar('01', $month, $year);
             },
             'permission_callback'     => '__return_true',                // Allow public access
             'args'                    => array(
@@ -44,10 +47,14 @@ function restApiInit()
         TSJIPPY\RESTAPIPREFIX . '/events',
         '/get_week_html',
         array(
-            'methods'                 => 'POST',
-            'callback'                 => function () {
-                $events        = new DisplayEvents();
-                return $events->weekCalendar();
+            'methods'        => 'POST',
+            'callback'       => function () {
+                $events      = new DisplayEvents();
+
+                $weekNr      = (int) $_POST['wknr'];
+                $year        = (int) $_POST['year'];
+
+                return $events->weekCalendar($weekNr, $year);
             },
             'permission_callback'     => '__return_true',                // Allow public access
             'args'                    => array(
@@ -75,7 +82,10 @@ function restApiInit()
             'methods'                 => 'POST,GET',
             'callback'                 => function () {
                 $events        = new DisplayEvents();
-                return $events->listCalendar();
+                $offset        = (int) $_POST['offset'];
+                $month         = (int) $_POST['month'];
+                $year          = (int) $_POST['year'];
+                return $events->listCalendar($offset, $month, $year);
             },
             'permission_callback'     => '__return_true',                // Allow public access
             'args'                    => array(

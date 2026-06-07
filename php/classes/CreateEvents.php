@@ -439,28 +439,28 @@ class CreateEvents extends Events
             $post    = get_post($post);
         }
 
-        $this->postId                    = $post->ID;
+        $this->postId                   = $post->ID;
 
-        $event                            = $_POST['event'];
-        $event['allday']                = sanitize_text_field(wp_unslash($event['allday']));
-        $event['start_date']                = sanitize_text_field(wp_unslash($event['start_date']));
-        $event['start_time']                = sanitize_text_field(wp_unslash($event['start_time']));
-        $event['end_date']                = sanitize_text_field(wp_unslash($event['end_date']));
-        $event['end_time']                = sanitize_text_field(wp_unslash($event['end_time']));
+        $event                          = [];
+        $event['allday']                = TSJIPPY\sanitize($_POST['event']['allday'] ?? '');
+        $event['start_date']            = TSJIPPY\sanitize($_POST['event']['start_date'] ?? '');
+        $event['start_time']            = TSJIPPY\sanitize($_POST['event']['start_time'] ?? '');
+        $event['end_date']              = TSJIPPY\sanitize($_POST['event']['end_date'] ?? '');
+        $event['end_time']              = TSJIPPY\sanitize($_POST['event']['end_time'] ?? '');
 
         if (empty($event['start_date']) || empty($event['end_date'])) {
             return;
         }
 
-        $event['repeat']['type']        = sanitize_text_field(wp_unslash($event['repeat']['type']));
-        $event['repeat']['interval']    = sanitize_text_field(wp_unslash($event['repeat']['interval']));
-        $event['repeat']['stop']        = sanitize_text_field(wp_unslash($event['repeat']['stop']));
-        $event['repeat']['end_date']        = sanitize_text_field(wp_unslash($event['repeat']['end_date']));
-        $event['repeat']['amount']        = sanitize_text_field(wp_unslash($event['repeat']['amount']));
-        $event['location']                = sanitize_text_field(wp_unslash($event['location']));
-        $event['location_id']            = sanitize_text_field(wp_unslash($event['location-id']));
-        $event['organizer']                = sanitize_text_field(wp_unslash($event['organizer']));
-        $event['organizer-id']            = sanitize_text_field(wp_unslash($event['organizer-id']));
+        $event['repeat']['type']        = TSJIPPY\sanitize($_POST['event']['repeat']['type'] ?? '');
+        $event['repeat']['interval']    = TSJIPPY\sanitize($_POST['event']['repeat']['interval'] ?? '');
+        $event['repeat']['stop']        = TSJIPPY\sanitize($_POST['event']['repeat']['stop'] ?? '');
+        $event['repeat']['end_date']    = TSJIPPY\sanitize($_POST['event']['repeat']['end_date'] ?? '');
+        $event['repeat']['amount']      = TSJIPPY\sanitize($_POST['event']['repeat']['amount'] ?? '');
+        $event['location']              = TSJIPPY\sanitize($_POST['event']['location'] ?? '');
+        $event['location_id']           = TSJIPPY\sanitize($_POST['event']['location-id'] ?? '');
+        $event['organizer']             = TSJIPPY\sanitize($_POST['event']['organizer'] ?? '');
+        $event['organizer-id']          = TSJIPPY\sanitize($_POST['event']['organizer-id'] ?? '');
 
         //check if anything has changed
         $oldMeta    = get_post_meta($this->postId, 'eventdetails', true);
@@ -486,19 +486,28 @@ class CreateEvents extends Events
 
     /**
      * Creatres a new event in db if it does not exist already
-     * @param      string  $start_date        The start_date of the event
+     * @param      string  $startDate        The start_date of the event
      */
-    protected function maybeCreateRow($start_date)
+    protected function maybeCreateRow($startDate)
     {
         global $wpdb;
 
         //check if form row already exists
-        if (!$wpdb->get_var("SELECT * FROM {$this->tableName} WHERE `post_id` = '{$this->postId}' AND start_date = '$start_date'")) {
+        $event  = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM %i WHERE `post_id` = %d AND start_date = %s",
+                $this->tableName,
+                $this->postId,
+                $startDate
+            )
+        );
+
+        if (empty($event)) {
             $wpdb->insert(
                 $this->tableName,
                 array(
-                    'post_id'            => $this->postId,
-                    'start_date'            => $start_date
+                    'post_id'     => $this->postId,
+                    'start_date'  => $startDate
                 )
             );
         }

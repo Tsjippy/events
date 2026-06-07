@@ -449,42 +449,27 @@ class DisplayEvents extends Events
      *
      * @return    string                Html of the calendar
      */
-    public function monthCalendar($cat = [])
+    public function monthCalendar($day, $month, $year, $cat = [])
     {
-        if (defined('REST_REQUEST')) {
-            $month        = $_POST['month'];
-            $year        = $_POST['year'];
-            $dateStr    = "$year-$month-01";
-        } else {
-            //events
-            $day    = gmdate('d');
-            $month    = $_GET['month'];
-            $year    = $_GET['yr'];
-            if (!is_numeric($month) || strlen($month) != 2) {
-                $month    = gmdate('m');
-            }
-            if (!is_numeric($year) || strlen($year) != 4) {
-                $year    = gmdate('Y');
-            }
-            $dateStr    = "$year-$month-$day";
-        }
+        $dateStr    = "$year-$month-$day";
+
         ob_start();
 
-        $date            = strtotime($dateStr);
-        $monthStr        = gmdate('m', $date);
-        $yearStr        = gmdate('Y', $date);
-        $minusMonth        = strtotime('first day of last month', $date);
-        $minusMonthStr    = gmdate('m', $minusMonth);
-        $minusYearStr    = gmdate('Y', $minusMonth);
-        $plusMonth        = strtotime('first day of next month', $date);
-        $plusMonthStr    = gmdate('m', $plusMonth);
-        $plusYearStr    = gmdate('Y', $plusMonth);
+        $date          = strtotime($dateStr);
+        $monthStr      = gmdate('m', $date);
+        $yearStr       = gmdate('Y', $date);
+        $minusMonth    = strtotime('first day of last month', $date);
+        $minusMonthStr = gmdate('m', $minusMonth);
+        $minusYearStr  = gmdate('Y', $minusMonth);
+        $plusMonth     = strtotime('first day of next month', $date);
+        $plusMonthStr  = gmdate('m', $plusMonth);
+        $plusYearStr   = gmdate('Y', $plusMonth);
 
-        $weekDay        = gmdate("w", strtotime(gmdate('Y-m-01', $date)));
-        $workingDate    = strtotime("-$weekDay day", strtotime(gmdate('Y-m-01', $date)));
+        $weekDay       = gmdate("w", strtotime(gmdate('Y-m-01', $date)));
+        $workingDate   = strtotime("-$weekDay day", strtotime(gmdate('Y-m-01', $date)));
 
-        $calendarRows    = TSJIPPY\addElement('div', '', ['class' => 'calendar-rows-wrapper']);
-        $details        = TSJIPPY\addElement('div', '', ['class' => 'calendar-details']);
+        $calendarRows  = TSJIPPY\addElement('div', '', ['class' => 'calendar-rows-wrapper']);
+        $details       = TSJIPPY\addElement('div', '', ['class' => 'calendar-details']);
 
         $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH . 'pictures');
 
@@ -494,9 +479,9 @@ class DisplayEvents extends Events
 
             //loop over all days of a week
             while (true) {
-                $monthName            = gmdate('F', $workingDate);
-                $workingDateStr        = gmdate('Y-m-d', $workingDate);
-                $month                = gmdate('m', $workingDate);
+                $monthName          = gmdate('F', $workingDate);
+                $workingDateStr     = gmdate('Y-m-d', $workingDate);
+                $month              = gmdate('m', $workingDate);
                 $day                = gmdate('j', $workingDate);
 
                 //get the events for this day
@@ -811,25 +796,19 @@ class DisplayEvents extends Events
      *
      * @return    string                Html of the calendar
      */
-    public function weekCalendar($cat = [])
+    public function weekCalendar($weekNr='', $year='', $cat = [])
     {
-        $weekNr    = gmdate('W');
-        $year    = gmdate('Y');
-
-        if (defined('REST_REQUEST')) {
-            $weekNr        = $_POST['wknr'];
-            $year        = $_POST['year'];
-        } else {
-            if (isset($_GET['week']) && strlen($_GET['week']) == 2) {
-                $weekNr        = $_GET['week'];
-            }
-            if (isset($_GET['yr']) && strlen($_GET['yr']) == 4) {
-                $year        = $_GET['yr'];
-            }
+        if(empty($weekNr)){
+            $weekNr  = gmdate('W');
         }
-        $dto         = new \DateTime();
+
+        if(empty($year)){
+            $year    = gmdate('Y');
+        }
+
+        $dto     = new \DateTime();
         $dto->setISODate($year, $weekNr);
-        $dateStr     = $dto->format('Y-m-d');
+        $dateStr = $dto->format('Y-m-d');
 
         $this->prepareWeekTable();
 
@@ -1020,18 +999,8 @@ class DisplayEvents extends Events
      *
      * @return    string                Html of the calendar
      */
-    public function listCalendar($cat = [])
+    public function listCalendar($offset='', $month='', $year='', $cat = [])
     {
-        $offset = '';
-        if (defined('REST_REQUEST')) {
-            $offset    = $_POST['offset'];
-            $month    = $_POST['month'];
-            $year    = $_POST['year'];
-        } else {
-            $month    = $_GET['month'];
-            $year    = $_GET['yr'];
-        }
-
         if (!is_numeric($month) || strlen($month) != 2) {
             $month    = gmdate('m');
         }

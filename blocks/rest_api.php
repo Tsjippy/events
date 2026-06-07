@@ -69,21 +69,21 @@ function upcomingEvents($rest)
 {
     $events        = new DisplayEvents();
 
-    $items    = 10;
-    $months    = 3;
+    $items   = 10;
+    $months  = 3;
     $cats    = [];
-    $include    = [];
+    $include = [];
 
-    if (!empty($_GET['items']) && is_numeric($_GET['items'])) {
-        $items    = $_GET['items'];
+    if (is_numeric($_GET['items'] ?? false)) {
+        $items    = TSJIPPY\sanitize($_GET['items']);
     }
 
-    if (!empty($_GET['months']) && is_numeric($_GET['months'])) {
-        $months    = $_GET['months'];
+    if (is_numeric($_GET['months'] ?? false)) {
+        $months    = TSJIPPY\sanitize($_GET['months']);
     }
 
     if (!empty($_GET['categories'])) {
-        $cats    = explode(',', trim($_GET['categories'], ','));
+        $cats    = explode(',', trim(TSJIPPY\sanitize($_GET['categories']), ','));
 
         $categories    = get_categories(array(
             'taxonomy'        => 'events',

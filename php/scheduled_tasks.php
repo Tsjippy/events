@@ -35,9 +35,14 @@ function removeOldEvents()
 
     $events        = new CreateEvents();
 
-    $query        = "DELETE FROM {$events->tableName} WHERE start_date<'" . gmdate('Y-m-d', strtotime("- $maxAge")) . "'";
-
-    $expiredEvents    = $wpdb->get_results($query);
+    $expiredEvents = $wpdb->get_results(
+        $wpdb->prepare(
+            "DELETE FROM %i WHERE start_date < %s",
+            $events->tableName,
+            gmdate('Y-m-d', strtotime("- $maxAge"))
+        )
+    );
+    
     foreach ($expiredEvents as $event) {
         $events->removeDbRows($event->ID, true);
     }

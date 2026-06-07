@@ -22,15 +22,15 @@ function beforeSavingFormData($submission, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
-        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), $_POST['birthday']);
-        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), $_POST['arrival-date']);
+        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), TSJIPPY\sanitize($_POST['birthday'] ?? ''));
+        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), TSJIPPY\sanitize($_POST['arrival-date'] ?? ''));
     }
 
     if ($object->formData->slug == 'user_family') {
         $family = new TSJIPPY\FAMILY\Family();
 
         // Then the weddingdate
-        $newDate    = sanitize_text_field(wp_unslash($_POST['weddingdate']));
+        $newDate    = TSJIPPY\sanitize($_POST['weddingdate'] ?? '' );
         $oldDate    = $family->getWeddingDate($object->userId);
         if ($newDate != $oldDate) {
             $events        = new CreateEvents();

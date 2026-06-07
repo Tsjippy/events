@@ -19,7 +19,11 @@ function schedulesRestApiInit()
             'methods'                 => 'POST',
             'callback'                 => function () {
                 $schedule        = new CreateSchedule();
-                return $schedule->addSchedule($_POST['update']);
+
+                // Recursively sanitize all text fields in the array
+                $settings = TSJIPPY\sanitize($_POST);
+
+                return $schedule->addSchedule($settings);
             },
             'permission_callback'     => function () {
                 $schedule    = new CreateSchedule();
@@ -51,7 +55,10 @@ function schedulesRestApiInit()
             'methods'                 => 'POST',
             'callback'                 => function () {
                 $schedule        = new CreateSchedule();
-                return $schedule->publishSchedule();
+
+                $settings = TSJIPPY\sanitize($_POST);
+
+                return $schedule->publishSchedule($settings);
             },
             'permission_callback'     => function () {
                 $schedule    = new CreateSchedule();
@@ -158,7 +165,10 @@ function schedulesRestApiInit()
             'methods'                 => 'POST',
             'callback'                 => function () {
                 $schedule        = new CreateSchedule();
-                return $schedule->addMenu();
+
+                $settings = TSJIPPY\sanitize($_POST);
+
+                return $schedule->addMenu($settings);
             },
             'permission_callback'     => function () {
                 return current_user_can('read');
@@ -191,15 +201,18 @@ function addHost($param)
 {
     $schedules        = new CreateSchedule();
 
-    if (is_array($_POST['date'])) {
+    $settings = TSJIPPY\sanitize($_POST);
+
+    if (is_array($settings['date'])) {
         $schedule        = $schedules->getScheduleById($schedules->scheduleId);
 
-        $succesFull        = '';
+        $succesFull    = '';
         $succes        = '';
-        $unSuccesFull    = '';
-        $html            = [];
-        foreach ($_POST['date'] as $date) {
-            $result    = $schedules->addHost($date);
+        $unSuccesFull  = '';
+        $html          = [];
+
+        foreach ($settings['date'] as $date) {
+            $result    = $schedules->addHost($date, $settings);
 
             if (is_wp_error($result)) {
                 if (!empty($unSuccesFull)) {
@@ -231,5 +244,6 @@ function addHost($param)
             'html'        => $html
         ];
     }
-    return $schedules->addHost($_POST['date']);
+
+    return $schedules->addHost($settings['date'], $settings);
 }
