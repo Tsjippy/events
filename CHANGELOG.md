@@ -5,6 +5,7 @@
 - placeholder for textdomain
 
 ### Changed
+- prefixed post metas and shortcodes
 
 ### Fixed
 
