@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.4] - 2026-06-09
+
+
+### Added
 - usage of wpdb->prepare for all queries
 - shared functionality loader
 
@@ -14,8 +25,6 @@
 ### Fixed
 - spacing problem
 - space before dot bug
-
-### Updated
 
 ## [10.2.3] - 2026-06-03
 
