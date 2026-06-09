@@ -32,7 +32,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
         addElement('br', $parent);
 
-        addElement('label', $parent, ['for' => 'freq'], __('Minimum age of events before they get removed:', 'tsjippy'));
+        addElement('label', $parent, ['for' => 'freq'], __('Minimum age of events before they get removed:', '%TEXTDOMAIN%'));
 
         $select = addElement('select', $parent, ['name' => 'max-age']);
 

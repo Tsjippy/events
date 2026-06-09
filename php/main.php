@@ -64,7 +64,7 @@ function postStates($states, $post)
 {
 
     if ($post->ID == (SETTINGS['schedules-page'] ?? '')) {
-        $states[] = __('Schedules page', 'tsjippy');
+        $states[] = __('Schedules page', '%TEXTDOMAIN%');
     }
 
     return $states;
