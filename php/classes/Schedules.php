@@ -800,7 +800,7 @@ class Schedules
             if ($hostId == $this->user->ID || $hostId == $partnerId) {
                 $class             .= ' own';
 
-                $menu        = get_post_meta($data->posts[0]->ID, 'recipe_keyword', true);
+                $menu        = get_post_meta($data->posts[0]->ID, 'tsjippy_recipe_keyword', true);
                 if (empty($menu)) {
                     $menu    = 'Enter recipe keyword';
                 }
@@ -889,7 +889,7 @@ class Schedules
                 $dataset    .= " data-atendees='" . json_encode($atendees) . "'";
             }
 
-            $reminders        = (array)get_post_meta($event->post_id, 'reminders', true);
+            $reminders        = (array)get_post_meta($event->post_id, 'tsjippy_reminders', true);
             if (!empty($reminders)) {
                 $dataset    .= " data-reminders='" . json_encode($reminders) . "'";
             }
@@ -1319,7 +1319,7 @@ class Schedules
             }
             $others            = maybe_unserialize($session->events[0]->atendees);
 
-            $reminders        = (array)get_post_meta($session->posts[0]->ID, 'reminders', true);
+            $reminders        = (array)get_post_meta($session->posts[0]->ID, 'tsjippy_reminders', true);
 
             if (!in_array(15, $reminders)) {
                 $checked1        = '';

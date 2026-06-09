@@ -62,7 +62,7 @@ function anniversaryCheck()
     $events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
 
     foreach ($events->events as $event) {
-        $startYear    = get_post_meta($event->ID, 'celebrationdate', true);
+        $startYear    = get_post_meta($event->ID, 'tsjippy_celebrationdate', true);
 
         if (!empty($startYear)) {
             $userData        = get_userdata($event->post_author);
@@ -132,7 +132,7 @@ function addRepeatedEvents()
         if (!is_array($details)) {
             $details    = json_decode($details, true);
         } else {
-            update_post_meta($result->post_id, 'eventdetails', json_encode($details));
+            update_post_meta($result->post_id, 'tsjippy_eventdetails', json_encode($details));
         }
 
         if (@is_array($details['repeat']) && !empty($details['repeat']['stop']) && $details['repeat']['stop'] == 'never') {

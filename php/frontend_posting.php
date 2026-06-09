@@ -46,7 +46,7 @@ function eventTitle($postType)
 
 function eventSpecificFields($frontEndContent)
 {
-    $eventDetails    = get_post_meta($frontEndContent->postId, 'eventdetails', true);
+    $eventDetails    = get_post_meta($frontEndContent->postId, 'tsjippy_eventdetails', true);
     if (!is_array($eventDetails)) {
         if (!empty($eventDetails)) {
             $eventDetails    = (array)json_decode($eventDetails, true);

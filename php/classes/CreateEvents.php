@@ -347,7 +347,7 @@ class CreateEvents extends Events
                 // no need to create new events, just update the meta value
                 $postId    = get_user_meta($user->ID, $eventIdMetaKey, true);
 
-                update_post_meta($postId, 'celebrationdate', $newValue);
+                update_post_meta($postId, 'tsjippy_celebrationdate', $newValue);
                 return;
             }
         }
@@ -396,8 +396,8 @@ class CreateEvents extends Events
         );
 
         $this->postId     = wp_insert_post($post, true, false);
-        update_metadata('post', $this->postId, 'eventdetails', json_encode($this->eventData));
-        update_metadata('post', $this->postId, 'celebrationdate', $metaValue);
+        update_metadata('post', $this->postId, 'tsjippy_eventdetails', json_encode($this->eventData));
+        update_metadata('post', $this->postId, 'tsjippy_celebrationdate', $metaValue);
 
         // Set the categories
         if ($type == 'birthday') {
@@ -463,7 +463,7 @@ class CreateEvents extends Events
         $event['organizer-id']          = TSJIPPY\sanitize($_POST['event']['organizer-id'] ?? '');
 
         //check if anything has changed
-        $oldMeta    = get_post_meta($this->postId, 'eventdetails', true);
+        $oldMeta    = get_post_meta($this->postId, 'tsjippy_eventdetails', true);
         if (!is_array($oldMeta)) {
             if (!empty($oldMeta)) {
                 $oldMeta    = (array)json_decode($oldMeta, true);
@@ -473,7 +473,7 @@ class CreateEvents extends Events
         }
         if ($oldMeta != $event) {
             //store meta in db
-            update_metadata('post', $this->postId, 'eventdetails', json_encode($event));
+            update_metadata('post', $this->postId, 'tsjippy_eventdetails', json_encode($event));
         }
 
         /**

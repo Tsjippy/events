@@ -36,7 +36,7 @@ function getAnniversaries()
     $events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
 
     foreach ($events->events as $event) {
-        $startYear    = get_post_meta($event->ID, 'celebrationdate', true);
+        $startYear    = get_post_meta($event->ID, 'tsjippy_celebrationdate', true);
 
         if (is_array($startYear)) {
             array_filter($startYear);

@@ -120,7 +120,7 @@ function displayEventMeta()
 
     $date        = $events->getDate($event);
     $time        = $events->getTime($event);
-    $meta        = get_post_meta($event->ID, 'eventdetails', true);
+    $meta        = get_post_meta($event->ID, 'tsjippy_eventdetails', true);
     if (!is_array($meta)) {
         if (!empty($meta)) {
             $meta    = (array)json_decode($meta, true);

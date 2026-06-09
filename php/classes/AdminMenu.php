@@ -104,7 +104,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
         $birthdayRows       = [];
 
         foreach ($posts as $post) {
-            $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
+            $celDate        = get_post_meta($post->ID, 'tsjippy_celebrationdate', true);
 
             $author     = get_user_by('id', $post->post_author);
             if (!$author) {
@@ -177,7 +177,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 continue;
             }
 
-            $celDate        = get_post_meta($post->ID, 'celebrationdate', true);
+            $celDate        = get_post_meta($post->ID, 'tsjippy_celebrationdate', true);
             if (!empty($celDate)) {
                 $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
             }

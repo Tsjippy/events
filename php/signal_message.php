@@ -19,7 +19,7 @@ function afterBotPrayer($args)
     // add normal events
     $events->retrieveEvents(gmdate('Y-m-d'), gmdate('Y-m-d'));
     foreach ($events->events as $event) {
-        $startYear    = get_post_meta($event->ID, 'celebrationdate', true);
+        $startYear    = get_post_meta($event->ID, 'tsjippy_celebrationdate', true);
 
         //only add events which are not a celebration and start today after curent time
         if (empty($startYear) && $event->start_date == gmdate('Y-m-d') && $event->start_time > gmdate('H:i', current_time('U'))) {

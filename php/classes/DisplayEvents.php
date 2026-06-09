@@ -194,7 +194,7 @@ class DisplayEvents extends Events
             $eventTitle        = get_the_title($event->post_id);
             $endDateStr        = gmdate('d M', strtotime(($event->end_date)));
 
-            $userId = get_post_meta($event->post_id, 'user', true);
+            $userId = get_post_meta($event->post_id, 'tsjippy_user', true);
 
             $eventUrl    = apply_filters('tsjippy-events-event-url', get_permalink($event->post_id), $userId, $this);
 
@@ -303,7 +303,7 @@ class DisplayEvents extends Events
     public function getLocationDetail($event)
     {
         $postId        = $event->location_id;
-        $location    = get_post_meta($postId, 'location', true);
+        $location    = get_post_meta($postId, 'tsjippy_location', true);
 
         if (!is_numeric($postId)) {
             return $event->location;
@@ -365,7 +365,7 @@ class DisplayEvents extends Events
      */
     public function eventExportHtml($event)
     {
-        $eventMeta        = get_post_meta($event->post_id, 'eventdetails', true);
+        $eventMeta        = get_post_meta($event->post_id, 'tsjippy_eventdetails', true);
         if (!is_array($eventMeta)) {
             if (!empty($eventMeta)) {
                 $eventMeta    = (array)json_decode($eventMeta, true);
@@ -608,7 +608,7 @@ class DisplayEvents extends Events
         $heading->append(gmdate('F', $workingDate));
 
         foreach ($this->events as $event) {
-            $meta        = get_post_meta($event->ID, 'eventdetails', true);
+            $meta        = get_post_meta($event->ID, 'tsjippy_eventdetails', true);
             if (!is_array($meta)) {
                 if (!empty($meta)) {
                     $meta    = (array)json_decode($meta, true);
@@ -629,7 +629,7 @@ class DisplayEvents extends Events
                 TSJIPPY\addElement('h4', $article, ['class' => 'event-title'], 'No events');
             } else {
                 foreach ($this->events as $event) {
-                    $meta        = get_post_meta($event->ID, 'eventdetails', true);
+                    $meta        = get_post_meta($event->ID, 'tsjippy_eventdetails', true);
                     if (!is_array($meta)) {
                         if (!empty($meta)) {
                             $meta    = (array)json_decode($meta, true);
@@ -1017,7 +1017,7 @@ class DisplayEvents extends Events
         $baseUrl    = TSJIPPY\pathToUrl(PLUGINPATH . 'pictures');
 
         foreach ($this->events as $event) {
-            $meta        = get_post_meta($event->ID, 'eventdetails', true);
+            $meta        = get_post_meta($event->ID, 'tsjippy_eventdetails', true);
             if (!is_array($meta)) {
                 if (!empty($meta)) {
                     $meta    = (array)json_decode($meta, true);

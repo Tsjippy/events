@@ -44,7 +44,7 @@ class IcalFeed
 
         foreach ($events as $event) {
             // sometimes only_for has a false or true value keep only the numbers
-            $onlyFor        = array_filter((array)get_post_meta($event->ID, 'only_for', true), 'is_numeric');
+            $onlyFor        = array_filter((array)get_post_meta($event->ID, 'tsjippy_only_for', true), 'is_numeric');
 
             //do not show events which are not meant for us
             if (!empty($onlyFor) && !in_array($userId, $onlyFor)) {
@@ -52,7 +52,7 @@ class IcalFeed
             }
 
             //skip events without meta data
-            $meta        = get_post_meta($event->ID, 'eventdetails', true);
+            $meta        = get_post_meta($event->ID, 'tsjippy_eventdetails', true);
             if (!is_array($meta) && !empty($meta)) {
                 $meta    = (array)json_decode($meta, true);
             }

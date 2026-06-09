@@ -214,9 +214,9 @@ class CreateSchedule extends Schedules
             }
 
             $postIds[]    = $postId;
-            update_post_meta($postId, 'eventdetails', json_encode($event));
-            update_post_meta($postId, 'only_for', $a['only_for']);
-            update_post_meta($postId, 'reminders', $settings['reminders']);
+            update_post_meta($postId, 'tsjippy_eventdetails', json_encode($event));
+            update_post_meta($postId, 'tsjippy_only_for', $a['only_for']);
+            update_post_meta($postId, 'tsjippy_reminders', $settings['reminders']);
 
             // setting the eventdetails meta value also creates the event. Remove it
             $events = new CreateEvents();
@@ -832,7 +832,7 @@ class CreateSchedule extends Schedules
         }
 
         foreach ($events->post_ids as $postId) {
-            update_post_meta($postId, 'recipe_keyword', $menu);
+            update_post_meta($postId, 'tsjippy_recipe_keyword', $menu);
         }
 
         if (count(explode(' ', $menu)) == 1) {
