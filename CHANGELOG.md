@@ -3,6 +3,7 @@
 
 ### Added
 - placeholder for textdomain
+- user, post and rest_meta prefixing
 
 ### Changed
 - prefixed post metas and shortcodes
