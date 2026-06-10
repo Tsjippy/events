@@ -22,8 +22,8 @@ function beforeSavingFormData($submission, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
-        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'birthday', true), TSJIPPY\sanitize($_POST['birthday'] ?? ''));
-        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'arrival_date', true), TSJIPPY\sanitize($_POST['arrival-date'] ?? ''));
+        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'tsjippy_birthday', true), TSJIPPY\sanitize($_POST['birthday'] ?? ''));
+        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'tsjippy_arrival_date', true), TSJIPPY\sanitize($_POST['arrival-date'] ?? ''));
     }
 
     if ($object->formData->slug == 'user_family') {

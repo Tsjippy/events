@@ -79,7 +79,7 @@ function afterBotPrayer($args)
                     $args['pictures'][] = get_attached_file($picture);
                 }
             } else {
-                $profilePicture    = get_user_meta($userId, 'profile_picture', true);
+                $profilePicture    = get_user_meta($userId, 'tsjippy_profile_picture', true);
                 if (is_array($profilePicture) && isset($profilePicture[0])) {
                     $args['pictures'][] = get_attached_file($profilePicture[0]);
                 } elseif (is_numeric($profilePicture)) {
@@ -118,7 +118,7 @@ function afterBotPrayer($args)
                         $args['pictures'][] = get_attached_file($picture);
                     }
                 } else {
-                    $profilePicture    = get_user_meta($user->ID, 'profile_picture', true);
+                    $profilePicture    = get_user_meta($user->ID, 'tsjippy_profile_picture', true);
                     if (isset($profilePicture[0])) {
                         $args['pictures'][] = get_attached_file($profilePicture[0]);
                     }

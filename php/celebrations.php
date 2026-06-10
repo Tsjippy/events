@@ -52,7 +52,7 @@ function getAnniversaries()
                 continue;
             }
 
-            $privacy    = (array)get_user_meta($event->post_author, 'privacy_preference', true);
+            $privacy    = (array)get_user_meta($event->post_author, 'tsjippy_privacy_preference', true);
 
             if (substr($title, 0, 8) == 'Birthday' && in_array('hide_age', $privacy)) {
                 $age    = '';
@@ -90,7 +90,7 @@ function deleteUser($userId)
     $events = new CreateEvents();
 
     //Remove birthday events
-    $birthdayPostId = get_user_meta($userId, 'birthday_event_id', true);
+    $birthdayPostId = get_user_meta($userId, 'tsjippy_birthday_event_id', true);
     if (is_numeric($birthdayPostId)) {
         $events->removeDbRows($birthdayPostId);
     }
@@ -260,7 +260,7 @@ function anniversaryMessages()
         $message    = str_replace($userdata->display_name, $link, $message);
 
         if ($addImage) {
-            $profilePicture    = get_user_meta($userId, 'profile_picture', true);
+            $profilePicture    = get_user_meta($userId, 'tsjippy_profile_picture', true);
             if (isset($profilePicture[0])) {
                 $pictureUrl        = wp_get_attachment_url($profilePicture[0]);
                 $pictureHtml    = wp_get_attachment_image($profilePicture[0], 'avatar', false, 'style=border-radius: 50%;');

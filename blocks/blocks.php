@@ -192,7 +192,7 @@ function upcomingArrivalsBlock($attributes)
 
         $url         = TSJIPPY\maybeGetUserPageUrl($user->ID);
 
-        $dateString    = gmdate(TSJIPPY\DATEFORMAT, strtotime(get_user_meta($user->ID, 'arrival_date', true)));
+        $dateString    = gmdate(TSJIPPY\DATEFORMAT, strtotime(get_user_meta($user->ID, 'tsjippy_arrival_date', true)));
 
         // Add to an existing date, multiple people arrive on the same date
         if (isset($dates[$dateString])) {

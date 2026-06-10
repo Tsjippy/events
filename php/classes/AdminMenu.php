@@ -115,13 +115,13 @@ class AdminMenu extends ADMIN\SubAdminMenu
             if (!empty($celDate)) {
                 $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
 
-                $arrivalDate    = get_user_meta($post->post_author, 'arrival_date', true);
+                $arrivalDate    = get_user_meta($post->post_author, 'tsjippy_arrival_date', true);
                 if (!empty($arrivalDate)) {
                     $arrivalDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($arrivalDate));
                 }
                 if ($celDate != $arrivalDate) {
                     // this is a rogue event
-                    if (get_user_meta($post->post_author, 'SIM Nigeria anniversary_event_id', true) != $post->ID) {
+                    if (get_user_meta($post->post_author, 'tsjippy_SIM Nigeria anniversary_event_id', true) != $post->ID) {
                         wp_delete_post($post->ID);
                     } else {
 
@@ -138,7 +138,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 $weddingDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($weddingDate));
                 if ($celDate != $weddingDate) {
                     // this is a rogue event
-                    if (get_user_meta($post->post_author, 'Wedding anniversary_event_id', true) != $post->ID) {
+                    if (get_user_meta($post->post_author, 'tsjippy_Wedding anniversary_event_id', true) != $post->ID) {
                         wp_delete_post($post->ID);
                     } else {
 
@@ -172,7 +172,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
         );
 
         foreach ($posts as $post) {
-            if (get_user_meta($post->post_author, 'birthday_event_id', true) != $post->ID) {
+            if (get_user_meta($post->post_author, 'tsjippy_birthday_event_id', true) != $post->ID) {
                 wp_delete_post($post->ID);
                 continue;
             }
@@ -189,7 +189,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             }
 
             if (!empty($celDate)) {
-                $birthday   = get_user_meta($post->post_author, 'birthday', true);
+                $birthday   = get_user_meta($post->post_author, 'tsjippy_birthday', true);
                 if (!empty($birthday)) {
                     $birthday    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($birthday));
                 }
@@ -238,7 +238,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             <tbody>
                 <?php
                 foreach (get_users() as $user) {
-                    if (empty(get_user_meta($user->ID, 'birthday_event_id', true))) {
+                    if (empty(get_user_meta($user->ID, 'tsjippy_birthday_event_id', true))) {
                 ?>
                         <tr>
                             <td>Birthdays</td>
@@ -264,7 +264,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                     <?php
                     }
 
-                    if ($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'Wedding anniversary_event_id', true))) {
+                    if ($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'tsjippy_Wedding anniversary_event_id', true))) {
                     ?>
                         <tr>
                             <td>Wedding</td>
