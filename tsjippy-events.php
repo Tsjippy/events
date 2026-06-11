@@ -39,7 +39,12 @@ define(__NAMESPACE__ . '\PLUGINSLUG', str_replace('tsjippy-', '', basename(__FIL
 define(__NAMESPACE__ . '\SETTINGS', get_option('tsjippy_events_settings', []));
 
 // run right before activation
-register_activation_hook(__FILE__, function () { // Create the dbs
+register_activation_hook(__FILE__, function () { 
+    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+        require_once(__DIR__  . '/shared-functionality/loader.php');
+    }
+    
+    // Create the dbs
     $events    = new Events();
     $events->createEventsTable();
 
