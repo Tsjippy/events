@@ -159,13 +159,13 @@ function upcomingArrivalsBlock($attributes)
         'meta_query' => array(
             'relation' => 'AND',
             array(
-                'key'     => 'arrival_date',
+                'key'     => 'tsjippy_arrival_date',
                 'value'   => gmdate("Y-m-d"),
                 'compare' => '>=',
                 'type'    => 'DATE'
             ),
             array(
-                'key'     => 'arrival_date',
+                'key'     => 'tsjippy_arrival_date',
                 'value'   => gmdate("Y-m-d", strtotime("+{$args['months']} month", time())),
                 'compare' => '<=',
                 'type'    => 'DATE'
