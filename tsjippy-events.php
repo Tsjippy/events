@@ -52,7 +52,7 @@ register_activation_hook(__FILE__, function () {
     $schedules->createDbTable();
 
     $settings                    = SETTINGS;
-    $settings['schedules-page']    = TSJIPPY\ADMIN\createDefaultPage('Schedules', '[schedules]');
+    $settings['schedules-page']    = TSJIPPY\ADMIN\createDefaultPage('Schedules', '[tsjippy_schedules]');
 
     update_option('tsjippy_events_settings', $settings);
 });
