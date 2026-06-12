@@ -8,6 +8,7 @@
 ### Fixed
 - shared code loader
 - activation hook
+- use correct shortcodes on auto created pages
 
 ### Updated
 
