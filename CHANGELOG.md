@@ -4,14 +4,21 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.2.7] - 2026-06-13
+
+
+### Changed
 - prefix meta key in get_users
 
 ### Fixed
 - shared code loader
 - activation hook
 - use correct shortcodes on auto created pages
-
-### Updated
 
 ## [10.2.6] - 2026-06-11
 
