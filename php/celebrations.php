@@ -17,7 +17,7 @@ function getArrivingUsers()
 {
     $date   = new \DateTime();
     return get_users(array(
-        'meta_key'     => 'arrival_date',
+        'meta_key'     => 'tsjippy_arrival_date',
         'meta_value'   => $date->format('Y-m-d'),
         'meta_compare' => '=',
     ));
