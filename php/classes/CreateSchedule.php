@@ -248,7 +248,7 @@ class CreateSchedule extends Schedules
     /**
      * Updates events in the db
      */
-    protected function updateScheduleEvents($addHostPartner = true, $addPartner = true, $settings)
+    protected function updateScheduleEvents($addHostPartner = true, $addPartner = true, $settings = [])
     {
         global $wpdb;
         $family        = new TSJIPPY\FAMILY\Family();
