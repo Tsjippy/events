@@ -73,7 +73,7 @@ function afterBotPrayer($args)
             // add appropriate picture
             if (str_contains($msg, '&')) {
                 $family    = new TSJIPPY\FAMILY\Family();
-                $picture    = $family->getFamilyMeta($userId, 'family_picture');
+                $picture    = $family->getFamilyMeta($userId, 'family_picture', true);
 
                 if (is_numeric($picture)) {
                     $args['pictures'][] = get_attached_file($picture);
@@ -107,12 +107,14 @@ function afterBotPrayer($args)
                     continue;
                 }
 
-                $name        = $family->getFamilyName($user, false, $partnerId);
+                $partnerId = 0;
+
+                $name      = $family->getFamilyName($user, false, $partnerId);
 
                 if ($partnerId) {
-                    $skip[]        = $partnerId;
+                    $skip[]  = $partnerId;
 
-                    $picture    = $family->getFamilyMeta($userId, 'family_picture');
+                    $picture = $family->getFamilyMeta($user->ID, 'family_picture', true);
 
                     if ($picture) {
                         $args['pictures'][] = get_attached_file($picture);

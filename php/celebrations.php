@@ -140,9 +140,9 @@ function getCoupleString($user, $partner = '')
         $user    = get_userdata($user);
     }
 
-    $family        = new TSJIPPY\FAMILY\Family();
-    $lastName    = $user->last_name;
-    $familyName    = $family->getFamilyMeta($user, 'family_name');
+    $family     = new TSJIPPY\FAMILY\Family();
+    $lastName   = $user->last_name;
+    $familyName = $family->getFamilyMeta($user, 'family_name', true);
     if (!empty($familyName)) {
         $lastName    = $familyName;
     }
@@ -226,27 +226,27 @@ function anniversaryMessages()
         $addImage    = true;
 
         if ($userId  == $currentUser->ID) {
-            $coupleLink    = "of you and your spouse my dear $currentUser->first_name!<br>";
-            $link        = str_replace($currentUser->display_name, "of you my dear $currentUser->first_name!<br>", $message);
+            $coupleLink   = "of you and your spouse my dear $currentUser->first_name!<br>";
+            $link         = str_replace($currentUser->display_name, "of you my dear $currentUser->first_name!<br>", $message);
 
-            $addImage    = false;
+            $addImage     = false;
         } else {
             //Get the url of the user page
-            $url        = TSJIPPY\maybeGetUserPageUrl($userId);
+            $url          = TSJIPPY\maybeGetUserPageUrl($userId);
 
-            $coupleString    = getCoupleString($userdata, $partner);
-            $coupleLink        = "of <a href=\"$url\">$coupleString</a>";
-            $link            = "of <a href=\"$url\">{$userdata->display_name}</a>";
+            $coupleString = getCoupleString($userdata, $partner);
+            $coupleLink   = "of <a href=\"$url\">$coupleString</a>";
+            $link         = "of <a href=\"$url\">{$userdata->display_name}</a>";
         }
 
         if ($partner) {
-            $newMessage    = replaceCoupleString($message, $coupleLink, $userdata, $partner);
+            $newMessage   = replaceCoupleString($message, $coupleLink, $userdata, $partner);
 
             // Add family picture if needed
             if ($newMessage != $message && $addImage) {
-                $message    = $newMessage;
-                $family        = new TSJIPPY\FAMILY\Family();
-                $picture    = $family->getFamilyMeta($userId, 'family_picture');
+                $message  = $newMessage;
+                $family   = new TSJIPPY\FAMILY\Family();
+                $picture  = $family->getFamilyMeta($userId, 'family_picture', true);
 
                 if (is_numeric($picture)) {
                     $url        = wp_get_attachment_url($picture);
@@ -262,9 +262,9 @@ function anniversaryMessages()
         if ($addImage) {
             $profilePicture    = get_user_meta($userId, 'tsjippy_profile_picture', true);
             if (isset($profilePicture[0])) {
-                $pictureUrl        = wp_get_attachment_url($profilePicture[0]);
-                $pictureHtml    = wp_get_attachment_image($profilePicture[0], 'avatar', false, 'style=border-radius: 50%;');
-                $message        .= "<a href='$pictureUrl'>$pictureHtml</a>";
+                $pictureUrl    = wp_get_attachment_url($profilePicture[0]);
+                $pictureHtml   = wp_get_attachment_image($profilePicture[0], 'avatar', false, 'style=border-radius: 50%;');
+                $message       .= "<a href='$pictureUrl'>$pictureHtml</a>";
             }
         }
 
