@@ -16,7 +16,7 @@ function befoeDeletePost($postId)
     $events->removeDbRows($postId);
 }
 
-add_filter('post-edit-button', __NAMESPACE__ . '\editButton', 10, 3);
+add_filter('tsjippy-post-edit-button', __NAMESPACE__ . '\editButton', 10, 3);
 function editButton($buttonHtml, $post, $content)
 {
     if ($post->post_type != 'event') {
