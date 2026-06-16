@@ -446,14 +446,14 @@ class AdminMenu extends ADMIN\SubAdminMenu
      */
     public function postSettingsSave()
     {
-        TSJIPPY\scheduleTask('anniversary_check_action', 'daily');
-        TSJIPPY\scheduleTask('remove_old_schedules_action', 'daily');
-        TSJIPPY\scheduleTask('add_repeated_events_action', 'yearly');
+        TSJIPPY\scheduleTask('anniversary_check', 'daily');
+        TSJIPPY\scheduleTask('remove_old_schedules', 'daily');
+        TSJIPPY\scheduleTask('add_repeated_events', 'yearly');
 
         $freq   = SETTINGS['freq'] ?? false;
 
         if ($freq) {
-            TSJIPPY\scheduleTask('remove_old_events_action', $freq);
+            TSJIPPY\scheduleTask('remove_old_events', $freq);
         }
     }
 }

@@ -12,8 +12,8 @@ add_action('init', __NAMESPACE__ . '\addEventPostType', 999);
 function addEventPostType()
 {
     TSJIPPY\registerPostTypeAndTax('event', 'events');
-    add_action('tsjippy_frontend_post_before_content', __NAMESPACE__ . '\eventSpecificFields');
-    add_action('tsjippy_frontend_post_content_title', __NAMESPACE__ . '\eventTitle');
+    add_action('tsjippy-frontend-post-before-content', __NAMESPACE__ . '\eventSpecificFields');
+    add_action('tsjippy-frontend-post-content-title', __NAMESPACE__ . '\eventTitle');
 
     add_filter(
         'widget_categories_args',
@@ -57,27 +57,35 @@ function eventSpecificFields($frontEndContent)
 
 ?>
     <br>
-    <div class="property event <?php if ($frontEndContent->postType != 'event') {
-                                    echo 'hidden';
-                                } ?>">
+    <div 
+        class="property event 
+        <?php if ($frontEndContent->postType != 'event') { echo 'hidden'; } ?>"
+    >
         <label>
-            <input type='checkbox' name='event[allday]' value='allday' <?php if (!empty($eventDetails['allday'])) {
-                                                                            echo 'checked';
-                                                                        } ?>>
+            <input 
+                type='checkbox' 
+                name='event[allday]' 
+                value='allday' 
+                <?php if (!empty($eventDetails['allday'])) { echo 'checked'; } ?>>
             All day event
         </label>
 
         <label name="start_date-label">
             <h4>Startdate</h4>
             <input type='date' name='event[start_date]' value='<?php echo esc_attr($eventDetails['start_date'] ?? ''); ?>' required>
-            <input type='time' class='eventtime<?php if (!empty($eventDetails['start_time'])) {
-                                                    echo " hidden";
-                                                } ?>' name='event[start_time]' value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>' required>
+            <input 
+                type='time' 
+                class='eventtime
+                <?php if (!empty($eventDetails['start_time'])) { echo " hidden"; } ?>' 
+                name='event[start_time]' 
+                value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>' 
+                required
+            >
         </label>
 
-        <label name="end_date-label" <?php if (!empty($eventDetails['allday'])) {
-                                            echo "class='hidden'";
-                                        } ?>>
+        <label 
+            name="end_date-label" 
+            <?php if (!empty($eventDetails['allday'])) { echo "class='hidden'"; } ?>>
             <h4>Enddate</h4>
             <input type='date' name='event[end_date]' value='<?php echo esc_attr($eventDetails['end_date'] ?? ''); ?>' required>
             <input type='time' class='eventtime' name='event[end_time]' value='<?php echo esc_attr($eventDetails['end_time'] ?? ''); ?>' required>
@@ -417,7 +425,7 @@ function repetitionIntervalSettings($eventDetails)
 <?php
 }
 
-add_filter('tsjippy_signal_post_notification_message', __NAMESPACE__ . '\postNotification', 10, 2);
+add_filter('tsjippy-signal-post-notification-message', __NAMESPACE__ . '\postNotification', 10, 2);
 function postNotification($excerpt, $post)
 {
     if ($post->post_type == 'event') {
@@ -451,7 +459,7 @@ function postNotification($excerpt, $post)
     return $excerpt;
 }
 
-add_action('tsjippy_after_post_save', __NAMESPACE__ . '\afterPostSave', 1, 2);
+add_action('tsjippy-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 2);
 function afterPostSave($post, $frontEndPost)
 {
     if ($post->post_type != 'event') {

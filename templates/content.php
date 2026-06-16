@@ -29,7 +29,7 @@ if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
     <div class="cat-card inside-article">
-        <?php do_action('tsjippy_before_content'); ?>
+        <?php do_action('tsjippy-before-content'); ?>
         <div class='entry-content'>
             <div class="description event">
                 <?php

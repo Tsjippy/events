@@ -108,7 +108,7 @@ function deleteUser($userId)
  * @return   string|false     Birthday and arrining usrs html or false if there are no events
  *
  **/
-add_filter('tsjippy_prayer_message', __NAMESPACE__ . '\prayerMessage');
+add_filter('tsjippy-prayer-message', __NAMESPACE__ . '\prayerMessage');
 /**
  * Adds the birthday and arrining users message to the prayer message
  *

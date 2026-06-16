@@ -60,7 +60,7 @@ function showCalendar()
     ?>
     <div class="calendar-wrap">
         <?php
-        do_action('tsjippy_before_archive', 'event');
+        do_action('tsjippy-before-archive', 'event');
         ?>
         <button id='add-calendar' class='button small'>Add this calendar to your personal agenda</button>
         <div id='calendaraddingoptions' class='hidden'>

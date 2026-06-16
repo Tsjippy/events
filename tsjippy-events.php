@@ -63,8 +63,8 @@ register_deactivation_hook(__FILE__, function () {
         wp_delete_post($page, true);
     }
 
-    wp_clear_scheduled_hook('anniversary_check_action');
-    wp_clear_scheduled_hook('remove_old_schedules_action');
-    wp_clear_scheduled_hook('add_repeated_events_action');
-    wp_clear_scheduled_hook('remove_old_events_action');
+    wp_clear_scheduled_hook('anniversary_check');
+    wp_clear_scheduled_hook('remove_old_schedules');
+    wp_clear_scheduled_hook('add_repeated_events');
+    wp_clear_scheduled_hook('remove_old_events');
 });

@@ -12,12 +12,12 @@ add_action('init', __NAMESPACE__ . '\initTasks');
 function initTasks()
 {
     //add action for use in scheduled task
-    add_action('remove_old_events_action', __NAMESPACE__ . '\removeOldEvents');
-    add_action('anniversary_check_action', __NAMESPACE__ . '\anniversaryCheck');
-    add_action('remove_old_schedules_action', __NAMESPACE__ . '\removeOldSchedules');
-    add_action('add_repeated_events_action', __NAMESPACE__ . '\addRepeatedEvents');
+    add_action('tsjippy-remove-old-events', __NAMESPACE__ . '\removeOldEvents');
+    add_action('tsjippy-anniversary-check', __NAMESPACE__ . '\anniversaryCheck');
+    add_action('tsjippy-remove-old-schedules', __NAMESPACE__ . '\removeOldSchedules');
+    add_action('tsjippy-add-repeated-events', __NAMESPACE__ . '\addRepeatedEvents');
 
-    add_action('send_event_reminder_action', function ($eventId) {
+    add_action('tsjippy-send-event-reminder', function ($eventId) {
         $events = new DisplayEvents();
         $events->sendEventReminder($eventId);
     });
