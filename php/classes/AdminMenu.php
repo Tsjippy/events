@@ -439,21 +439,4 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
         return '';
     }
-
-    /**
-     * Schedules the tasks for this plugin
-     *
-     */
-    public function postSettingsSave()
-    {
-        TSJIPPY\scheduleTask('anniversary-check', 'daily');
-        TSJIPPY\scheduleTask('remove-old-schedules', 'daily');
-        TSJIPPY\scheduleTask('add-repeated-events', 'yearly');
-
-        $freq   = SETTINGS['freq'] ?? false;
-
-        if ($freq) {
-            TSJIPPY\scheduleTask('remove-old-events', $freq);
-        }
-    }
 }

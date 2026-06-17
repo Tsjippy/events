@@ -59,7 +59,7 @@ class CreateSchedule extends Schedules
                 //Warn minutes in advance
                 $start    = $start->getTimestamp() - $minutes * MINUTE_IN_SECONDS;
 
-                wp_schedule_single_event($start, 'send_event_reminder_action', [$eventId]);
+                wp_schedule_single_event($start, 'tsjippy-events-send-event-reminder', [$eventId]);
             }
         }
 

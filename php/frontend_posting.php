@@ -12,8 +12,8 @@ add_action('init', __NAMESPACE__ . '\addEventPostType', 999);
 function addEventPostType()
 {
     TSJIPPY\registerPostTypeAndTax('event', 'events');
-    add_action('tsjippy-frontend-post-before-content', __NAMESPACE__ . '\eventSpecificFields');
-    add_action('tsjippy-frontend-post-content-title', __NAMESPACE__ . '\eventTitle');
+    add_action('tsjippy-frontend-content-post-before-content', __NAMESPACE__ . '\eventSpecificFields');
+    add_action('tsjippy-frontend-content-post-content-title', __NAMESPACE__ . '\eventTitle');
 
     add_filter(
         'widget_categories_args',
@@ -459,7 +459,7 @@ function postNotification($excerpt, $post)
     return $excerpt;
 }
 
-add_action('tsjippy-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 2);
+add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 2);
 function afterPostSave($post, $frontEndPost)
 {
     if ($post->post_type != 'event') {

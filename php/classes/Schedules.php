@@ -38,29 +38,29 @@ class Schedules
     {
         global $wpdb;
 
-        $this->tableName        = $wpdb->prefix . 'tsjippy_schedules';
-        $this->sessionTableName    = $wpdb->prefix . 'tsjippy_schedule_sessions';
+        $this->tableName         = $wpdb->prefix . 'tsjippy_schedules';
+        $this->sessionTableName  = $wpdb->prefix . 'tsjippy_schedule_sessions';
 
         $this->getSchedules();
 
-        $this->user                 = wp_get_current_user();
+        $this->user              = wp_get_current_user();
 
-        $this->events                = new DisplayEvents();
+        $this->events            = new DisplayEvents();
 
-        $this->lunchStartTime        = '12:00';
-        $this->lunchEndTime            = '13:00';
-        $this->dinerTime            = '18:00';
-        $this->noPermissionText        = 'No permission to do that!';
-        $this->tdLabels                = [];
-        $this->fixedTimeSlotSize    = false;
-        $this->defaultSubject        = '';
+        $this->lunchStartTime    = '12:00';
+        $this->lunchEndTime      = '13:00';
+        $this->dinerTime         = '18:00';
+        $this->noPermissionText  = 'No permission to do that!';
+        $this->tdLabels          = [];
+        $this->fixedTimeSlotSize = false;
+        $this->defaultSubject    = '';
 
-        $this->mobile                = wp_is_mobile();
+        $this->mobile            = wp_is_mobile();
 
         if (array_intersect(['administrator', 'editor'], $this->user->roles)) {
-            $this->admin            = true;
+            $this->admin         = true;
         } else {
-            $this->admin            = false;
+            $this->admin         = false;
         }
     }
 

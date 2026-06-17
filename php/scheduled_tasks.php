@@ -8,16 +8,21 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_action('init', __NAMESPACE__ . '\initTasks');
-function initTasks()
+add_action('init', __NAMESPACE__ . '\scheduleTasks');
+function scheduleTasks()
 {
-    //add action for use in scheduled task
-    add_action('tsjippy-remove-old-events', __NAMESPACE__ . '\removeOldEvents');
-    add_action('tsjippy-anniversary-check', __NAMESPACE__ . '\anniversaryCheck');
-    add_action('tsjippy-remove-old-schedules', __NAMESPACE__ . '\removeOldSchedules');
-    add_action('tsjippy-add-repeated-events', __NAMESPACE__ . '\addRepeatedEvents');
+    TSJIPPY\scheduleTask('tsjippy-events-anniversary-check', 'daily', __NAMESPACE__, 'anniversaryCheck');
+    TSJIPPY\scheduleTask('tsjippy-events-remove-old-schedules', 'daily', __NAMESPACE__, 'removeOldSchedules');
+    TSJIPPY\scheduleTask('tsjippy-events-add-repeated-events', 'yearly', __NAMESPACE__, 'addRepeatedEvents');
 
-    add_action('tsjippy-send-event-reminder', function ($eventId) {
+    $freq   = SETTINGS['freq'] ?? false;
+
+    if ($freq) {
+        TSJIPPY\scheduleTask('tsjippy-events-remove-old-events', $freq, __NAMESPACE__, 'removeOldEvents');
+    };
+
+    // USed for single events
+    add_action('tsjippy-events-send-event-reminder', function ($eventId) {
         $events = new DisplayEvents();
         $events->sendEventReminder($eventId);
     });
