@@ -218,12 +218,12 @@ function addHost($param)
                 if (!empty($unSuccesFull)) {
                     $unSuccesFull        .= ' and ';
                 }
-                $unSuccesFull    .= gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($date));
+                $unSuccesFull    .= gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
             } else {
                 if (!empty($succesFull)) {
                     $succesFull        .= ' and ';
                 }
-                $succesFull    .= gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($date));
+                $succesFull    .= gmdate(TSJIPPY\DATEFORMAT, strtotime($date));
 
                 $html[$date]    = $result['html'];
 

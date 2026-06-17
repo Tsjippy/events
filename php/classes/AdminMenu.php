@@ -113,11 +113,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
             }
 
             if (!empty($celDate)) {
-                $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(TSJIPPY\DATEFORMAT, strtotime($celDate));
 
                 $arrivalDate    = get_user_meta($post->post_author, 'tsjippy_arrival_date', true);
                 if (!empty($arrivalDate)) {
-                    $arrivalDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($arrivalDate));
+                    $arrivalDate    = gmdate(TSJIPPY\DATEFORMAT, strtotime($arrivalDate));
                 }
                 if ($celDate != $arrivalDate) {
                     // this is a rogue event
@@ -135,7 +135,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 }
 
                 $weddingDate    = $family->getWeddingDate($post->post_author);
-                $weddingDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($weddingDate));
+                $weddingDate    = gmdate(TSJIPPY\DATEFORMAT, strtotime($weddingDate));
                 if ($celDate != $weddingDate) {
                     // this is a rogue event
                     if (get_user_meta($post->post_author, 'tsjippy_Wedding anniversary_event_id', true) != $post->ID) {
@@ -179,7 +179,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
             $celDate        = get_post_meta($post->ID, 'tsjippy_celebrationdate', true);
             if (!empty($celDate)) {
-                $celDate    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($celDate));
+                $celDate    = gmdate(TSJIPPY\DATEFORMAT, strtotime($celDate));
             }
 
             $author     = get_user_by('id', $post->post_author);
@@ -191,7 +191,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             if (!empty($celDate)) {
                 $birthday   = get_user_meta($post->post_author, 'tsjippy_birthday', true);
                 if (!empty($birthday)) {
-                    $birthday    = gmdate(TSJIPPY\DATEFORMATTEFORMAT, strtotime($birthday));
+                    $birthday    = gmdate(TSJIPPY\DATEFORMAT, strtotime($birthday));
                 }
 
                 if ($celDate != $birthday) {
@@ -396,9 +396,9 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 foreach ($orphans as $orphan) {
                 ?>
                     <tr>
-                        <th><?php echo esc_attr($orphan->post_title); ?></th>
-                        <th><?php echo esc_attr($orphan->start_date); ?></th>
-                        <th><?php echo esc_attr($orphan->start_time); ?></th>
+                        <th><?php echo esc_attr($orphan->post_title ?? ''); ?></th>
+                        <th><?php echo esc_attr($orphan->start_date ?? ''); ?></th>
+                        <th><?php echo esc_attr($orphan->start_time ?? ''); ?></th>
                     </tr>
                 <?php
                 }
