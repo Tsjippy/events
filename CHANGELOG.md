@@ -7,6 +7,7 @@
 - hook and filter name update
 - hook and filter name update
 - hook and filter name update
+- prefix all hooks with plugin name
 
 ### Fixed
 
