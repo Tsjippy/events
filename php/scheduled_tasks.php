@@ -128,7 +128,7 @@ function addRepeatedEvents()
         $wpdb->prepare(
             "SELECT * FROM %i WHERE `meta_key`=%s",
             $wpdb->postmeta,
-            'eventdetails'
+            'tsjippy_eventdetails'
         )
     );
 
@@ -140,10 +140,10 @@ function addRepeatedEvents()
             update_post_meta($result->post_id, 'tsjippy_eventdetails', json_encode($details));
         }
 
-        if (@is_array($details['repeat']) && !empty($details['repeat']['stop']) && $details['repeat']['stop'] == 'never') {
-            $events    = new CreateEvents();
-            $events->eventData    = $details;
-            $events->postId        = $result->post_id;
+        if (($details['repeat']['stop'] ?? '') == 'never') {
+            $events            = new CreateEvents();
+            $events->eventData = $details;
+            $events->postId    = $result->post_id;
             $events->createEvents();
         }
     }

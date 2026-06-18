@@ -46,37 +46,37 @@ class CreateEvents extends Events
     {
         global $wpdb;
 
-        $baseStartDateStr    = $this->eventData['start_date'];
-        $baseStartDate        = strtotime($baseStartDateStr);
+        $baseStartDateStr = $this->eventData['startdate'];
+        $baseStartDate    = strtotime($baseStartDateStr);
 
         // Startdate is in the past
         if ($baseStartDate < strtotime(gmdate('Y-m-d', time()))) {
             // in the past and not repeated
             if (empty($this->eventData['isrepeated'])) {
-                return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['start_date']}");
+                return new \WP_Error('events', "Date cannot be in the past: {$this->eventData['startdate']}");
             }
         }
 
-        $this->startDates    = [$baseStartDateStr];
+        $this->startDates  = [$baseStartDateStr];
         if (!empty($this->eventData['isrepeated'])) {
-            $baseStartDate    = $this->createRepeatedEvents($baseStartDate);
+            $baseStartDate = $this->createRepeatedEvents($baseStartDate);
         }
 
-        $baseEndDate        = $this->eventData['end_date'];
-        $dayDiff             = ((new \DateTime($baseStartDateStr))->diff((new \DateTime($baseEndDate))))->d;
+        $baseEndDate       = $this->eventData['enddate'];
+        $dayDiff           = ((new \DateTime($baseStartDateStr))->diff((new \DateTime($baseEndDate))))->d;
 
         foreach ($this->startDates as $startDate) {
-            $end_date    = gmdate('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
+            $endDate    = gmdate('Y-m-d', strtotime("+{$dayDiff} day", strtotime($startDate)));
             $this->maybeCreateRow($startDate);
 
             $args    = [
-                'end_date'    => $end_date
+                'end_date' => $endDate
             ];
 
             // only add the data where there is a column for it
             foreach (['id', 'post_id', 'start_time', 'end_time', 'location', 'organizer', 'location_id', 'organizer_id', 'atendees', 'only_for'] as $column) {
                 if (isset($this->eventData[$column])) {
-                    $args[$column]    = $this->eventData[$column];
+                    $args[$column] = $this->eventData[$column];
                 }
             }
 
@@ -85,8 +85,8 @@ class CreateEvents extends Events
                 $this->tableName,
                 $args,
                 array(
-                    'post_id'        => $this->postId,
-                    'start_date'        => $startDate
+                    'post_id'      => $this->postId,
+                    'start_date'   => $startDate
                 ),
             );
 
@@ -195,15 +195,15 @@ class CreateEvents extends Events
         $this->removeDbRows();
 
         //then create the new ones
-        $repeatParam    = $this->eventData['repeat'];
-        $interval        = max(1, (int)$repeatParam['interval']);
-        $amount            = 200; // no more than 200 events to not overload the db
+        $repeatParam = $this->eventData['repeat'];
+        $interval    = max(1, (int)$repeatParam['interval']);
+        $amount      = 200; // no more than 200 events to not overload the db
 
         if ($repeatParam['type'] == 'custom_days') {
             foreach ($repeatParam['includedates'] as $date) {
                 // not yet included and not in the past
                 if (!in_array($date, $this->startDates) && $date > gmdate('Y-m-d')) {
-                    $this->startDates[]    = $date;
+                    $this->startDates[] = $date;
                 }
             }
 
@@ -211,16 +211,22 @@ class CreateEvents extends Events
         }
 
         // Startdate is in the past, adjust
-        $type                = rtrim($repeatParam['type'], 'ly');
+        $type        = rtrim($repeatParam['type'], 'ly');
         if ($type == 'dai') {
             $type    = 'day';
         }
         while ($baseStartDate < strtotime(gmdate('Y-m-d'))) {
-            // Add one day/week/month/year
-            $baseStartDate        = strtotime("+1 $type", $baseStartDate);
+            if(!empty($type)){
+                // Add one day/week/month/year
+                $baseStartDate    = strtotime("+1 $type", $baseStartDate);
+            }elseif($repeatParam['datetype'] == 'patterned'){
+                $baseStartDate    = strtotime($repeatParam['weeks'][0]." ".$repeatParam['weekdays'][0]." ". "of +". $repeatParam['months'][0] ." months", $baseStartDate);
+            }else{
+                $test=1;
+            }
 
             //re-adjust the start_date string
-            $this->startDates    = [gmdate('Y-m-d', $baseStartDate)];
+            $this->startDates = [gmdate('Y-m-d', $baseStartDate)];
         }
 
         // Calculate amount of repititions
@@ -231,19 +237,19 @@ class CreateEvents extends Events
 
         // calculate repetition end date
         if ($repeatStop == 'date') {
-            $repEnddate    = strtotime($repeatParam['end_date']);
+            $repEnddate  = strtotime($repeatParam['end_date']);
         } else {
-            $repEnddate    = strtotime("+5 year", $baseStartDate);
+            $repEnddate  = strtotime("+5 year", $baseStartDate);
         }
 
         $excludeDates    = [];
         if (isset($repeatParam['excludedates'])) {
-            $excludeDates    = (array)$repeatParam['excludedates'];
+            $excludeDates = (array)$repeatParam['excludedates'];
         }
 
         $includeDates    = [];
         if (isset($repeatParam['includedates'])) {
-            $includeDates    = (array)$repeatParam['includedates'];
+            $includeDates = (array)$repeatParam['includedates'];
         }
 
         $startDate        = $baseStartDate;
@@ -263,15 +269,15 @@ class CreateEvents extends Events
             }
 
             if (
-                !in_array($startDateStr, $includeDates)        &&        //we should not exclude this date
-                $startDate < $repEnddate                    &&         //falls within the limits
-                (!is_numeric($amount) || $amount > 0)                //We have not exeeded the amount
+                !in_array($startDateStr, $includeDates) &&        //we should not exclude this date
+                $startDate < $repEnddate                &&        //falls within the limits
+                (!is_numeric($amount) || $amount > 0)             //We have not exeeded the amount
             ) {
-                $this->startDates[]    = $startDateStr;
+                $this->startDates[] = $startDateStr;
             }
 
-            $i                = $i + $interval;
-            $amount            = $amount - 1;
+            $i      = $i + $interval;
+            $amount = $amount - 1;
         }
 
         return $baseStartDate;
