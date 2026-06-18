@@ -4,6 +4,15 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Updated
+
+## [10.3.4] - 2026-06-18
+
+
+### Changed
 - hook and filter name update
 - hook and filter name update
 - hook and filter name update
@@ -11,8 +20,6 @@
 
 ### Fixed
 - scheduled tasks
-
-### Updated
 
 ## [10.3.3] - 2026-06-15
 
