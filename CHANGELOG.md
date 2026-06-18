@@ -10,6 +10,7 @@
 - prefix all hooks with plugin name
 
 ### Fixed
+- scheduled tasks
 
 ### Updated
 
