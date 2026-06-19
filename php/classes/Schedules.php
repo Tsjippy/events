@@ -1284,42 +1284,42 @@ class Schedules
         </div>
 
         <?php
-        $schdeuleId        = '';
-        $sessionId        = '';
-        $hostId            = '';
-        $date            = '';
-        $startTime        = '';
+        $schdeuleId     = '';
+        $sessionId      = '';
+        $hostId         = '';
+        $date           = '';
+        $startTime      = '';
         $endTime        = '';
         $subject        = '';
-        $location        = '';
-        $host            = '';
-        $others            = '';
-        $hidden            = 'hidden';
-        $action            = 'Add';
-        $checked1        = 'checked';
-        $checked2        = '';
+        $location       = '';
+        $host           = '';
+        $others         = '';
+        $hidden         = 'hidden';
+        $action         = 'Add';
+        $checked1       = 'checked';
+        $checked2       = '';
 
         if (isset($_REQUEST['schedule']) && isset($_REQUEST['session']) && is_numeric($_REQUEST['schedule']) && is_numeric($_REQUEST['session'])) {
-            $hidden            = '';
-            $action            = 'Update';
+            $hidden     = '';
+            $action     = 'Update';
             $this->getScheduleById((int) $_REQUEST['schedule']);
             $session    = $this->getSessionEvent((int) $_REQUEST['session']);
 
-            $schdeuleId        = $_REQUEST['schedule'];
-            $sessionId        = $_REQUEST['session'];
-            $hostId            = $session->events[0]->organizer - id;
-            $date            = $session->events[0]->start_date;
-            $startTime        = $session->events[0]->start_time;
-            $endTime        = $session->events[0]->end_time;
-            $subject        = $this->getBaseTitle();
-            $location        = $session->events[0]->location;
-            $host            = $session->events[0]->organizer;
+            $schdeuleId = TSJIPPY\sanitize($_REQUEST['schedule']);
+            $sessionId  = TSJIPPY\sanitize($_REQUEST['session']);
+            $hostId     = $session->events[0]->organizer - id;
+            $date       = $session->events[0]->start_date;
+            $startTime  = $session->events[0]->start_time;
+            $endTime    = $session->events[0]->end_time;
+            $subject    = $this->getBaseTitle();
+            $location   = $session->events[0]->location;
+            $host       = $session->events[0]->organizer;
             if (is_numeric($hostId)) {
-                $host    = $hostId;
+                $host   = $hostId;
             }
-            $others            = maybe_unserialize($session->events[0]->atendees);
+            $others     = maybe_unserialize($session->events[0]->atendees);
 
-            $reminders        = (array)get_post_meta($session->posts[0]->ID, 'tsjippy_reminders', true);
+            $reminders  = (array)get_post_meta($session->posts[0]->ID, 'tsjippy_reminders', true);
 
             if (!in_array(15, $reminders)) {
                 $checked1        = '';
