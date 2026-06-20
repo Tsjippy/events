@@ -13,13 +13,6 @@ add_action('init', function () {
     );
 
     register_block_type(
-        __DIR__ . '/schedules/build',
-        array(
-            'render_callback' => __NAMESPACE__ . '\displaySchedules',
-        )
-    );
-
-    register_block_type(
         __DIR__ . '/upcomingArrivals/build',
         array(
             'render_callback' => __NAMESPACE__ . '\upcomingArrivalsBlock',
@@ -87,12 +80,6 @@ function displayUpcomingEvents($attributes)
     $events        = new DisplayEvents();
 
     return $events->upcomingEvents($args['items'], $args['months'], $include, $args['title']);
-}
-
-function displaySchedules()
-{
-    $schedule    = new Schedules();
-    return $schedule->showSchedules();
 }
 
 // register custom meta tag field

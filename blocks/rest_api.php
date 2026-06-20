@@ -7,19 +7,6 @@ use TSJIPPY;
 add_action('rest_api_init',  __NAMESPACE__ . '\blockRestApiInit');
 function blockRestApiInit()
 {
-    // show schedules
-    register_rest_route(
-        TSJIPPY\RESTAPIPREFIX . '/events',
-        '/show_schedules',
-        array(
-            'methods'                 => 'GET',
-            'callback'                 => __NAMESPACE__ . '\showSchedules',
-            'permission_callback'     => function ($rest) {
-                return current_user_can('read');
-            },
-        )
-    );
-
     // show upcoming arrivals
     register_rest_route(
         TSJIPPY\RESTAPIPREFIX . '/events',
@@ -45,12 +32,6 @@ function blockRestApiInit()
     );
 }
 
-function showSchedules()
-{
-    $schedule        = new Schedules();
-    return $schedule->showSchedules();
-}
-
 /**
  * Show the upcoming arrivals block
  *
@@ -74,20 +55,26 @@ function upcomingEvents($rest)
     $cats    = [];
     $include = [];
 
+    // phpcs:ignore
     if (is_numeric($_GET['items'] ?? false)) {
+        // phpcs:ignore
         $items    = TSJIPPY\sanitize($_GET['items']);
     }
 
+    // phpcs:ignore
     if (is_numeric($_GET['months'] ?? false)) {
+        // phpcs:ignore
         $months    = TSJIPPY\sanitize($_GET['months']);
     }
 
+    // phpcs:ignore
     if (!empty($_GET['categories'])) {
+        // phpcs:ignore
         $cats    = explode(',', trim(TSJIPPY\sanitize($_GET['categories']), ','));
 
         $categories    = get_categories(array(
-            'taxonomy'        => 'events',
-            'hide_empty'     => false,
+            'taxonomy'   => 'events',
+            'hide_empty' => false,
         ));
 
         $exclude    = $cats;

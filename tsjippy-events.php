@@ -47,19 +47,4 @@ register_activation_hook(__FILE__, function () {
     // Create the dbs
     $events    = new Events();
     $events->createEventsTable();
-
-    $schedules    = new Schedules();
-    $schedules->createDbTable();
-
-    $settings                    = SETTINGS;
-    $settings['schedules-page']    = TSJIPPY\ADMIN\createDefaultPage('Schedules', '[tsjippy_schedules]');
-
-    update_option('tsjippy_events_settings', $settings);
-});
-
-register_deactivation_hook(__FILE__, function () {
-    foreach (SETTINGS['schedules-pages'] as $page) {
-        // Remove the auto created page
-        wp_delete_post($page, true);
-    }
 });

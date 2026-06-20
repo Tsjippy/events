@@ -377,24 +377,24 @@ class CreateEvents extends Events
     protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey)
     {
         //Get the upcoming celebration date
-        $start_date                                = gmdate(gmdate('Y') . '-m-d', strtotime($metaValue));
+        $start_date                            = gmdate(gmdate('Y') . '-m-d', strtotime($metaValue));
 
-        $this->eventData['start_date']            = $start_date;
-        $this->eventData['end_date']                = $start_date;
-        $this->eventData['location']            = '';
-        $this->eventData['organizer']            = $user->display_name;
-        $this->eventData['organizer-id']        = $user->ID;
-        $this->eventData['start_time']            = '00:00';
-        $this->eventData['end_time']                = '23:59';
-        $this->eventData['allday']                = true;
-        $this->eventData['isrepeated']            = 'Yes';
-        $this->eventData['repeat']['interval']    = 1;
-        $this->eventData['repeat']['amount']    = 90;
-        $this->eventData['repeat']['stop']        = 'never';
-        $this->eventData['repeat']['type']        = 'yearly';
+        $this->eventData['start_date']         = $start_date;
+        $this->eventData['end_date']           = $start_date;
+        $this->eventData['location']           = '';
+        $this->eventData['organizer']          = $user->display_name;
+        $this->eventData['organizer-id']       = $user->ID;
+        $this->eventData['start_time']         = '00:00';
+        $this->eventData['end_time']           = '23:59';
+        $this->eventData['allday']             = true;
+        $this->eventData['isrepeated']         = 'Yes';
+        $this->eventData['repeat']['interval'] = 1;
+        $this->eventData['repeat']['amount']   = 90;
+        $this->eventData['repeat']['stop']     = 'never';
+        $this->eventData['repeat']['type']     = 'yearly';
 
         $post = array(
-            'post_type'        => 'event',
+            'post_type'     => 'event',
             'post_title'    => $title,
             'post_content'  => $title,
             'post_status'   => 'publish',
@@ -437,9 +437,10 @@ class CreateEvents extends Events
 
     /**
      * Stores all event details in the db, removes any existing events, and creates new ones.
-     * @param      int|WP_post  $post        The id of a post or the post itself
+     * @param   int|\WP_post  $post        The id of a post or the post itself
+     * @param   array         $event       The event data    
      */
-    public function storeEventMeta($post)
+    public function storeEventMeta($post, $event)
     {
         if (is_numeric($post)) {
             $post    = get_post($post);
@@ -447,26 +448,25 @@ class CreateEvents extends Events
 
         $this->postId                   = $post->ID;
 
-        $event                          = [];
-        $event['allday']                = TSJIPPY\sanitize($_POST['event']['allday'] ?? '');
-        $event['start_date']            = TSJIPPY\sanitize($_POST['event']['start_date'] ?? '');
-        $event['start_time']            = TSJIPPY\sanitize($_POST['event']['start_time'] ?? '');
-        $event['end_date']              = TSJIPPY\sanitize($_POST['event']['end_date'] ?? '');
-        $event['end_time']              = TSJIPPY\sanitize($_POST['event']['end_time'] ?? '');
+        $event['allday']                = $event['allday'] ?? '';
+        $event['start_date']            = $event['start_date'] ?? '';
+        $event['start_time']            = $event['start_time'] ?? '';
+        $event['end_date']              = $event['end_date'] ?? '';
+        $event['end_time']              = $event['end_time'] ?? '';
 
         if (empty($event['start_date']) || empty($event['end_date'])) {
             return;
         }
 
-        $event['repeat']['type']        = TSJIPPY\sanitize($_POST['event']['repeat']['type'] ?? '');
-        $event['repeat']['interval']    = TSJIPPY\sanitize($_POST['event']['repeat']['interval'] ?? '');
-        $event['repeat']['stop']        = TSJIPPY\sanitize($_POST['event']['repeat']['stop'] ?? '');
-        $event['repeat']['end_date']    = TSJIPPY\sanitize($_POST['event']['repeat']['end_date'] ?? '');
-        $event['repeat']['amount']      = TSJIPPY\sanitize($_POST['event']['repeat']['amount'] ?? '');
-        $event['location']              = TSJIPPY\sanitize($_POST['event']['location'] ?? '');
-        $event['location_id']           = TSJIPPY\sanitize($_POST['event']['location-id'] ?? '');
-        $event['organizer']             = TSJIPPY\sanitize($_POST['event']['organizer'] ?? '');
-        $event['organizer-id']          = TSJIPPY\sanitize($_POST['event']['organizer-id'] ?? '');
+        $event['repeat']['type']        = $event['repeat']['type'] ?? '';
+        $event['repeat']['interval']    = $event['repeat']['interval'] ?? '';
+        $event['repeat']['stop']        = $event['repeat']['stop'] ?? '';
+        $event['repeat']['end_date']    = $event['repeat']['end_date'] ?? '';
+        $event['repeat']['amount']      = $event['repeat']['amount'] ?? '';
+        $event['location']              = $event['location'] ?? '';
+        $event['location_id']           = $event['location-id'] ?? '';
+        $event['organizer']             = $event['organizer'] ?? '';
+        $event['organizer-id']          = $event['organizer-id'] ?? '';
 
         //check if anything has changed
         $oldMeta    = get_post_meta($this->postId, 'tsjippy_eventdetails', true);

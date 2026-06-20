@@ -23,7 +23,7 @@ class IcalFeed
      */
     public function calendarStream()
     {
-        $userId        = (int) $_GET['id'];
+        $userId        = (int) $_GET['id'] ?? 0;
         if (!is_numeric($userId)) {
             $userId    = -1;
         }

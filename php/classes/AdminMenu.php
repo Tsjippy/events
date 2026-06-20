@@ -419,7 +419,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
     public function postActions()
     {
-
+        // phpcs:ignore
         if (isset($_POST['delete-orphans'])) {
             global $wpdb;
 

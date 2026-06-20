@@ -12,7 +12,6 @@ add_action('init', __NAMESPACE__ . '\scheduleTasks');
 function scheduleTasks()
 {
     TSJIPPY\scheduleTask('tsjippy-events-anniversary-check', 'daily', __NAMESPACE__, 'anniversaryCheck');
-    TSJIPPY\scheduleTask('tsjippy-events-remove-old-schedules', 'daily', __NAMESPACE__, 'removeOldSchedules');
     TSJIPPY\scheduleTask('tsjippy-events-add-repeated-events', 'yearly', __NAMESPACE__, 'addRepeatedEvents');
 
     $freq   = SETTINGS['freq'] ?? false;
@@ -98,21 +97,6 @@ function anniversaryCheck()
                     $partner->ID
                 );
             }
-        }
-    }
-}
-
-/**
- * Get all schedules with an end_date in the past and deletes them
- */
-function removeOldSchedules()
-{
-    $schedules    = new CreateSchedule();
-    $schedules->getSchedules();
-
-    foreach ($schedules->schedules as $schedule) {
-        if ($schedule->end_date < gmdate('Y-m-d')) {
-            $schedules->removeSchedule($schedule->id);
         }
     }
 }
