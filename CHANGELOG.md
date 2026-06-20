@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- moved all schedules code to seperate plugin
 
 ### Fixed
 
