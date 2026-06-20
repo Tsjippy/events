@@ -4,11 +4,16 @@
 ### Added
 
 ### Changed
-- moved all schedules code to seperate plugin
 
 ### Fixed
 
 ### Updated
+
+## [10.3.6] - 2026-06-20
+
+
+### Changed
+- moved all schedules code to seperate plugin
 
 ## [10.3.5] - 2026-06-19
 
