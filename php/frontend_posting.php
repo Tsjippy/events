@@ -467,5 +467,6 @@ function afterPostSave($post, $frontEndPost)
     }
 
     $events = new CreateEvents();
+    // phpcs:ignore
     $events->storeEventMeta($post, TSJIPPY\sanitize($_POST['event'] ?? []));
 }

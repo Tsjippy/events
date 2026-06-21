@@ -26,14 +26,14 @@ function restApiInit()
             },
             'permission_callback'     => '__return_true',                // Allow public access
             'args'                    => array(
-                'month'        => array(
-                    'required'    => true,
+                'month'               => array(
+                    'required'          => true,
                     'validate_callback' => function ($param) {
                         return is_numeric($param);
                     }
                 ),
-                'year'        => array(
-                    'required'    => true,
+                'year'                => array(
+                    'required'          => true,
                     'validate_callback' => function ($param) {
                         return is_numeric($param);
                     }
@@ -83,14 +83,14 @@ function restApiInit()
             'callback'                 => function () {
                 $events        = new DisplayEvents();
                 $offset        = (int) $_POST['offset'];
-                $month         = (int) $_POST['month'];
-                $year          = (int) $_POST['year'];
+                $month         = (int) $_POST['month'] ?? '';
+                $year          = (int) $_POST['year'] ?? '';
                 return $events->listCalendar($offset, $month, $year);
             },
             'permission_callback'     => '__return_true',                // Allow public access
             'args'                    => array(
-                'offset'        => array(
-                    'required'    => true,
+                'offset'            => array(
+                    'required'          => true,
                     'validate_callback' => function ($offset) {
                         return is_numeric($offset);
                     }

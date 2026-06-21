@@ -1079,18 +1079,13 @@ class DisplayEvents extends Events
 
     /**
      * Sends a message to anyone who has an event which is about to start
-     * @param      int     $eventId        The id of the event
+     * @param     int     $eventId  The id of the event
      *
-     * @return    bool                    true if succesfull false if no event found
+     * @return    bool              True if succesfull false if no event found
      */
     public function sendEventReminder($eventId)
     {
-        global $wpdb;
-        $results    = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM %i WHERE id=%d",
-            $this->tableName,
-            $eventId
-        ));
+        $results    = TSJIPPY\getFromDb("get_event_$eventId", 'events', "SELECT * FROM %i WHERE id=%d",  $this->tableName, $eventId);
 
         if (empty($results)) {
             return false;

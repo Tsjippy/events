@@ -58,6 +58,7 @@ class Events
 
     /**
      * Gets an event from the db
+     * 
      * @param    int            $postId        WP_Post id
      *
      * @return    object|false            The event or false if no event found
@@ -65,12 +66,15 @@ class Events
     public function retrieveSingleEvent($postId)
     {
         global $wpdb;
-        $results    = $wpdb->get_results($wpdb->prepare(
+        
+        TSJIPPY\getFromDb(
+            "get_event_by_postid_$postId",
+            'events',
             "SELECT * FROM %i as posts INNER JOIN %i as events ON posts.ID = events.post_id WHERE post_id=%d ORDER BY ABS(DATEDIFF(start_date, CURDATE())) LIMIT 1",
             $wpdb->posts,
             $this->tableName,
             $postId
-        ));
+        );
 
         if (empty($results)) {
             return false;

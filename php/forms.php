@@ -22,7 +22,11 @@ function beforeSavingFormData($submission, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
+        
+        // phpcs:ignore
         $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'tsjippy_birthday', true), TSJIPPY\sanitize($_POST['birthday'] ?? ''));
+
+        // phpcs:ignore
         $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'tsjippy_arrival_date', true), TSJIPPY\sanitize($_POST['arrival-date'] ?? ''));
     }
 
@@ -30,6 +34,7 @@ function beforeSavingFormData($submission, $object)
         $family = new TSJIPPY\FAMILY\Family();
 
         // Then the weddingdate
+        // phpcs:ignore
         $newDate    = TSJIPPY\sanitize($_POST['weddingdate'] ?? '' );
         $oldDate    = $family->getWeddingDate($object->userId);
         if ($newDate != $oldDate) {
