@@ -90,6 +90,15 @@ class CreateEvents extends Events
                 ),
             );
 
+            /**
+             * Flush db cache
+             */
+            if(wp_cache_supports( 'flush_group' )){
+                wp_cache_flush_group('events');
+            }else{
+                wp_cache_flush();
+            }
+
             if ($wpdb->last_error !== '') {
                 return new WP_Error('event', $wpdb->last_error);
             }
@@ -496,8 +505,6 @@ class CreateEvents extends Events
      */
     protected function maybeCreateRow($startDate)
     {
-        global $wpdb;
-
         //check if form row already exists
         $event  = TSJIPPY\getFromDb(
             "get_event_for_post_{$this->postId}_startdate_$startDate",
@@ -509,12 +516,17 @@ class CreateEvents extends Events
         );
 
         if (empty($event)) {
-            $wpdb->insert(
+            TSJIPPY\insertInDb(
                 $this->tableName,
                 array(
                     'post_id'     => $this->postId,
                     'start_date'  => $startDate
-                )
+                ),
+                [
+                    '%d',
+                    '%s'
+                ],
+                'events'
             );
         }
     }

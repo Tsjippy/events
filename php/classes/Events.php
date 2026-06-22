@@ -100,10 +100,11 @@ class Events
             wp_delete_post($postId);
         }
 
-        return $wpdb->delete(
+        return TSJIPPY\removeFromDb(
             $this->tableName,
             ['post_id' => $postId],
-            ['%d']
+            ['%d'],
+            'events'
         );
     }
 }
