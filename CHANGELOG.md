@@ -7,6 +7,7 @@
 - implemented db caching
 - implemented db caching
 - implemented db caching
+- replaced wpdb->update with updateDbFunction
 
 ### Fixed
 
