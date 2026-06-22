@@ -81,26 +81,23 @@ class CreateEvents extends Events
             }
 
             //Update the database
-            $wpdb->update(
+            $result = TSJIPPY\updateDbValue(
                 $this->tableName,
                 $args,
                 array(
                     'post_id'      => $this->postId,
                     'start_date'   => $startDate
                 ),
+                [],
+                [
+                    '%d',
+                    '%s'
+                ],
+                'events'
             );
 
-            /**
-             * Flush db cache
-             */
-            if(wp_cache_supports( 'flush_group' )){
-                wp_cache_flush_group('events');
-            }else{
-                wp_cache_flush();
-            }
-
-            if ($wpdb->last_error !== '') {
-                return new WP_Error('event', $wpdb->last_error);
+            if (is_wp_error($result)) {
+                return $result;
             }
         }
 
