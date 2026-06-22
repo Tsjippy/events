@@ -13,15 +13,15 @@ if (! defined('ABSPATH')) {
 }
 
 
-$events        = new DisplayEvents();
-$event        = $events->retrieveSingleEvent(get_the_ID());
+$events = new DisplayEvents();
+$event  = $events->retrieveSingleEvent(get_the_ID());
 if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
-?>
+    ?>
     <div class='error'>
         This event is not ment for you to see, sorry.
     </div>
 
-<?php
+    <?php
     return;
 }
 
