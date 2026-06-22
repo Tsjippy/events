@@ -10,6 +10,7 @@
 - replaced wpdb->update with updateDbFunction
 
 ### Fixed
+- direct access bug
 
 ### Updated
 
