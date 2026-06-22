@@ -84,7 +84,8 @@ class Events
 
     /**
      * Removes all events connected to an certain event post
-     * @param      int      $postId        Optional post id
+     * 
+     * @param    int     $postId     Optional post id
      * @param    bool    $delPost    Wheter to delete the post as well
      */
     public function removeDbRows($postId = null, $delPost = false)

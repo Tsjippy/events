@@ -35,16 +35,18 @@ function removeOldEvents()
 {
     global $wpdb;
 
-    $maxAge       = SETTINGS['max-age'] ?? 90;
+    $maxAge = SETTINGS['max-age'] ?? 90;
 
-    $events        = new CreateEvents();
+    $events = new CreateEvents();
 
-    $expiredEvents = $wpdb->get_results(
-        $wpdb->prepare(
-            "DELETE FROM %i WHERE start_date < %s",
-            $events->tableName,
-            gmdate('Y-m-d', strtotime("- $maxAge"))
-        )
+    $date   = gmdate('Y-m-d', strtotime("- $maxAge"));
+
+    $expiredEvents = TSJIPPY\getFromDb(
+        "events_before_$date",
+        "events",
+        "select * FROM %i WHERE start_date < %s",
+        $events->tableName,
+        $date
     );
     
     foreach ($expiredEvents as $event) {
@@ -108,12 +110,12 @@ function addRepeatedEvents()
 {
     global $wpdb;
 
-    $results    = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT * FROM %i WHERE `meta_key`=%s",
-            $wpdb->postmeta,
-            'tsjippy_eventdetails'
-        )
+    $results    = TSJIPPY\getFromDb(
+        "get_all_posts_with_eventdetails_meta",
+        "events",
+        "SELECT * FROM %i WHERE `meta_key`=%s",
+        $wpdb->postmeta,
+        'tsjippy_eventdetails'
     );
 
     foreach ($results as $result) {

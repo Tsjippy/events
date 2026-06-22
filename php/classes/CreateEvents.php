@@ -499,13 +499,13 @@ class CreateEvents extends Events
         global $wpdb;
 
         //check if form row already exists
-        $event  = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM %i WHERE `post_id` = %d AND start_date = %s",
-                $this->tableName,
-                $this->postId,
-                $startDate
-            )
+        $event  = TSJIPPY\getFromDb(
+            "get_event_for_post_{$this->postId}_startdate_$startDate",
+            "events",
+            "SELECT * FROM %i WHERE `post_id` = %d AND start_date = %s",
+            $this->tableName,
+            $this->postId,
+            $startDate
         );
 
         if (empty($event)) {
