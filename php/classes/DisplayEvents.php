@@ -280,7 +280,7 @@ class DisplayEvents extends Events
         } else {
             $url    = TSJIPPY\maybeGetUserPageUrl($userId);
             $email    = $user->user_email;
-            $phone    = get_user_meta($userId, 'tsjippy_phonenumbers', true);
+            $phone    = get_user_meta($userId, 'tsjippy_phonenumbers');
 
             $html    = "<a href='$url'>{$user->display_name}</a><br>";
             $html    .= "<br><a href='mailto:$email'>$email</a>";
