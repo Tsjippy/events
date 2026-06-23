@@ -326,7 +326,7 @@ document.addEventListener("click", function (event) {
 
       let options = {
         title: "Success",
-        timer: 1500,
+        timer: 3000,
       };
 
       new Main.Alert(`Copied ${target.textContent}`, "success", options);
