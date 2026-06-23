@@ -17,7 +17,7 @@ add_filter('tsjippy-family-meta-keys', function ($metaKeys) {
 });
 
 //create  events
-add_filter('tsjippy-before-inserting-formdata', __NAMESPACE__ . '\beforeSavingFormData', 10, 2);
+add_filter('tsjippy-forms-before-inserting-formdata', __NAMESPACE__ . '\beforeSavingFormData', 10, 2);
 function beforeSavingFormData($submission, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {

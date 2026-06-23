@@ -8,7 +8,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-add_filter('tsjippy-after-bot-payer', __NAMESPACE__ . '\afterBotPrayer');
+add_filter('tsjippy-payer-after-message', __NAMESPACE__ . '\afterBotPrayer'); 
 function afterBotPrayer($args)
 {
     $family    = new TSJIPPY\FAMILY\Family();

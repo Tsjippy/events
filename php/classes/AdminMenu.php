@@ -425,13 +425,16 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
             $events = new Events();
 
-            $wpdb->query(
-                $wpdb->prepare(
+            TSJIPPY\removeFromDb(
+                $events->tableName,
+                [
                     "DELETE %i FROM %i as events INNER JOIN $wpdb->posts as posts ON events.post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)",
                     $events->tableName,
                     $events->tableName,
                     $wpdb->users
-                )
+                ],
+                [],
+                'events'
             );
 
             /**
