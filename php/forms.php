@@ -18,16 +18,16 @@ add_filter('tsjippy-family-meta-keys', function ($metaKeys) {
 
 //create  events
 add_filter('tsjippy-forms-before-inserting-formdata', __NAMESPACE__ . '\beforeSavingFormData', 10, 2);
-function beforeSavingFormData($submission, $object)
+function beforeSavingFormData($request, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
         
         // phpcs:ignore
-        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'tsjippy_birthday', true), TSJIPPY\sanitize($_POST['birthday'] ?? ''));
+        $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'tsjippy_birthday', true), $request['birthday'] ?? '');
 
         // phpcs:ignore
-        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'tsjippy_arrival_date', true), TSJIPPY\sanitize($_POST['arrival-date'] ?? ''));
+        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'tsjippy_arrival_date', true), $request['arrival-date'] ?? '');
     }
 
     if ($object->formData->slug == 'user_family') {
@@ -35,7 +35,7 @@ function beforeSavingFormData($submission, $object)
 
         // Then the weddingdate
         // phpcs:ignore
-        $newDate    = TSJIPPY\sanitize($_POST['weddingdate'] ?? '' );
+        $newDate    = $request['weddingdate'] ?? '' ;
         $oldDate    = $family->getWeddingDate($object->userId);
         if ($newDate != $oldDate) {
             $events        = new CreateEvents();
@@ -44,5 +44,5 @@ function beforeSavingFormData($submission, $object)
         }
     }
 
-    return $submission;
+    return $request;
 }
