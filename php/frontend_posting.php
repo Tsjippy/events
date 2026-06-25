@@ -459,14 +459,20 @@ function postNotification($excerpt, $post)
     return $excerpt;
 }
 
-add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 2);
-function afterPostSave($post, $frontEndPost)
+/**
+ * Allow comments
+ * 
+ * @param   \WP_Post    $post       The new or updated post
+ * @param   object      $object     FrontEndContent Instance
+ * @param   array       $request    The sanitized request data
+ */
+add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 3);
+function afterPostSave($post, $frontEndPost, $request)
 {
     if ($post->post_type != 'event') {
         return;
     }
 
     $events = new CreateEvents();
-    // phpcs:ignore
-    $events->storeEventMeta($post, TSJIPPY\sanitize($_POST['event'] ?? []));
+    $events->storeEventMeta($post, $request['event'] ?? []);
 }
