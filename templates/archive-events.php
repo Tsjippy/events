@@ -83,35 +83,24 @@ function showCalendar()
                     <img src='<?php echo esc_url(TSJIPPY\pathToUrl(PLUGINPATH . 'pictures')); ?>/date.png' alt='time' loading='lazy' class='event-icon'>
                     <?php
                     ?>
-                    <select class='month-selector<?php if ($view == 'week') {
-                                                        echo ' hidden';
-                                                    } ?>' placeholder="Select month">
+                    <select class='month-selector<?php if ($view == 'week') echo 'hidden'; ?>' placeholder="Select month">
                         <?php
                         for ($m = 1; $m < 13; $m++) {
                             $monthName    = gmdate("F", mktime(0, 0, 0, $m, 10));
                             $monthNum    = sprintf("%02d", $m);
-                            if (($_GET['month'] ?? '') == $m) {
-                                echo ' selected=selected';
-                            }
                         ?>
-                            <option value='<?php echo esc_attr($monthNum); ?>' <?php if (($_GET['month'] ?? '') == $m) {
-                                                                                    echo ' selected=selected';
-                                                                                } ?>>
+                            <option value='<?php echo esc_attr($monthNum); ?>' <?php if (($_GET['month'] ?? '') == $m) echo ' selected=selected'; ?>>
                                 <?php echo esc_html($monthName); ?>
                             </option>
                         <?php
                         }
                         ?>
                     </select>
-                    <select class='week-selector<?php if ($view != 'week') {
-                                                    echo ' hidden';
-                                                } ?>' placeholder="Select week">
+                    <select class='week-selector<?php if ($view != 'week') echo ' hidden'; ?>' placeholder="Select week">
                         <?php
                         for ($w = 1; $w <= 53; $w++) {
                         ?>
-                            <option value='<?php echo esc_attr($w); ?>' <?php if (($_GET['week'] ?? '') == $w) {
-                                                                            echo ' selected=selected';
-                                                                        } ?>>
+                            <option value='<?php echo esc_attr($w); ?>' <?php if (($_GET['week'] ?? '') == $w) echo ' selected=selected';  ?>>
                                 Week <?php echo esc_html($w); ?>
                             </option>
                         <?php
@@ -123,14 +112,12 @@ function showCalendar()
                         <?php
                         $start     = gmdate('Y');
                         $end    = gmdate("Y", strtotime('+10 year'));
+                        
                         for ($y = $start; $y < $end; $y++) {
-
                         ?>
                             <option
                                 value='<?php echo esc_attr($y); ?>'
-                                <?php if ($y == ($_GET['year'] ?? '')) {
-                                    echo 'selected=selected';
-                                } ?>>
+                                <?php if ($y == ($_GET['year'] ?? '')) echo 'selected=selected'; ?>>
                                 <?php echo esc_html($y); ?>
                             </option>
                         <?php
@@ -140,24 +127,22 @@ function showCalendar()
                 </div>
             </div>
             <div class="view-style">
-                <span class="viewselector<?php if ($view == 'month') {
-                                                echo ' selected';
-                                            } ?>" data-type="monthview">Monthly</span>
-                <span class="viewselector<?php if ($view == 'week') {
-                                                echo ' selected';
-                                            } ?>" data-type="weekview">Weekly</span>
-                <span class="viewselector<?php if ($view == 'list') {
-                                                echo ' selected';
-                                            } ?>" data-type="listview">List</span>
+                <span class="viewselector<?php if ($view == 'month') echo ' selected'; ?>" data-type="monthview">
+                    Monthly
+                </span>
+                <span class="viewselector<?php if ($view == 'week') echo ' selected'; ?>" data-type="weekview">
+                    Weekly
+                </span>
+                <span class="viewselector<?php if ($view == 'list') echo ' selected'; ?>" data-type="listview">
+                    List
+                </span>
             </div>
         </div>
 
-        <div id='monthview' class='calendarview<?php if ($view != 'month') {
-                                                    echo ' hidden';
-                                                } ?>'>
+        <div id='monthview' class='calendarview<?php if ($view != 'month') echo ' hidden'; ?>'>
             <?php
             if ($view == 'month') {
-                
+
                 $day    = gmdate('d');
                 $month  = TSJIPPY\sanitize($_GET['month'] ?? '');
                 $year   = TSJIPPY\sanitize($_GET['year'] ?? '');
@@ -168,20 +153,16 @@ function showCalendar()
                 if (!is_numeric($year) || strlen($year) != 4) {
                     $year  = gmdate('Y');
                 }
-
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->monthCalendar($day, $month, $year, $cat);
+                $events->monthCalendar($day, $month, $year, $cat, true);
             }
             ?>
         </div>
-        <div id='weekview' class='calendarview<?php if ($view != 'week') {
-                                                    echo ' hidden';
-                                                } ?>'>
+        <div id='weekview' class='calendarview<?php if ($view != 'week') echo ' hidden'; ?>'>
             <?php
             if ($view == 'week') {
                 $weekNr = '';
                 $year   = '';
-                
+
                 if (strlen($_GET['week'] ?? '') == 2) {
                     $weekNr = (int)$_GET['week'];
                 }
@@ -189,20 +170,17 @@ function showCalendar()
                     $year  = (int) $_GET['yr'];
                 }
 
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->weekCalendar($weekNr, $year, $cat);
+                $events->weekCalendar($weekNr, $year, $cat, true);
             }
             ?>
         </div>
-        <div id='listview' class='calendarview<?php if ($view != 'list') {
-                                                    echo ' hidden';
-                                                } ?>'>
+        <div id='listview' class='calendarview<?php if ($view != 'list') echo ' hidden'; ?>'>
             <?php
             if ($view == 'list') {
                 $month   = (int) $_GET['month'] ?? '';
                 $year    = (int) $_GET['yr'] ?? '';
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                echo $events->listCalendar('', $month, $year, $cat);
+                
+                $events->listCalendar('', $month, $year, $cat, true);
             }
             ?>
         </div>

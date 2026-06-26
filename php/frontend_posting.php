@@ -59,14 +59,14 @@ function eventSpecificFields($frontEndContent)
     <br>
     <div 
         class="property event 
-        <?php if ($frontEndContent->postType != 'event') { echo 'hidden'; } ?>"
+        <?php if ($frontEndContent->postType != 'event') echo 'hidden';  ?>"
     >
         <label>
             <input 
                 type='checkbox' 
                 name='event[allday]' 
                 value='allday' 
-                <?php if (!empty($eventDetails['allday'])) { echo 'checked'; } ?>>
+                <?php if (!empty($eventDetails['allday'])) echo 'checked';  ?>>
             All day event
         </label>
 
@@ -76,7 +76,7 @@ function eventSpecificFields($frontEndContent)
             <input 
                 type='time' 
                 class='eventtime
-                <?php if (!empty($eventDetails['start_time'])) { echo " hidden"; } ?>' 
+                <?php if (!empty($eventDetails['start_time'])) echo " hidden";  ?>' 
                 name='event[start_time]' 
                 value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>' 
                 required
@@ -85,7 +85,7 @@ function eventSpecificFields($frontEndContent)
 
         <label 
             name="end_date-label" 
-            <?php if (!empty($eventDetails['allday'])) { echo "class='hidden'"; } ?>>
+            <?php if (!empty($eventDetails['allday'])) echo "class='hidden'";  ?>>
             <h4>Enddate</h4>
             <input type='date' name='event[end_date]' value='<?php echo esc_attr($eventDetails['end_date'] ?? ''); ?>' required>
             <input type='time' class='eventtime' name='event[end_time]' value='<?php echo esc_attr($eventDetails['end_time'] ?? ''); ?>' required>
@@ -190,9 +190,7 @@ function displayRepetitionParameters($eventDetails)
     }
 
 ?>
-    <fieldset class='repeat-wrapper <?php if (empty($eventDetails['isrepeated'])) {
-                                        echo 'hidden';
-                                    } ?>'>
+    <fieldset class='repeat-wrapper <?php if (empty($eventDetails['isrepeated'])) echo 'hidden'; ?>'>
         <legend><span class='text'>Repeat parameters</span></legend>
         <h4>Select repeat type:</h4>
         <select name="event[repeat][type]">
@@ -200,9 +198,7 @@ function displayRepetitionParameters($eventDetails)
             <?php
             foreach ($list as $key => $item) {
             ?>
-                <option value='<?php echo esc_attr($key); ?>' <?php if ($repeatParam['type'] == $key) {
-                                                                    echo 'selected=selected';
-                                                                } ?>>
+                <option value='<?php echo esc_attr($key); ?>' <?php if ($repeatParam['type'] == $key) echo 'selected=selected'; ?>>
                     <?php echo esc_html($item); ?>
                 </option>
             <?php
@@ -214,33 +210,25 @@ function displayRepetitionParameters($eventDetails)
             <h4>Select repeat pattern:</h4>
             <!-- Same day number of the month -->
             <label class='option-label'>
-                <input type='radio' name='event[repeat][datetype]' value='samedate' <?php if ($repeatParam['datetype'] == 'samedate') {
-                                                                                        echo 'checked';
-                                                                                    } ?>>
+                <input type='radio' name='event[repeat][datetype]' value='samedate' <?php if ($repeatParam['datetype'] == 'samedate') echo 'checked'; ?>>
                 On the same day
             </label>
 
             <!-- Same Day of the week -->
             <label class='option-label'>
-                <input type='radio' name='event[repeat][datetype]' value='patterned' <?php if ($repeatParam['datetype'] == 'patterned') {
-                                                                                            echo 'checked';
-                                                                                        } ?>>
+                <input type='radio' name='event[repeat][datetype]' value='patterned' <?php if ($repeatParam['datetype'] == 'patterned') echo 'checked'; ?>>
                 On the <span class='weekword'><?php echo esc_html($occurence); ?></span> <span class='dayname'><?php echo esc_html($dayName); ?></span> of the month
             </label>
 
             <!-- Last dayname of the month-->
             <label class='option-label last-dayname-of-month <?php echo esc_html($hideLast); ?>'>
-                <input type='radio' name='event[repeat][datetype]' value='last' <?php if ($repeatParam['datetype'] == 'last') {
-                                                                                    echo 'checked';
-                                                                                } ?>>
+                <input type='radio' name='event[repeat][datetype]' value='last' <?php if ($repeatParam['datetype'] == 'last') echo 'checked'; ?>>
                 On the last <span class='dayname'><?php echo esc_html($dayName); ?></span> of the month
             </label>
 
             <!-- On the very last day of the month-->
             <label class='option-label last-day-of-month <?php echo esc_attr($hideLastDay); ?>'>
-                <input type='radio' name='event[repeat][datetype]' value='lastday' <?php if ($repeatParam['datetype'] == 'lastday') {
-                                                                                        echo 'checked';
-                                                                                    } ?>>
+                <input type='radio' name='event[repeat][datetype]' value='lastday' <?php if ($repeatParam['datetype'] == 'lastday') echo 'checked'; ?>>
                 On the last day of the month
             </label>
         </div>
@@ -276,42 +264,28 @@ function displayRepetitionParameters($eventDetails)
 
         <h4>Stop repetition</h4>
         <label>
-            <input type='radio' name='event[repeat][stop]' value='never' <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] == 'never') {
-                                                                                echo 'checked';
-                                                                            } ?>>
+            <input type='radio' name='event[repeat][stop]' value='never' <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] == 'never') echo 'checked'; ?>>
             Never
         </label><br>
         <div class='repeat-type-option'>
             <label>
-                <input type='radio' name='event[repeat][stop]' value='date' <?php if (!empty($eventDetails['repeat']['stop']) && $eventDetails['repeat']['stop'] == 'date') {
-                                                                                echo 'checked';
-                                                                            } ?>>
+                <input type='radio' name='event[repeat][stop]' value='date' <?php if (!empty($eventDetails['repeat']['stop']) && $eventDetails['repeat']['stop'] == 'date') echo 'checked'; ?>>
                 On this date:
             </label><br>
 
-            <label class='repeat-type-option-specifics <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'date') {
-                                                            echo 'hidden';
-                                                        } ?>'>
-                <input type='date' name='event[repeat][end_date]' value='<?php if (!empty($eventDetails['repeat']['end_date'])) {
-                                                                                echo esc_attr($eventDetails['repeat']['end_date']);
-                                                                            } ?>'>
+            <label class='repeat-type-option-specifics <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'date') echo 'hidden'; ?>'>
+                <input type='date' name='event[repeat][end_date]' value='<?php if (!empty($eventDetails['repeat']['end_date'])) echo esc_attr($eventDetails['repeat']['end_date']); ?>'>
             </label>
         </div>
 
         <div class='repeat-type-option'>
             <label>
-                <input type='radio' name='event[repeat][stop]' value='after' <?php if (!empty($eventDetails['repeat']['stop']) && $eventDetails['repeat']['stop'] == 'after') {
-                                                                                    echo 'checked';
-                                                                                } ?>>
+                <input type='radio' name='event[repeat][stop]' value='after' <?php if (!empty($eventDetails['repeat']['stop']) && $eventDetails['repeat']['stop'] == 'after') echo 'checked'; ?>>
                 After this amount of repeats:<br>
             </label>
 
-            <label class='repeat-type-option-specifics <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'after') {
-                                                            echo 'hidden';
-                                                        } ?>'>
-                <input type='number' name='event[repeat][amount]' value='<?php if (!empty($eventDetails['repeat']['amount'])) {
-                                                                                echo esc_attr($eventDetails['repeat']['amount']);
-                                                                            } ?>'>
+            <label class='repeat-type-option-specifics <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] != 'after') echo 'hidden'; ?>'>
+                <input type='number' name='event[repeat][amount]' value='<?php if (!empty($eventDetails['repeat']['amount'])) echo esc_attr($eventDetails['repeat']['amount']); ?>'>
             </label>
         </div>
 
@@ -387,9 +361,7 @@ function repetitionIntervalSettings($eventDetails)
         foreach ($weekNames as $weekName) {
         ?>
             <label class='option-label'>
-                <input type='checkbox' name='event[repeat][weeks][]' value='<?php echo esc_attr($weekName); ?>' <?php if (is_array($eventDetails['repeat']['weeks'] ?? '') && in_array($weekName, $eventDetails['repeat']['weeks'])) {
-                                                                                                                    echo 'checked';
-                                                                                                                } ?>>
+                <input type='checkbox' name='event[repeat][weeks][]' value='<?php echo esc_attr($weekName); ?>' <?php if (is_array($eventDetails['repeat']['weeks'] ?? '') && in_array($weekName, $eventDetails['repeat']['weeks'])) echo 'checked'; ?>>
                 <?php echo esc_html($weekName); ?>
             </label>
         <?php
@@ -413,9 +385,7 @@ function repetitionIntervalSettings($eventDetails)
                     type='checkbox'
                     name='event[repeat][weekdays][]'
                     value='<?php echo esc_attr($key); ?>'
-                    <?php if (is_array($eventDetails['repeat']['weekdays'] ?? '') && in_array($dayName, $eventDetails['repeat']['weekdays'])) {
-                        echo 'checked';
-                    } ?>>
+                    <?php if (is_array($eventDetails['repeat']['weekdays'] ?? '') && in_array($dayName, $eventDetails['repeat']['weekdays'])) echo 'checked'; ?>>
                 <?php echo esc_attr($dayName); ?>
             </label>
         <?php

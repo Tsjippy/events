@@ -100,7 +100,7 @@ function displayEventCategories()
                 </a>
             <?php
                 if ($id != $lastKey) {
-                    echo ', ';
+ echo ', ';
                 }
             }
             ?>
@@ -139,7 +139,7 @@ function displayEventMeta()
                 <dl>
                     <dd>
                         <?php
-                        echo esc_html($date);
+ echo esc_html($date);
                         ?>
                     </dd>
                 </dl>
@@ -150,7 +150,7 @@ function displayEventMeta()
                 <dl>
                     <dd>
                         <?php
-                        echo esc_html($time);
+ echo esc_html($time);
                         ?>
                     </dd>
                 </dl>
@@ -172,15 +172,15 @@ function displayEventMeta()
                                     $type    .= gmdate('j F Y', strtotime($date)) . '<br>';
                                 }
                             }
-                            echo esc_html(ucfirst($type));
+ echo esc_html(ucfirst($type));
 
                             if (!empty($meta['repeat']['end_date'])) {
-                                echo esc_html(" until " . gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
+ echo esc_html(" until " . gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
                             }
                             if (!empty($meta['repeat']['amount'])) {
                                 $repeatAmount = $meta['repeat']['amount'];
                                 if ($repeatAmount != 90) {
-                                    echo esc_html(" for $repeatAmount times");
+ echo esc_html(" for $repeatAmount times");
                                 }
                             }
                             ?>
@@ -196,8 +196,7 @@ function displayEventMeta()
                     <h4>LOCATION</h4>
                     <div class='location-details'>
                         <?php
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                        echo $events->getLocationDetail($event);
+                        $events->getLocationDetail($event, true);
                         ?>
                     </div>
                 </div>
@@ -210,15 +209,13 @@ function displayEventMeta()
                     <h4>ORGANIZER</h4>
                     <div class='author-details''>
                         <?php
-                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                        echo $events->getAuthorDetail($event);
+                        $events->getAuthorDetail($event, true);
                         ?>
                     </div>
                 </div>
             <?php
             }
-            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            echo $events->eventExportHtml($event);
+            $events->eventExportHtml($event, true);
             ?>
         </div>
     </div>
