@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- attribute escaping
 
 ### Changed
 - plugin tested up to 7.0
