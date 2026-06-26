@@ -30,8 +30,8 @@ const Edit = ({ setAttributes, attributes }) => {
   const [eventData, setEvent] = useState("");
 
   useEffect(() => {
-    if (meta["eventdetails"] != "" && meta["eventdetails"] != undefined) {
-      let data = JSON.parse(meta["eventdetails"]);
+    if (meta["tsjippy_eventdetails"] != "" && meta["tsjippy_eventdetails"] != undefined) {
+      let data = JSON.parse(meta["tsjippy_eventdetails"]);
       if (data.repeat == undefined) {
         data.repeat = { interval: 1 };
       }
