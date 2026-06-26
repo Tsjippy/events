@@ -88,10 +88,10 @@ function displayUpcomingEvents($attributes)
 add_action('init', __NAMESPACE__ . '\registerPostMeta');
 function registerPostMeta()
 {
-    register_post_meta('event', 'eventdetails', array(
-        'show_in_rest'     => true,
-        'single'         => true,
-        'type'             => 'string',
+    register_post_meta('event', "tsjippy_eventdetails", array(
+        'show_in_rest'      => true,
+        'single'            => true,
+        'type'              => 'string',
         'sanitize_callback' => 'sanitize_text_field'
     ));
 }
