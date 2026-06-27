@@ -100,7 +100,7 @@ function displayEventCategories()
                 </a>
             <?php
                 if ($id != $lastKey) {
- echo ', ';
+                    echo ', ';
                 }
             }
             ?>
