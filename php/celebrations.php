@@ -52,7 +52,7 @@ function getAnniversaries()
                 continue;
             }
 
-            $privacy    = (array)get_user_meta($event->post_author, 'tsjippy_privacy_preference', true);
+            $privacy    = get_user_meta($event->post_author, 'tsjippy_privacy_preference');
 
             if (substr($title, 0, 8) == 'Birthday' && in_array('hide_age', $privacy)) {
                 $age    = '';
@@ -315,7 +315,7 @@ function arrivingUsersMessage()
             $skip    = [];
             //Loop over the arrivals
             foreach ($arrivingUsers as $user) {
-                if (in_array($user->ID, $skip)) {
+                if (isset($skip[$user->ID])) {
                     continue;
                 }
 
@@ -324,7 +324,7 @@ function arrivingUsersMessage()
                 $name        = $family->getFamilyName($user, false, $partnerId);
 
                 if ($partnerId) {
-                    $skip[]        = $partnerId;
+                    $skip[$partnerId] = 1;
                 }
                 $url      = TSJIPPY\maybeGetUserPageUrl($user->ID);
                 $html     .= "<a href='$url'>$name</a><br>";

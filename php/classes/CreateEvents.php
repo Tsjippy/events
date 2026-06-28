@@ -57,7 +57,7 @@ class CreateEvents extends Events
             }
         }
 
-        $this->startDates  = [$baseStartDateStr];
+        $this->startDates  = [$baseStartDateStr => 1];
         if (!empty($this->eventData['isrepeated'])) {
             $baseStartDate = $this->createRepeatedEvents($baseStartDate);
         }
@@ -119,7 +119,7 @@ class CreateEvents extends Events
         switch ($repeatParam['type']) {
             case 'daily':
                 $startDate        = strtotime("+{$index} day", $baseStartDate);
-                if (!empty($weekDays) && !in_array(gmdate('w', $startDate), $weekDays)) {
+                if (!empty($weekDays) && !isset($startDate[gmdate('w')], $weekDays)) {
                     return false;
                 }
                 break;
@@ -128,15 +128,15 @@ class CreateEvents extends Events
                 $monthWeek        = $this->monthWeek($startDate);
 
                 $firstWeek        = gmdate('m', $startDate) != gmdate('m', strtotime('-1 week', $startDate));
-                if ($firstWeek && in_array('First', $weeks)) {
+                if ($firstWeek && isset($weeks['First'])) {
                     $monthWeek    = 'First';
                 }
 
                 $lastWeek        = gmdate('m', $startDate) != gmdate('m', strtotime('+1 week', $startDate));
-                if ($lastWeek && in_array('Last', $weeks)) {
+                if ($lastWeek && isset($weeks['Last'])) {
                     $monthWeek    = 'Last';
                 }
-                if (!in_array($monthWeek, $weeks)) {
+                if (!isset($weeks[$monthWeek])) {
                     return false;
                 }
                 break;
@@ -157,7 +157,6 @@ class CreateEvents extends Events
                         if (gmdate('t', $startDate) < gmdate('d', $baseStartDate)) {
                             return false;
                         }
-
                         $day        = gmdate('d', $baseStartDate) - 1;
                         $startDate    = strtotime("+$day days", $startDate);
                     }
@@ -208,8 +207,8 @@ class CreateEvents extends Events
         if ($repeatParam['type'] == 'custom_days') {
             foreach ($repeatParam['includedates'] as $date) {
                 // not yet included and not in the past
-                if (!in_array($date, $this->startDates) && $date > gmdate('Y-m-d')) {
-                    $this->startDates[] = $date;
+                if (!isset($this->startDates[$date]) && $date > gmdate('Y-m-d')) {
+                    $this->startDates[ $date ] = 1;
                 }
             }
 
@@ -232,7 +231,7 @@ class CreateEvents extends Events
             }
 
             //re-adjust the start_date string
-            $this->startDates = [gmdate('Y-m-d', $baseStartDate)];
+            $this->startDates[gmdate('Y-m-d', $baseStartDate)]  = 1;
         }
 
         // Calculate amount of repititions
@@ -269,17 +268,17 @@ class CreateEvents extends Events
                 $startDateStr    = gmdate('Y-m-d', $startDate);
             }
 
-            if (!$startDate || in_array($startDateStr, $excludeDates)) {
+            if (!$startDate || isset($excludeDates[$startDateStr])) {
                 $i                = $i + $interval;
                 continue;
             }
 
             if (
-                !in_array($startDateStr, $includeDates) &&        //we should not exclude this date
+                !isset($includeDates[$startDateStr]) &&        //we should not exclude this date
                 $startDate < $repEnddate                &&        //falls within the limits
                 (!is_numeric($amount) || $amount > 0)             //We have not exeeded the amount
             ) {
-                $this->startDates[] = $startDateStr;
+                $this->startDates[$startDateStr] = 1;
             }
 
             $i      = $i + $interval;

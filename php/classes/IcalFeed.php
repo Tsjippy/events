@@ -217,11 +217,13 @@ class IcalFeed
                 if (!empty($excludeDates)) {
                     $icalEvent    .= "EXDATE:";
 
-                    foreach ($excludeDates as $i => $exdate) {
+                    $i = 0;
+                    foreach ($excludeDates as $exdate => $value) {
                         if ($i > 0) {
                             $icalEvent    .= ',';
                         }
                         $icalEvent    .= gmdate($this->icalFormat, strtotime($exdate));
+                        $i++;
                     }
                     $icalEvent    .= "\r\n";
                 }

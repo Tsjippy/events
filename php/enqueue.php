@@ -13,11 +13,11 @@ function afterInsertPost($postId, $post)
 {
 
     if (has_shortcode($post->post_content, 'upcomingevents')) {
-        $pages  = SETTINGS['upcomingevents-pages'] ?? [];
+        $pages          = SETTINGS['upcomingevents-pages'] ?? [];
 
-        $pages[]  = $postId;
+        $pages[$postId] = $postId;
 
-        $settings   = SETTINGS;
+        $settings       = SETTINGS;
         $settings['upcomingevents-pages']  = $pages;
 
         update_option("tsjippy_events_settings", $settings);
@@ -28,9 +28,8 @@ add_action('wp_trash_post',  __NAMESPACE__ . '\trashPost');
 function trashPost($postId)
 {
     $pages  = SETTINGS['upcomingevents-pages'] ?? [];
-    $index  = array_search($postId, $pages);
-    if ($index) {
-        unset($pages[$index]);
+    if (isset($pages[$postId])) {
+        unset($pages[$postId]);
         $settings   = SETTINGS;
         $settings['upcomingevents-pages']  = $pages;
 
@@ -53,13 +52,6 @@ function loadAssets()
 
     //js
     wp_register_script('tsjippy_event_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/events.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
-
-    $upcomingEventsPages   = SETTINGS['upcoming-events-pages'] ?? [];
-    if (is_numeric(get_the_ID())) {
-        if (in_array(get_the_ID(), $upcomingEventsPages)) {
-            wp_enqueue_style('tsjippy_events_css');
-        }
-    }
 }
 
 function addDependable($dependables)

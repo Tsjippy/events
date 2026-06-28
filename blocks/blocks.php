@@ -165,10 +165,10 @@ function upcomingArrivalsBlock($attributes)
     ]);
 
     //Loop over the arrival_users to find any families
-    $skip    = [];
-    $dates    = [];
+    $skip  = [];
+    $dates = [];
     foreach ($arrivingUsers as $user) {
-        if (in_array($user->ID, $skip)) {
+        if (isset($skip[$user->ID])) {
             continue;
         }
 
@@ -176,7 +176,7 @@ function upcomingArrivalsBlock($attributes)
         $name        = $family->getFamilyName($user, false, $partnerId);
 
         if ($partnerId) {
-            $skip[]        = $partnerId;
+            $skip[$partnerId] = 1;
         }
 
         $url         = TSJIPPY\maybeGetUserPageUrl($user->ID);

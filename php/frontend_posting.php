@@ -294,21 +294,25 @@ function displayRepetitionParameters($eventDetails)
             <div class="clone-divs-wrapper">
                 <?php
                 if (empty($eventDetails['repeat']['excludedates'])) {
-                    $excludeDates    = [''];
+                    $excludeDates    = ['' => 1];
                 } else {
-                    $excludeDates    = (array)$eventDetails['repeat']['excludedates'];
+                    $excludeDates    = $eventDetails['repeat']['excludedates'];
                 }
 
-                foreach ($excludeDates as $index => $excludeDate) {
-                ?>
-                    <div id="excludedate-div-<?php echo esc_attr($index); ?>" class="clone-div" data-div-id="<?php echo esc_attr($index); ?>">
-                        <label>Exclude date <?php echo esc_attr($index + 1); ?></label>
+                $i = 0;
+                foreach ($excludeDates as $excludeDate => $index ) {
+                    ?>
+                    <div id="excludedate-div-<?php echo esc_attr($i); ?>" class="clone-div" data-div-id="<?php echo esc_attr($i); ?>">
+                        <label>
+                            Exclude date <?php echo esc_attr($index + 1); ?>
+                        </label>
                         <div class='button-wrapper'>
-                            <input type="date" name="event[repeat][excludedates][<?php echo esc_attr($index); ?>]" style="flex: 9;" value="<?php echo esc_attr($excludeDate); ?>">
+                            <input type="date" name="event[repeat][excludedates][<?php echo esc_attr($excludeDate); ?>]" style="flex: 9;" value="1">
                             <button type="button" class="add button" style="flex: 1;">+</button>
                         </div>
                     </div>
-                <?php
+                    <?php
+                    $i++;
                 }
                 ?>
             </div>
@@ -352,7 +356,9 @@ function repetitionIntervalSettings($eventDetails)
 
     <!-- Weekly repetition options -->
     <div class="selector-wrapper weeks <?php echo esc_attr($repeatParam['type'] == 'weekly' ? 'hide' : "hidden"); ?>">
-        <h4 class='checkbox'>Select weeks(s) of the month this event should be repeated on</h4>
+        <h4 class='checkbox'>
+            Select weeks(s) of the month this event should be repeated on
+        </h4>
         <label class='select-all-wrapper option-label'>
             <input type='checkbox' class='selectall' name='allweekss' value='all'>Select all weeks<br>
         </label>
@@ -361,7 +367,7 @@ function repetitionIntervalSettings($eventDetails)
         foreach ($weekNames as $weekName) {
         ?>
             <label class='option-label'>
-                <input type='checkbox' name='event[repeat][weeks][]' value='<?php echo esc_attr($weekName); ?>' <?php if (is_array($eventDetails['repeat']['weeks'] ?? '') && in_array($weekName, $eventDetails['repeat']['weeks'])) echo 'checked'; ?>>
+                <input type='checkbox' name='event[repeat][weeks][<?php echo esc_attr($weekName); ?>]' value='1' <?php if (isset($eventDetails['repeat']['weeks'][$weekName])) echo 'checked'; ?>>
                 <?php echo esc_html($weekName); ?>
             </label>
         <?php
@@ -371,7 +377,9 @@ function repetitionIntervalSettings($eventDetails)
 
     <!-- Daily repetition options -->
     <div class="selector-wrapper days <?php echo esc_attr($repeatParam['type'] == 'daily' ? 'hide' : "hidden"); ?>">
-        <h4 class='checkbox'>Select day(s) this event should be repeated on</h4>
+        <h4 class='checkbox'>
+            Select day(s) this event should be repeated on
+        </h4>
         <label class='select-all-wrapper option-label'>
             <input type='checkbox' class='selectall' name='alldays' value='all'>Select all days<br>
         </label>
@@ -383,9 +391,9 @@ function repetitionIntervalSettings($eventDetails)
             <label class='option-label'>
                 <input
                     type='checkbox'
-                    name='event[repeat][weekdays][]'
-                    value='<?php echo esc_attr($key); ?>'
-                    <?php if (is_array($eventDetails['repeat']['weekdays'] ?? '') && in_array($dayName, $eventDetails['repeat']['weekdays'])) echo 'checked'; ?>>
+                    name='event[repeat][weekdays][<?php echo esc_attr($key); ?>]'
+                    value='1'
+                    <?php if (is_array($eventDetails['repeat']['weekdays'] ?? '') && isset($eventDetails['repeat']['weekdays'][$dayName])) echo 'checked'; ?>>
                 <?php echo esc_attr($dayName); ?>
             </label>
         <?php

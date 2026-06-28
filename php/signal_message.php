@@ -103,7 +103,7 @@ function afterBotPrayer($args)
             //Loop over the arrival_users to find any families
             $skip    = [];
             foreach ($arrivalUsers as $user) {
-                if (in_array($user->ID, $skip)) {
+                if (isset($skip[$user->ID])) {
                     continue;
                 }
 
@@ -112,7 +112,7 @@ function afterBotPrayer($args)
                 $name      = $family->getFamilyName($user, false, $partnerId);
 
                 if ($partnerId) {
-                    $skip[]  = $partnerId;
+                    $skip[$partnerId] = 1;
 
                     $picture = $family->getFamilyMeta($user->ID, 'family_picture', true);
 
