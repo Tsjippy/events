@@ -86,8 +86,8 @@ class AdminMenu extends ADMIN\SubAdminMenu
          */
         $posts = get_posts(
             array(
-                'post_type'        => 'event',
-                'numberposts'    => -1,
+                'post_type'     => 'event',
+                'numberposts'   => -1,
                 'tax_query'     => [
                     [
                         'taxonomy'          => 'events',
@@ -210,7 +210,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
         if (!empty($anniversaryRows)) {
             ?>
             <h4>
-                SIM Anniversaries
+                <?php echo esc_html(TSJIPPY\SITENAME);?> Anniversaries
             </h4>
             <?php
             $this->tableBody($anniversaryRows);
@@ -226,16 +226,22 @@ class AdminMenu extends ADMIN\SubAdminMenu
         }
 
         if (!empty($birthdayRows)) {
-        ?>
-            <h4>
-                Birthdays
-            </h4>
-        <?php
-            $this->tableBody($birthdayRows);
+            ?>
+                <h4>
+                    Birthdays with mismatch between the event date and the user meta date
+                </h4>
+            <?php
+                $this->tableBody($birthdayRows);
         }
 
         ?>
-        <h4>Missing Events</h4>
+        <h4>
+            Missing Events
+        </h4>
+        <p>
+            Each website user should have a birthday and site anniversary event.<br>
+            This table lists all users who are missing one or both.
+        </p>
         <table class='tsjippy table'>
             <thead>
                 <th>
@@ -249,7 +255,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 <?php
                 foreach (get_users() as $user) {
                     if (empty(get_user_meta($user->ID, 'tsjippy_birthday_event_id', true))) {
-                ?>
+                        ?>
                         <tr>
                             <td>Birthdays</td>
                             <td>
@@ -258,7 +264,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                                 </a>
                             </td>
                         </tr>
-                    <?php
+                        <?php
                     }
 
                     if (empty(get_user_meta($user->ID, 'tsjippy_'.TSJIPPY\SITENAME . ' anniversary_event_id', true))) {
@@ -275,7 +281,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                     }
 
                     if ($family->getWeddingDate($user->ID) && empty(get_user_meta($user->ID, 'tsjippy_Wedding anniversary_event_id', true))) {
-                    ?>
+                        ?>
                         <tr>
                             <td>Wedding</td>
                             <td>
@@ -284,7 +290,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                                 </a>
                             </td>
                         </tr>
-                <?php
+                        <?php
                     }
                 }
                 ?>
@@ -360,25 +366,29 @@ class AdminMenu extends ADMIN\SubAdminMenu
         /**
          * Get events of which the author account no longer exists
          */
-        $orphans    = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT * FROM %i as events INNER JOIN %i as posts ON post_id = posts.ID WHERE posts.post_author NOT IN (SELECT ID FROM %i)",
-                $events->tableName,
-                $wpdb->posts,
-                $wpdb->users
-            )
+
+        $ect        = "-- Table with user ID's\nWITH userIds AS ( " .$wpdb->prepare("SELECT ID FROM %i", $wpdb->users)." )";
+
+        $orphans    = TSJIPPY\getFromDb(
+            'events-without-author',
+            'events',
+            "$ect\n\n-- Main query\nSELECT * FROM %i as events INNER JOIN %i as posts ON post_id = posts.ID WHERE posts.post_author NOT IN (select * from userIds)",
+            $events->tableName,
+            $wpdb->posts
         );
 
         /**
          * Get events of which the post no longer exists
          */
+        $ect                 = "-- Table with post ID's\nWITH postIds AS ( " .$wpdb->prepare("SELECT ID FROM %i", $wpdb->posts)." )";
+
         $orphans    = array_merge(
-            $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT * FROM %i WHERE post_id NOT IN (SELECT ID FROM %i)",
-                    $events->tableName,
-                    $wpdb->posts
-                )
+            TSJIPPY\getFromDb(
+                'events-without-author',
+                'events',
+                "$ect\n\n-- Main query\nSELECT * FROM %i WHERE post_id NOT IN (select * from postIds)",
+                $events->tableName,
+                $wpdb->posts
             ),
             $orphans
         );
@@ -389,9 +399,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
 
         ob_start();
     ?>
-        <h4>Orphan events</h4>
+        <h4>
+            Orphan events
+        </h4>
         <p>
-            There are <?php echo count($orphans); ?> events found linked to a valid user or post in the database.
+            There are <?php echo count($orphans); ?> events found not linked to a valid user or post in the database.
         </p>
         <table>
             <thead>
@@ -420,7 +432,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 Remove these events
             </button>
         </form>
-<?php
+        <?php
 
         addRawHtml(ob_get_clean(), $parent);
 
