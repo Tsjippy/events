@@ -11,6 +11,7 @@
 - moved upcoming arrivals to sim nigeria plugin
 
 ### Fixed
+- admin menu
 
 ### Updated
 
