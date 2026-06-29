@@ -56,7 +56,7 @@ function afterBotPrayer($args)
                 $messageString .= " and the ";
             }
 
-            $coupleString    = getCoupleString($userdata);
+            $coupleString   = getCoupleString($userdata);
 
             $msg            = replaceCoupleString($msg, "of $coupleString", $userdata);
 
@@ -88,48 +88,6 @@ function afterBotPrayer($args)
             }
         }
         $args['message'] .= $messageString . ' . ';
-    }
-
-    $arrivalUsers = getArrivingUsers();
-
-    //If there are arrivals
-    if (!empty($arrivalUsers)) {
-        if (count($arrivalUsers) == 1) {
-            $args['message']     .= "\n\n" . $arrivalUsers[0]->display_name . " arrives today. ";
-            $args['urls'][]        = str_replace('https://', '', get_author_posts_url($arrivalUsers[0]->ID)) . "\n";
-        } else {
-            $args['message'] .= "\n\nToday the following people will arrive: ";
-
-            //Loop over the arrival_users to find any families
-            $skip    = [];
-            foreach ($arrivalUsers as $user) {
-                if (isset($skip[$user->ID])) {
-                    continue;
-                }
-
-                $partnerId = 0;
-
-                $name      = $family->getFamilyName($user, false, $partnerId);
-
-                if ($partnerId) {
-                    $skip[$partnerId] = 1;
-
-                    $picture = $family->getFamilyMeta($user->ID, 'family_picture', true);
-
-                    if ($picture) {
-                        $args['pictures'][] = get_attached_file($picture);
-                    }
-                } else {
-                    $profilePicture    = get_user_meta($user->ID, 'tsjippy_profile_picture', true);
-                    if (isset($profilePicture[0])) {
-                        $args['pictures'][] = get_attached_file($profilePicture[0]);
-                    }
-                }
-
-                $args['message']     .= "$name\n";
-                $args['urls'][]     = str_replace('https://', '', get_author_posts_url($user->ID));
-            }
-        }
     }
 
     return $args;
