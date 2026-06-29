@@ -8,6 +8,7 @@
 - plugin tested up to 7.0
 - replaced in_array with isset
 - use get_author_posts_url
+- moved upcoming arrivals to sim nigeria plugin
 
 ### Fixed
 
