@@ -113,7 +113,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
             }
 
             if (!empty($celDate)) {
-                $celDate    = gmdate(TSJIPPY\DATEFORMAT, strtotime($celDate));
+                $celDate        = gmdate(TSJIPPY\DATEFORMAT, strtotime($celDate));
 
                 $arrivalDate    = get_user_meta($post->post_author, 'tsjippy_arrival_date', true);
                 if (!empty($arrivalDate)) {
@@ -121,7 +121,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                 }
                 if ($celDate != $arrivalDate) {
                     // this is a rogue event
-                    if (get_user_meta($post->post_author, 'tsjippy_SIM Nigeria anniversary_event_id', true) != $post->ID) {
+                    if (get_user_meta($post->post_author, 'tsjippy_'.TSJIPPY\SITENAME . 'anniversary_event_id', true) != $post->ID) {
                         wp_delete_post($post->ID);
                     } else {
 
@@ -208,22 +208,28 @@ class AdminMenu extends ADMIN\SubAdminMenu
         ob_start();
 
         if (!empty($anniversaryRows)) {
-?>
-            <h4>SIM Anniversaries</h4>
-        <?php
+            ?>
+            <h4>
+                SIM Anniversaries
+            </h4>
+            <?php
             $this->tableBody($anniversaryRows);
         }
 
         if (!empty($weddingRows)) {
         ?>
-            <h4>Wedding Anniversaries</h4>
+            <h4>
+                Wedding Anniversaries
+            </h4>
         <?php
             $this->tableBody($weddingRows);
         }
 
         if (!empty($birthdayRows)) {
         ?>
-            <h4>Birthdays</h4>
+            <h4>
+                Birthdays
+            </h4>
         <?php
             $this->tableBody($birthdayRows);
         }
@@ -232,8 +238,12 @@ class AdminMenu extends ADMIN\SubAdminMenu
         <h4>Missing Events</h4>
         <table class='tsjippy table'>
             <thead>
-                <th>Type</th>
-                <th>Link</th>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Link
+                </th>
             </thead>
             <tbody>
                 <?php
@@ -251,7 +261,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
                     <?php
                     }
 
-                    if (empty(get_user_meta($user->ID, TSJIPPY\SITENAME . ' anniversary_event_id', true))) {
+                    if (empty(get_user_meta($user->ID, 'tsjippy_'.TSJIPPY\SITENAME . ' anniversary_event_id', true))) {
                     ?>
                         <tr>
                             <td>Anniversary</td>

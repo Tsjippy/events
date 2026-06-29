@@ -23,18 +23,14 @@ function beforeSavingFormData($request, $object)
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {
         $events    = new CreateEvents();
         
-        // phpcs:ignore
+        // Birthday Events
         $events->createCelebrationEvent('birthday', $object->userId, get_user_meta($object->userId, 'tsjippy_birthday', true), $request['birthday'] ?? '');
-
-        // phpcs:ignore
-        $events->createCelebrationEvent(TSJIPPY\SITENAME . ' anniversary', $object->userId, get_user_meta($object->userId, 'tsjippy_arrival_date', true), $request['arrival-date'] ?? '');
     }
 
     if ($object->formData->slug == 'user_family') {
         $family = new TSJIPPY\FAMILY\Family();
 
         // Then the weddingdate
-        // phpcs:ignore
         $newDate    = $request['weddingdate'] ?? '' ;
         $oldDate    = $family->getWeddingDate($object->userId);
         if ($newDate != $oldDate) {

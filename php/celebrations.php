@@ -9,21 +9,6 @@ if (! defined('ABSPATH')) {
 }
 
 /**
- * Get all the users arriving today
- *
- * @return    array    The WP_Users arriving today
- */
-function getArrivingUsers()
-{
-    $date   = new \DateTime();
-    return get_users(array(
-        'meta_key'     => 'tsjippy_arrival_date',
-        'meta_value'   => $date->format('Y-m-d'),
-        'meta_compare' => '=',
-    ));
-}
-
-/**
  * Get all the anniversary events
  *
  * @return    array    all messages
@@ -95,35 +80,10 @@ function deleteUser($userId)
         $events->removeDbRows($birthdayPostId);
     }
 
-    $anniversaryId    = get_user_meta($userId, TSJIPPY\SITENAME . ' anniversary_event_id', true);
+    $anniversaryId    = get_user_meta($userId, 'tsjippy_'.TSJIPPY\SITENAME . ' anniversary_event_id', true);
     if (is_numeric($anniversaryId)) {
         $events->removeDbRows($anniversaryId);
     }
-}
-
-/**
- *
- * Adds html to the frontpage prayer message
- *
- * @return   string|false     Birthday and arrining usrs html or false if there are no events
- *
- **/
-add_filter('tsjippy-prayer-message', __NAMESPACE__ . '\prayerMessage');
-/**
- * Adds the birthday and arrining users message to the prayer message
- *
- * @param    string    $html    the original prayer message
- *
- * @return    string    the prayer message with the birthday and arrining users message
- */
-function prayerMessage($html)
-{
-
-    $html    .= anniversaryMessages();
-
-    $html    .= arrivingUsersMessage();
-
-    return $html;
 }
 
 /**
@@ -191,19 +151,29 @@ function replaceCoupleString($string, $replaceString, $user, $partner = '')
 
 /**
  *
+ * Adds html to the frontpage prayer message
+ *
+ * @return   string|false     Birthday and arrining usrs html or false if there are no events
+ *
+ **/
+add_filter('tsjippy-prayer-message', __NAMESPACE__ . '\anniversaryMessages');
+/**
+ *
  * Get the html birthday message
+ * 
+ * @param   string            
  *
  * @return   string|false     Anniversary html
  *
  */
-function anniversaryMessages()
+function anniversaryMessages($html)
 {
-    $family                    = new TSJIPPY\FAMILY\Family();
-    $currentUser            = wp_get_current_user();
-    $anniversaryMessages     = getAnniversaries();
+    $family              = new TSJIPPY\FAMILY\Family();
+    $currentUser         = wp_get_current_user();
+    $anniversaryMessages = getAnniversaries();
 
     if (empty($anniversaryMessages)) {
-        return '';
+        return $html;
     }
 
     $messageString    = '';
@@ -275,64 +245,12 @@ function anniversaryMessages()
         return '';
     }
 
-    $html = '<div name="anniversaries" style="font-size: 18px;">';
+    $html .= '<div name="anniversaries" style="font-size: 18px;">';
     $html .= '<h3>Celebrations</h3>';
     $html .= '<p>';
     $html .= "Today is the $messageString";
     $html .= ' .</p>';
     $html .= '</div>';
-
-    return $html;
-}
-
-/**
- *
- * Get the arriving users if any
- *
- * @return   string     Arrining users html
- *
- */
-function arrivingUsersMessage()
-{
-    $family            = new TSJIPPY\FAMILY\Family();
-    $arrivingUsers    = getArrivingUsers();
-    $html            = '';
-
-    //If there are arrivals
-    if (!empty($arrivingUsers)) {
-        $html     .= '<div name="arrivals" style="font-size: 18px;margin-top:20px;">';
-        $html     .= '<h3>Arrivals</h3>';
-
-        $html .= '<p>';
-
-        if (count($arrivingUsers) == 1) {
-            //Get the url of the user page
-            $url     = get_author_posts_url($arrivingUsers[0]->ID);
-            $html    .= "<a href='$url'>{$arrivingUsers[0]->display_name}</a> arrives today!";
-        } else {
-            $html     .= 'The following people arrive today:<br><br>';
-
-            $skip    = [];
-            //Loop over the arrivals
-            foreach ($arrivingUsers as $user) {
-                if (isset($skip[$user->ID])) {
-                    continue;
-                }
-
-                $partnerId    = false;
-
-                $name        = $family->getFamilyName($user, false, $partnerId);
-
-                if ($partnerId) {
-                    $skip[$partnerId] = 1;
-                }
-                $url      = get_author_posts_url($user->ID);
-                $html     .= "<a href='$url'>$name</a><br>";
-            }
-        }
-        $html .= ' .</p>';
-        $html .= '</div>';
-    }
 
     return $html;
 }

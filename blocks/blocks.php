@@ -15,27 +15,6 @@ add_action('init', function () {
     );
 
     register_block_type(
-        __DIR__ . '/upcomingArrivals/build',
-        array(
-            'render_callback' => __NAMESPACE__ . '\upcomingArrivalsBlock',
-            "attributes"    =>  [
-                "title"    => [
-                    "type"        => "string",
-                    "default"    => ''
-                ],
-                'months'    => [
-                    'type'        => 'integer',
-                    'default'    => 2
-                ],
-                'hide'    => [
-                    'type'        => 'bool',
-                    'default'    => true
-                ]
-            ]
-        )
-    );
-
-    register_block_type(
         __DIR__ . '/metadata/build',
         array(
             "attributes"    =>  [
@@ -133,80 +112,4 @@ function createEvents($metaId, $postId,  $metaKey,  $metaValue)
         TSJIPPY\printArray($result);
         TSJIPPY\printArray($metaValue);
     }
-}
-
-function upcomingArrivalsBlock($attributes)
-{
-    $family    = new TSJIPPY\FAMILY\Family();
-
-    $args     = wp_parse_args($attributes, array(
-        'title'         => 'Upcoming Arrivals',
-        'months'        => 2
-    ));
-
-    $arrivingUsers    = get_users([
-        'meta_query' => array(
-            'relation' => 'AND',
-            array(
-                'key'     => 'tsjippy_arrival_date',
-                'value'   => gmdate("Y-m-d"),
-                'compare' => '>=',
-                'type'    => 'DATE'
-            ),
-            array(
-                'key'     => 'tsjippy_arrival_date',
-                'value'   => gmdate("Y-m-d", strtotime("+{$args['months']} month", time())),
-                'compare' => '<=',
-                'type'    => 'DATE'
-            )
-        ),
-        'orderby'    => 'meta_value',
-        'order'     => 'ASC'
-    ]);
-
-    //Loop over the arrival_users to find any families
-    $skip  = [];
-    $dates = [];
-    foreach ($arrivingUsers as $user) {
-        if (isset($skip[$user->ID])) {
-            continue;
-        }
-
-        $partnerId    = false;
-        $name        = $family->getFamilyName($user, false, $partnerId);
-
-        if ($partnerId) {
-            $skip[$partnerId] = 1;
-        }
-
-        $url           = get_author_posts_url($user->ID);
-
-        $dateString    = gmdate(TSJIPPY\DATEFORMAT, strtotime(get_user_meta($user->ID, 'tsjippy_arrival_date', true)));
-
-        // Add to an existing date, multiple people arrive on the same date
-        if (isset($dates[$dateString])) {
-            $dates[$dateString]    .= "<br><a href='$url' class='arrival-name'>$name</a>";
-        } else {
-            $dates[$dateString]    = "<a href='$url' class='arrival-name'>$name</a>";
-        }
-    }
-
-    if (empty($dates) && get_the_ID()) {
-        return '';
-    }
-
-    $html    = "<div class='arrival-dates-wrapper'>";
-    $html    .= "<h4 class='title'>{$args['title']}</h4>";
-
-    if (empty($dates)) {
-        $html    .= "No upcoming arrivals found";
-    }
-    foreach ($dates as $date => $string) {
-        $html    .= "<div class='arrival-date-wrapper'>";
-        $html    .= "<strong class='arrival-title'>$date</strong><br>$string";
-        $html    .= "</div>";
-    }
-    $html    .= "</div>";
-
-    return $html;
 }
