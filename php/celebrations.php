@@ -232,7 +232,7 @@ function anniversaryMessages()
             $addImage     = false;
         } else {
             //Get the url of the user page
-            $url          = TSJIPPY\maybeGetUserPageUrl($userId);
+            $url          = get_author_posts_url($userId);
 
             $coupleString = getCoupleString($userdata, $partner);
             $coupleLink   = "of <a href=\"$url\">$coupleString</a>";
@@ -307,7 +307,7 @@ function arrivingUsersMessage()
 
         if (count($arrivingUsers) == 1) {
             //Get the url of the user page
-            $url     = TSJIPPY\maybeGetUserPageUrl($arrivingUsers[0]->ID);
+            $url     = get_author_posts_url($arrivingUsers[0]->ID);
             $html    .= "<a href='$url'>{$arrivingUsers[0]->display_name}</a> arrives today!";
         } else {
             $html     .= 'The following people arrive today:<br><br>';
@@ -326,7 +326,7 @@ function arrivingUsersMessage()
                 if ($partnerId) {
                     $skip[$partnerId] = 1;
                 }
-                $url      = TSJIPPY\maybeGetUserPageUrl($user->ID);
+                $url      = get_author_posts_url($user->ID);
                 $html     .= "<a href='$url'>$name</a><br>";
             }
         }

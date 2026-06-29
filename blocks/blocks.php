@@ -179,7 +179,7 @@ function upcomingArrivalsBlock($attributes)
             $skip[$partnerId] = 1;
         }
 
-        $url         = TSJIPPY\maybeGetUserPageUrl($user->ID);
+        $url           = get_author_posts_url($user->ID);
 
         $dateString    = gmdate(TSJIPPY\DATEFORMAT, strtotime(get_user_meta($user->ID, 'tsjippy_arrival_date', true)));
 

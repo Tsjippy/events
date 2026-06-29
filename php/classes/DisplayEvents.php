@@ -280,7 +280,7 @@ class DisplayEvents extends Events
 
             echo esc_html($event->organizer);
         } else {
-            $url    = TSJIPPY\maybeGetUserPageUrl($userId);
+            $url      = get_author_posts_url($userId);
             $email    = $user->user_email;
             $phone    = get_user_meta($userId, 'tsjippy_phonenumbers');
 

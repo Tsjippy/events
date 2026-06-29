@@ -65,7 +65,7 @@ function afterBotPrayer($args)
             $messageString .= $msg;
 
             // User page url
-            $url            = TSJIPPY\maybeGetUserPageUrl($userId);
+            $url            = get_author_posts_url($userId);
             if ($url) {
                 $args['urls'][]    = str_replace('https://', '', $url);
             }
@@ -96,7 +96,7 @@ function afterBotPrayer($args)
     if (!empty($arrivalUsers)) {
         if (count($arrivalUsers) == 1) {
             $args['message']     .= "\n\n" . $arrivalUsers[0]->display_name . " arrives today. ";
-            $args['urls'][]        = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($arrivalUsers[0]->ID)) . "\n";
+            $args['urls'][]        = str_replace('https://', '', get_author_posts_url($arrivalUsers[0]->ID)) . "\n";
         } else {
             $args['message'] .= "\n\nToday the following people will arrive: ";
 
@@ -127,7 +127,7 @@ function afterBotPrayer($args)
                 }
 
                 $args['message']     .= "$name\n";
-                $args['urls'][]     = str_replace('https://', '', TSJIPPY\maybeGetUserPageUrl($user->ID));
+                $args['urls'][]     = str_replace('https://', '', get_author_posts_url($user->ID));
             }
         }
     }

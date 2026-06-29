@@ -31,6 +31,7 @@ if (!isset($skipHeader) || !$skipHeader) {
 
 <?php
 
+/** @disregard */
 if (!$skipFooter) {
     get_footer();
 }
