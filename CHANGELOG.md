@@ -13,6 +13,7 @@
 
 ### Fixed
 - admin menu
+- missing echo call
 
 ### Updated
 
