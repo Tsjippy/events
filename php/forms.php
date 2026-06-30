@@ -10,8 +10,8 @@ if (! defined('ABSPATH')) {
 
 // Add meta keys to store in family meta table
 add_filter('tsjippy-family-meta-keys', function ($metaKeys) {
-    $metaKeys[] = 'Wedding anniversary_event_id';
-    $metaKeys[] = TSJIPPY\SITENAME . ' anniversary_event_id';
+    $metaKeys['Wedding anniversary_event_id'] = 1;
+    $metaKeys[TSJIPPY\SITENAME . ' anniversary_event_id'] = 1;
 
     return $metaKeys;
 });

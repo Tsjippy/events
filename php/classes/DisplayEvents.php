@@ -290,13 +290,13 @@ class DisplayEvents extends Events
             }
 
             ?>
-            <a href='<?php esc_url($url);?>'>
-                <?php esc_html($user->display_name);?>
+            <a href='<?php echo esc_url($url);?>'>
+                <?php echo esc_html($user->display_name);?>
             </a>
             <br>
             <br>
-            <a href='mailto:<?php esc_url($email);?>'>
-                <?php esc_html($email);?>
+            <a href='mailto:<?php echo esc_url($email);?>'>
+                <?php echo esc_html($email);?>
             </a>
 
             <?php
@@ -304,7 +304,7 @@ class DisplayEvents extends Events
                 foreach ($phone as $p) {
                     ?>
                     <br>
-                    <?php esc_html($p); 
+                    <?php echo esc_html($p); 
                 }
             }
 
@@ -399,7 +399,7 @@ class DisplayEvents extends Events
         }
 
         if (!empty($meta['repeat']['end_date'])) {
-            ?> until <?php esc_html( gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
+            ?> until <?php echo esc_html( gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
         }
 
         if (!empty($meta['repeat']['amount'])) {
