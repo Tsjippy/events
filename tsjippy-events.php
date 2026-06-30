@@ -14,7 +14,7 @@ use TSJIPPY;
  * Requires PHP:         8.3
  * Tested up to:         7.0
  * Plugin URI:            https://github.com/Tsjippy/events/
- * Tested:                6.9
+ * Tested:               7.0
  * TextDomain:            tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
@@ -47,4 +47,12 @@ register_activation_hook(__FILE__, function () {
     // Create the dbs
     $events    = new Events();
     $events->createEventsTable();
+
+    if(file_exists(__DIR__  . '/shared-functionality/loader.php')){
+        require_once(__DIR__  . '/shared-functionality/loader.php');
+    }
+
+    if(function_exists('TSJIPPY\activate')){
+        \TSJIPPY\activate();
+    }
 });
