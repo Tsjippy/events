@@ -3,6 +3,7 @@
 
 ### Added
 - attribute escaping
+- activate shared code function
 
 ### Changed
 - plugin tested up to 7.0
