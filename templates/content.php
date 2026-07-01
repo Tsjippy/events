@@ -16,12 +16,12 @@ if (! defined('ABSPATH')) {
 $events = new DisplayEvents();
 $event  = $events->retrieveSingleEvent(get_the_ID());
 if (!empty($event->only_for) && $event->only_for != wp_get_current_user()->ID) {
-    ?>
+?>
     <div class='error'>
         This event is not ment for you to see, sorry.
     </div>
 
-    <?php
+<?php
     return;
 }
 
@@ -135,11 +135,13 @@ function displayEventMeta()
         <div class="event-meta">
             <div class="single-event-date">
                 <img src='<?php echo esc_url($baseUrl); ?>/date.png' alt='date' loading='lazy' class='event-icon'>
-                <h4>DATE</h4>
+                <h4>
+                    DATE
+                </h4>
                 <dl>
                     <dd>
                         <?php
- echo esc_html($date);
+                        echo esc_html($date);
                         ?>
                     </dd>
                 </dl>
@@ -150,7 +152,7 @@ function displayEventMeta()
                 <dl>
                     <dd>
                         <?php
- echo esc_html($time);
+                        echo esc_html($time);
                         ?>
                     </dd>
                 </dl>
@@ -172,15 +174,15 @@ function displayEventMeta()
                                     $type    .= gmdate('j F Y', strtotime($date)) . '<br>';
                                 }
                             }
- echo esc_html(ucfirst($type));
+                            echo esc_html(ucfirst($type));
 
                             if (!empty($meta['repeat']['end_date'])) {
- echo esc_html(" until " . gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
+                                echo esc_html(" until " . gmdate('j F Y', strtotime($meta['repeat']['end_date'])));
                             }
                             if (!empty($meta['repeat']['amount'])) {
                                 $repeatAmount = $meta['repeat']['amount'];
                                 if ($repeatAmount != 90) {
- echo esc_html(" for $repeatAmount times");
+                                    echo esc_html(" for $repeatAmount times");
                                 }
                             }
                             ?>
@@ -193,7 +195,9 @@ function displayEventMeta()
             ?>
                 <div class="event-location">
                     <img src='<?php echo esc_url($baseUrl); ?>/location_red.png' alt='location' loading='lazy' class='event-icon'>
-                    <h4>LOCATION</h4>
+                    <h4>
+                        LOCATION
+                    </h4>
                     <div class='location-details'>
                         <?php
                         $events->getLocationDetail($event, true);
@@ -206,7 +210,9 @@ function displayEventMeta()
             ?>
                 <div class="event-organizer">
                     <img src='<?php echo esc_url($baseUrl); ?>/organizer.png' alt='organizer' loading='lazy' class='event-icon'>
-                    <h4>ORGANIZER</h4>
+                    <h4>
+                        ORGANIZER
+                    </h4>
                     <div class='author-details''>
                         <?php
                         $events->getAuthorDetail($event, true);

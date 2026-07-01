@@ -39,7 +39,9 @@ function eventTitle($postType)
 
 ?>
     <label class='<?php echo esc_attr($class); ?>' name='event-content-label'>
-        <h4>Describe the event</h4>
+        <h4>
+            Describe the event
+        </h4>
     </label>
 <?php
 }
@@ -57,42 +59,46 @@ function eventSpecificFields($frontEndContent)
 
 ?>
     <br>
-    <div 
+    <div
         class="property event 
-        <?php if ($frontEndContent->postType != 'event') echo 'hidden';  ?>"
-    >
+        <?php if ($frontEndContent->postType != 'event') echo 'hidden';  ?>">
         <label>
-            <input 
-                type='checkbox' 
-                name='event[allday]' 
-                value='allday' 
+            <input
+                type='checkbox'
+                name='event[allday]'
+                value='allday'
                 <?php if (!empty($eventDetails['allday'])) echo 'checked';  ?>>
             All day event
         </label>
 
         <label name="start_date-label">
-            <h4>Startdate</h4>
+            <h4>
+                Startdate
+            </h4>
             <input type='date' name='event[start_date]' value='<?php echo esc_attr($eventDetails['start_date'] ?? ''); ?>' required>
-            <input 
-                type='time' 
+            <input
+                type='time'
                 class='eventtime
-                <?php if (!empty($eventDetails['start_time'])) echo " hidden";  ?>' 
-                name='event[start_time]' 
-                value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>' 
-                required
-            >
+                <?php if (!empty($eventDetails['start_time'])) echo " hidden";  ?>'
+                name='event[start_time]'
+                value='<?php echo esc_attr($eventDetails['start_time'] ?? ''); ?>'
+                required>
         </label>
 
-        <label 
-            name="end_date-label" 
+        <label
+            name="end_date-label"
             <?php if (!empty($eventDetails['allday'])) echo "class='hidden'";  ?>>
-            <h4>Enddate</h4>
+            <h4>
+                Enddate
+            </h4>
             <input type='date' name='event[end_date]' value='<?php echo esc_attr($eventDetails['end_date'] ?? ''); ?>' required>
             <input type='time' class='eventtime' name='event[end_time]' value='<?php echo esc_attr($eventDetails['end_time'] ?? ''); ?>' required>
         </label>
 
         <label name="location">
-            <h4>Location</h4>
+            <h4>
+                Location
+            </h4>
             <input type='hidden' class='no-reset' class='datalistvalue' name='event[location-id]' value='<?php echo esc_attr($eventDetails['location-id'] ?? ''); ?>'>
             <input type='text' name='event[location]' value='<?php echo esc_attr($eventDetails['location'] ?? ''); ?>' list="locations">
             <datalist id="locations">
@@ -115,7 +121,9 @@ function eventSpecificFields($frontEndContent)
         </label>
 
         <label name="organizer">
-            <h4>Organizer</h4>
+            <h4>
+                Organizer
+            </h4>
             <input type='hidden' class='no-reset' class='datalistvalue' name='event[organizer-id]' value='<?php echo esc_attr($eventDetails['organizer-id'] ?? ''); ?>'>
             <input type='text' name='event[organizer]' value='<?php echo esc_attr($eventDetails['organizer'] ?? ''); ?>' list="users">
             <datalist id="users">
@@ -192,7 +200,9 @@ function displayRepetitionParameters($eventDetails)
 ?>
     <fieldset class='repeat-wrapper <?php if (empty($eventDetails['isrepeated'])) echo 'hidden'; ?>'>
         <legend><span class='text'>Repeat parameters</span></legend>
-        <h4>Select repeat type:</h4>
+        <h4>
+            Select repeat type:
+        </h4>
         <select name="event[repeat][type]">
             <option value="">---</option>
             <?php
@@ -207,7 +217,9 @@ function displayRepetitionParameters($eventDetails)
         </select>
 
         <div class='repeatdatetype <?php echo $repeatParam['type'] == 'monthly' || $repeatParam['type'] == 'yearly' ? 'hide' : 'hidden'; ?>'>
-            <h4>Select repeat pattern:</h4>
+            <h4>
+                Select repeat pattern:
+            </h4>
             <!-- Same day number of the month -->
             <label class='option-label'>
                 <input type='radio' name='event[repeat][datetype]' value='samedate' <?php if ($repeatParam['datetype'] == 'samedate') echo 'checked'; ?>>
@@ -238,7 +250,9 @@ function displayRepetitionParameters($eventDetails)
         ?>
 
         <div class="custom-dates-selector <?php echo $repeatParam['type'] == 'custom_days' ? 'hide' : 'hidden'; ?>">
-            <h4> Specify repeat days</h4>
+            <h4>
+                Specify repeat days
+            </h4>
             <div class="clone-divs-wrapper">
                 <?php
                 if (!empty($eventDetails['repeat']['includedates']) && is_array($eventDetails['repeat']['includedates'])) {
@@ -262,7 +276,9 @@ function displayRepetitionParameters($eventDetails)
             </div>
         </div>
 
-        <h4>Stop repetition</h4>
+        <h4>
+            Stop repetition
+        </h4>
         <label>
             <input type='radio' name='event[repeat][stop]' value='never' <?php if (empty($eventDetails['repeat']['stop']) || $eventDetails['repeat']['stop'] == 'never') echo 'checked'; ?>>
             Never
@@ -290,7 +306,9 @@ function displayRepetitionParameters($eventDetails)
         </div>
 
         <div>
-            <h4>Exclude dates from this pattern</h4>
+            <h4>
+                Exclude dates from this pattern
+            </h4>
             <div class="clone-divs-wrapper">
                 <?php
                 if (empty($eventDetails['repeat']['excludedates'])) {
@@ -300,8 +318,8 @@ function displayRepetitionParameters($eventDetails)
                 }
 
                 $i = 0;
-                foreach ($excludeDates as $excludeDate => $index ) {
-                    ?>
+                foreach ($excludeDates as $excludeDate => $index) {
+                ?>
                     <div id="excludedate-div-<?php echo esc_attr($i); ?>" class="clone-div" data-div-id="<?php echo esc_attr($i); ?>">
                         <label>
                             Exclude date <?php echo esc_attr($index + 1); ?>
@@ -311,7 +329,7 @@ function displayRepetitionParameters($eventDetails)
                             <button type="button" class="add button" style="flex: 1;">+</button>
                         </div>
                     </div>
-                    <?php
+                <?php
                     $i++;
                 }
                 ?>
@@ -348,7 +366,9 @@ function repetitionIntervalSettings($eventDetails)
 
 ?>
     <label class='repeatinterval <?php echo esc_attr($samedate); ?>'>
-        <h4>Repeat every </h4>
+        <h4>
+            Repeat every
+        </h4>
 
         <input type='number' name='event[repeat][interval]' value='<?php echo esc_attr($interval); ?>'>
         <span id='repeattype'>days</span>
