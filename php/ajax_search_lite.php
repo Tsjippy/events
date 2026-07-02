@@ -9,6 +9,16 @@ if (! defined('ABSPATH')) {
 }
 
 add_filter('asl_query_cpt', __NAMESPACE__ . '\excludePersonalEventsFromSearch', 10, 4);
+/**
+ * Exclude personal events from search results
+ *
+ * @param string $querystr The query string
+ * @param array $args The query arguments
+ * @param int $id The search ID
+ * @param object $_ajax_search The Ajax Search Lite object
+ *
+ * @return string The modified query string
+ */
 function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search)
 {
     global $wpdb;
@@ -25,6 +35,13 @@ function excludePersonalEventsFromSearch($querystr, $args, $id, $_ajax_search)
 }
 
 add_filter('asl_cpt_query_add_where', __NAMESPACE__ . '\excludePersonalEventsFromSearchWhereClause');
+/**
+ * Exclude personal events from search results
+ *
+ * @param string $where The where clause
+ *
+ * @return string The modified where clause
+ */
 function excludePersonalEventsFromSearchWhereClause($where)
 {
     $family    = new TSJIPPY\FAMILY\Family();

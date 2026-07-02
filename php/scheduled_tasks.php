@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', __NAMESPACE__ . '\scheduleTasks');
+/**
+ * Schedule tasks
+ */
 function scheduleTasks()
 {
     TSJIPPY\scheduleTask('tsjippy-events-anniversary-check', 'daily', __NAMESPACE__, 'anniversaryCheck');
@@ -69,6 +72,7 @@ function anniversaryCheck()
 
     foreach ($events->events as $event) {
         $startYear    = get_post_meta($event->ID, 'tsjippy_celebrationdate', true);
+        $coupleString    = '';
 
         if (!empty($startYear)) {
             $userData        = get_userdata($event->post_author);

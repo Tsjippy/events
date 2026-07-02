@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', __NAMESPACE__ . '\addEventPostType', 999);
+/**
+ * Add event post type
+ */
 function addEventPostType()
 {
     TSJIPPY\registerPostTypeAndTax('event', 'events');
@@ -30,6 +33,11 @@ function addEventPostType()
     );
 }
 
+/**
+ * Event title
+ *
+ * @param string $postType
+ */
 function eventTitle($postType)
 {
     $class = 'property event';
@@ -46,6 +54,11 @@ function eventTitle($postType)
 <?php
 }
 
+/**
+ * Event specific fields
+ *
+ * @param object $frontEndContent
+ */
 function eventSpecificFields($frontEndContent)
 {
     $eventDetails    = get_post_meta($frontEndContent->postId, 'tsjippy_eventdetails', true);
@@ -151,6 +164,11 @@ function eventSpecificFields($frontEndContent)
 <?php
 }
 
+/**
+ * Display repetition parameters
+ * 
+ * @param array $eventDetails 
+ */
 function displayRepetitionParameters($eventDetails)
 {
     $repeatParam['type']        = '';
@@ -339,6 +357,11 @@ function displayRepetitionParameters($eventDetails)
 <?php
 }
 
+/**
+ * Repetition interval settings
+ *
+ * @param array $eventDetails
+ */
 function repetitionIntervalSettings($eventDetails)
 {
     if (empty($eventDetails['repeat'])) {
@@ -424,6 +447,13 @@ function repetitionIntervalSettings($eventDetails)
 }
 
 add_filter('tsjippy-signal-post-notification-message', __NAMESPACE__ . '\postNotification', 10, 2);
+/**
+ * Post notification
+ *
+ * @param string $excerpt
+ * @param \WP_Post $post
+ * @return string
+ */
 function postNotification($excerpt, $post)
 {
     if ($post->post_type == 'event') {
@@ -465,6 +495,13 @@ function postNotification($excerpt, $post)
  * @param   array       $request    The sanitized request data
  */
 add_action('tsjippy-frontend-content-after-post-save', __NAMESPACE__ . '\afterPostSave', 1, 3);
+/**
+ * After post save
+ *
+ * @param \WP_Post $post
+ * @param object $frontEndPost
+ * @param array $request
+ */
 function afterPostSave($post, $frontEndPost, $request)
 {
     if ($post->post_type != 'event') {

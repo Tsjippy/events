@@ -18,6 +18,13 @@ add_filter('tsjippy-family-meta-keys', function ($metaKeys) {
 
 //create  events
 add_filter('tsjippy-forms-before-inserting-formdata', __NAMESPACE__ . '\beforeSavingFormData', 10, 2);
+/**
+ * Before saving form data
+ *
+ * @param array $request
+ * @param object $object
+ * @return array
+ */
 function beforeSavingFormData($request, $object)
 {
     if ($object->formData->slug == 'user_generics' || $object->formData->slug == 'child_generic') {

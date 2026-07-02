@@ -10,6 +10,12 @@ if (! defined('ABSPATH')) {
 
 // remove all events related to the user to be deleted
 add_action('delete_user', __NAMESPACE__ . '\userDeleted', 10, 2);
+/**
+ * User deleted
+ *
+ * @param int $userId
+ * @param int $reassign
+ */
 function userDeleted($userId, $reassign)
 {
     $events     = new Events();

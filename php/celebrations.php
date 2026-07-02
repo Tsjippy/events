@@ -161,7 +161,7 @@ add_filter('tsjippy-prayer-message', __NAMESPACE__ . '\anniversaryMessages');
  *
  * Get the html birthday message
  * 
- * @param   string            
+ * @param   string    $html    The html to add to  
  *
  * @return   string|false     Anniversary html
  *

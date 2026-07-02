@@ -11,11 +11,14 @@ if (! defined('ABSPATH')) {
 
 class Events
 {
-    public $tableName;
-    public $dayStartTime;
-    public $dayEndTime;
-    public $postId;
+    public string $tableName;
+    public string $dayStartTime;
+    public string $dayEndTime;
+    public int $postId;
 
+    /**
+     * Events constructor.
+     */
     public function __construct()
     {
         global $wpdb;

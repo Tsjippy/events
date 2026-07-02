@@ -9,6 +9,9 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('rest_api_init', __NAMESPACE__ . '\restApiInit');
+/**
+ * Rest API init
+ */
 function restApiInit()
 {
     // Month calendar

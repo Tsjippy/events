@@ -9,6 +9,12 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('wp_after_insert_post', __NAMESPACE__ . '\afterInsertPost', 10, 2);
+/**
+ * After insert post
+ *
+ * @param int $postId
+ * @param \WP_Post $post
+ */
 function afterInsertPost($postId, $post)
 {
 
@@ -25,6 +31,11 @@ function afterInsertPost($postId, $post)
 }
 
 add_action('wp_trash_post',  __NAMESPACE__ . '\trashPost');
+/**
+ * Trash post
+ *
+ * @param int $postId
+ */
 function trashPost($postId)
 {
     $pages  = SETTINGS['upcomingevents-pages'] ?? [];
@@ -38,6 +49,9 @@ function trashPost($postId)
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\loadAssets');
+/**
+ * Load assets
+ */
 function loadAssets()
 {
     if (str_contains($_SERVER['REQUEST_URI'] ?? '', '.map')) {
@@ -54,6 +68,12 @@ function loadAssets()
     wp_register_script('tsjippy_event_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/events.min.js'), array('tsjippy_formsubmit_script'), PLUGINVERSION, true);
 }
 
+/**
+ * Add dependable
+ *
+ * @param array $dependables
+ * @return array
+ */
 function addDependable($dependables)
 {
     $dependables[]  = 'tsjippy_frontend_events_script';

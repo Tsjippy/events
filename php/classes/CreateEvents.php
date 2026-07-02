@@ -11,9 +11,9 @@ if (! defined('ABSPATH')) {
 
 class CreateEvents extends Events
 {
-    public $eventData;
-    public $startDates;
-    public $partner;
+    public array $eventData;
+    public array $startDates;
+    public \WP_User $partner;
 
 
     /**
@@ -104,6 +104,14 @@ class CreateEvents extends Events
         return true;
     }
 
+    /**
+     * Calculates the start date for a repeated event
+     * @param      array  $repeatParam        The repeat parameters
+     * @param      int    $baseStartDate    The base start date in epoch
+     * @param      int    $index            The index of the repetition
+     *
+     * @return    int|false                The calculated start date in epoch or false if it cannot be calculated
+     */
     protected function calculateStartDate($repeatParam, $baseStartDate, $index)
     {
         $weekDays    = [];
@@ -115,6 +123,8 @@ class CreateEvents extends Events
         if (!empty($repeatParam['weeks'])) {
             $weeks            = (array)$repeatParam['weeks'];
         }
+
+        $startDate  = '';
 
         switch ($repeatParam['type']) {
             case 'daily':
@@ -194,6 +204,12 @@ class CreateEvents extends Events
         return $startDate;
     }
 
+    /**
+     * Creates repeated events based on the repeat parameters
+     * @param      int  $baseStartDate    The base start date in epoch
+     *
+     * @return    int|false                The base start date in epoch or false if it cannot be calculated
+     */
     protected function createRepeatedEvents($baseStartDate)
     {
         //first remove any existing events for this post
@@ -379,6 +395,14 @@ class CreateEvents extends Events
         $this->createEvents();
     }
 
+    /**
+     * Creates a celebration post for the user
+     * @param    object        $user        WP_User object
+     * @param    string        $metaValue    the meta value, should be a date string
+     * @param    string        $title        the event title
+     * @param    string        $type        the anniverasry type
+     * @param    string        $eventIdMetaKey    the meta key key
+     */
     protected function createCelebrationPost($user, $metaValue, $title, $type, $eventIdMetaKey)
     {
         //Get the upcoming celebration date

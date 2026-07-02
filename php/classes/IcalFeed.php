@@ -10,8 +10,11 @@ if (! defined('ABSPATH')) {
 
 class IcalFeed
 {
-    public $icalFormat;
+    public string $icalFormat;
 
+    /**
+     * IcalFeed constructor.
+     */
     public function __construct()
     {
         //see https://gist.github.com/jakebellacera/635416
@@ -144,6 +147,17 @@ class IcalFeed
         return        $icalEvent;
     }
 
+    /**
+     * Adds the repeat details to an ical event
+     *
+     * @param   array     $meta         The metadata of the event
+     * @param   string    $start        The start date in ical format
+     * @param   string    $end          The end date in ical format
+     * @param   string    $uid          The uid of the event
+     * @param   string    $icalEvent    The ical event
+     *
+     * @return  string                  The ical event with repeat details
+     */
     public function addRepeatDetails($meta, $start, $end, $uid, $icalEvent)
     {
         if (empty($meta['repeat'])) {
@@ -233,6 +247,17 @@ class IcalFeed
         return $icalEvent;
     }
 
+    /**
+     * Adds the custom dates to an ical event
+     *
+     * @param   array     $meta         The metadata of the event
+     * @param   string    $start        The start date in ical format
+     * @param   string    $end          The end date in ical format
+     * @param   string    $uid          The uid of the event
+     * @param   string    $icalEvent    The ical event
+     *
+     * @return  string                  The ical event with custom dates
+     */
     public function addIcalCustomDates($meta, $start, $end, $uid, $icalEvent)
     {
         //copy the event for each includes date

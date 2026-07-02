@@ -9,12 +9,18 @@ if (! defined('ABSPATH')) {
 }
 
 add_action('init', __NAMESPACE__ . '\init');
+/**
+ * Init
+ */
 function init()
 {
     add_rewrite_endpoint('public_calendar', EP_ROOT);
 }
 
 add_action('template_redirect', __NAMESPACE__ . '\templateRedirect');
+/**
+ * Template redirect
+ */
 function templateRedirect()
 {
     global $wp_query;

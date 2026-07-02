@@ -26,6 +26,12 @@ class AdminMenu extends ADMIN\SubAdminMenu
         parent::__construct($settings, $name);
     }
 
+    /**
+     * Render the settings page for the plugin
+     * 
+     * @param    string        $parent        The parent menu slug
+     * @return    boolean        True on success, false on failure
+     */
     public function settings($parent)
     {
         $this->recurrenceSelector('freq', $this->settings['freq'] ?? '', 'How often should we check for expired events?', $parent);
@@ -72,11 +78,17 @@ class AdminMenu extends ADMIN\SubAdminMenu
         return true;
     }
 
+    /**
+     * Render the emails page for the plugin
+     */
     public function emails($parent)
     {
         return false;
     }
 
+    /**
+     * Render the functions page for the plugin
+     */
     public function data($parent = '')
     {
         $family                    = new TSJIPPY\FAMILY\Family();
@@ -308,6 +320,12 @@ class AdminMenu extends ADMIN\SubAdminMenu
         return true;
     }
 
+    /**
+     * Render the table body for the given data
+     * 
+     * @param    array        $data        The data to render in the table body
+     * @return    void
+     */
     private function tableBody($data)
     {
         ?>
@@ -357,6 +375,9 @@ class AdminMenu extends ADMIN\SubAdminMenu
     <?php
     }
 
+    /**
+     * Render the functions page for the plugin
+     */
     public function functions($parent)
     {
         global $wpdb;
@@ -439,6 +460,12 @@ class AdminMenu extends ADMIN\SubAdminMenu
         return true;
     }
 
+    /**
+     * Handle post actions for the plugin
+     *
+     * @param    array        $request        The request data
+     * @return    string        The response message
+     */
     public function postActions($request)
     {
         // phpcs:ignore
