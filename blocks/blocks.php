@@ -38,14 +38,14 @@ function displayUpcomingEvents($attributes)
 {
 
     $args = wp_parse_args($attributes, array(
-        'items'         => 10,
-        'months'        => 3,
-        'categories'    => []
+        'items'      => 10,
+        'months'     => 3,
+        'categories' => []
     ));
 
     $categories    = get_categories(array(
-        'taxonomy'        => 'events',
-        'hide_empty'     => false,
+        'taxonomy'   => 'events',
+        'hide_empty' => false,
     ));
 
     $exclude    = $args['categories'];
