@@ -1,1 +1,53 @@
-aside>h4{font-size:larger}aside .eventlist .event-article{margin-bottom:10px}aside .event-wrapper{display:flex}aside .event-date{background-image:linear-gradient(#bd2919,#8a1a0e);border-radius:3px;color:#e0d0d0;float:right;line-height:1;margin-left:24px;max-height:40px;padding:6px 4px 3px;text-align:center;text-transform:uppercase;width:-moz-fit-content;width:fit-content}aside .event-date span{display:block;font-size:12px;font-weight:700;text-align:center}aside .event-title{margin:0}aside .event-title a{color:#292929}aside .no-events{text-align:center}aside .calendar.button{display:block;margin:10px auto 0;width:-moz-fit-content;width:fit-content}
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/.pnpm/css-loader@6.11.0_webpack@5.107.2/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/.pnpm/postcss-loader@6.2.1_postcss@8.5.15_webpack@5.107.2/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/.pnpm/sass-loader@16.0.8_sass@1.100.0_webpack@5.107.2/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+aside > h4 {
+  font-size: larger;
+}
+aside .eventlist .event-article {
+  margin-bottom: 10px;
+}
+aside .event-wrapper {
+  display: flex;
+}
+aside .event-date {
+  color: #e0d0d0;
+  margin-left: 24px;
+  background-image: linear-gradient(#bd2919, #8a1a0e);
+  width: -moz-fit-content;
+  width: fit-content;
+  float: right;
+  padding: 6px 4px 3px;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 3px;
+  max-height: 40px;
+  line-height: 1;
+}
+aside .event-date span {
+  font-size: 12px;
+  display: block;
+  font-weight: 700;
+  text-align: center;
+}
+aside .event-title {
+  margin: 0px;
+}
+aside .event-title a {
+  color: #292929;
+}
+aside .no-events {
+  text-align: center;
+}
+aside .calendar.button {
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 10px auto 0px;
+}

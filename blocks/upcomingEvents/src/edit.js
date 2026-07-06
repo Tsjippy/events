@@ -12,37 +12,27 @@ import {
   __experimentalNumberControl as NumberControl,
 } from "@wordpress/components";
 
+var eventCats = [];
+apiFetch({ path: "/wp/v2/events" }).then((res) => (eventCats = res));
+
 const Edit = ({ attributes, setAttributes }) => {
   const { items, months, categories, title } = attributes;
 
-  const onCatChanged = function (checked) {
-    let copy = { ...categories };
-
-    // this is the cat id
-    copy[this] = checked;
-    setAttributes({ categories: copy });
+  const onCatChanged = function (checked, id) {
+    categories[id] = checked;
+    setAttributes({ categories: { ...categories } });
   };
 
-  const [cats, setCats] = useState(<Spinner />);
-
-  useEffect(() => {
-    async function buildCheckboxes() {
-      setCats(<Spinner />);
-      const fetchedCats = await apiFetch({ path: "/wp/v2/events" });
-
-      setCats(
-        fetchedCats.map((c) => (
-          <CheckboxControl
-            key={c.id}
-            label={c.name}
-            onChange={onCatChanged.bind(c.id)}
-            checked={categories[c.id]}
-          />
-        )),
-      );
-    }
-    buildCheckboxes();
-  }, [attributes.categories]);
+  const CreateEventCatsCheckboxes = () => {
+      return eventCats.map((c) => (
+        <CheckboxControl
+          key={c.id}
+          label={c.name}
+          onChange={ checked => onCatChanged(checked, c.id) }
+          checked={categories[c.id]}
+        />
+      ))
+  }
 
   // variable, function name to set variable
   const [events, storeEvents] = useState([]);
@@ -124,7 +114,7 @@ const Edit = ({ attributes, setAttributes }) => {
               onChange={(val) => setAttributes({ title: val })}
             />
             Select an category you want to exclude from the list
-            {cats}
+            { CreateEventCatsCheckboxes() }
             <NumberControl
               label={__("Select the maximum amount of events", "tsjippy")}
               value={items || 10}
