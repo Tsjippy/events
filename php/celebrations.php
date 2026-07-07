@@ -42,9 +42,6 @@ function getAnniversaries()
             if (substr($title, 0, 8) == 'Birthday' && in_array('hide_age', $privacy)) {
                 $age    = '';
             }
-            if (substr($title, 0, 3) != 'SIM') {
-                $title    = lcfirst($title);
-            }
 
             //there happen to be more celeberations on the same day for one person
             if (isset($messages[$event->post_author])) {
