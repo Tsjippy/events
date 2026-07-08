@@ -355,7 +355,7 @@ class CreateEvents extends Events
             return;
         }
 
-        $eventIdMetaKey        = $type . '_event_id';
+        $eventIdMetaKey        = 'tsjippy_'.$type . '_event_id';
 
         if ($newValue == $oldValue) {
             // nothing to work with or no update
