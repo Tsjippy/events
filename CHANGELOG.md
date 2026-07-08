@@ -7,6 +7,7 @@
 - block update
 
 ### Fixed
+- meta key bug
 
 ### Updated
 
