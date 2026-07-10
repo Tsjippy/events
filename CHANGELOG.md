@@ -2,6 +2,17 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Updated
+
+## [10.5.0] - 2026-07-10
+
+
+### Added
 - block icon
 - block icon
 
@@ -10,8 +21,6 @@
 
 ### Fixed
 - meta key bug
-
-### Updated
 
 ## [10.4.9] - 2026-07-06
 
