@@ -11,6 +11,7 @@ add_action('init', function () {
         __DIR__ . '/upcomingEvents/build',
         array(
             'render_callback' => __NAMESPACE__ . '\displayUpcomingEvents',
+            'icon'  => 'calendar (alt)'
         )
     );
 
