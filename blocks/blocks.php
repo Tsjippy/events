@@ -22,12 +22,12 @@ add_action('init', function () {
                 "lock"    => [
                     "type"        => "object",
                     "default"    => [
-                        "move"        => true,
-                        "remove"    => true
+                        "move"   => true,
+                        "remove" => true
                     ]
                 ],
                 'event'    => [
-                    'type'        => 'string',
+                    'type'       => 'string',
                     'default'    => ''
                 ]
             ]
