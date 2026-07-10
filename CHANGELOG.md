@@ -3,6 +3,7 @@
 
 ### Added
 - block icon
+- block icon
 
 ### Changed
 - block update
