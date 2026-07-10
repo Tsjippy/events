@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "tsjippy-events/eventmeta",
+  "name": "tsjippy-events/meta",
   "version": "0.1.0",
   "title": "Events meta data",
   "category": "widgets",
@@ -20,7 +20,7 @@
     },
     "eventdetails": {
       "type": "array",
-      "default": ""
+      "default": []
     }
   }
 }
