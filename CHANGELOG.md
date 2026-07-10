@@ -6,6 +6,7 @@
 ### Changed
 - block name
 - block name
+- hook name
 
 ### Fixed
 
