@@ -4,13 +4,18 @@
 ### Added
 
 ### Changed
-- block name
-- block name
-- hook name
 
 ### Fixed
 
 ### Updated
+
+## [10.5.2] - 2026-07-10
+
+
+### Changed
+- block name
+- block name
+- hook name
 
 ## [10.5.1] - 2026-07-10
 
