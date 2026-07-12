@@ -153,7 +153,7 @@ function replaceCoupleString($string, $replaceString, $user, $partner = '')
  * @return   string|false     Birthday and arrining usrs html or false if there are no events
  *
  **/
-add_filter('tsjippy-prayer-message', __NAMESPACE__ . '\anniversaryMessages');
+add_filter('tsjippy-daily-message', __NAMESPACE__ . '\anniversaryMessages');
 /**
  *
  * Get the html birthday message
