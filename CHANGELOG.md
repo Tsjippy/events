@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- daily message hook
 
 ### Fixed
 
