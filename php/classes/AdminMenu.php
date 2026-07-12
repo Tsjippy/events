@@ -87,7 +87,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
     }
 
     /**
-     * Render the functions page for the plugin
+     * Function to display the emails page
+     *
+     * @param   string  $parent The parent menu slug
+     * 
+     * @return  bool            True if the emails page was displayed, false otherwise
      */
     public function data($parent = '')
     {
@@ -376,7 +380,11 @@ class AdminMenu extends ADMIN\SubAdminMenu
     }
 
     /**
-     * Render the functions page for the plugin
+     * Add the functions page to the admin menu
+     *
+     * @param string $parent The parent menu slug
+     * 
+     * @return bool True if the functions page was added, false otherwise
      */
     public function functions($parent)
     {
