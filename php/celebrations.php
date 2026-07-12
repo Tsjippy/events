@@ -148,7 +148,7 @@ function replaceCoupleString($string, $replaceString, $user, $partner = '')
 
 /**
  *
- * Adds html to the frontpage prayer message
+ * Adds html to the frontpage daily message
  *
  * @return   string|false     Birthday and arrining usrs html or false if there are no events
  *
