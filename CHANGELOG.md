@@ -5,6 +5,7 @@
 
 ### Changed
 - daily message hook
+- prayer rreference
 
 ### Fixed
 
