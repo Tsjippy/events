@@ -4,12 +4,17 @@
 ### Added
 
 ### Changed
-- daily message hook
-- prayer rreference
 
 ### Fixed
 
 ### Updated
+
+## [10.5.5] - 2026-07-12
+
+
+### Changed
+- daily message hook
+- prayer rreference
 
 ## [10.5.4] - 2026-07-11
 
