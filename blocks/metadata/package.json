@@ -2,7 +2,7 @@
 	"name": "tsjippy-pendingpages",
 	"version": "0.1.0",
 	"description": "Pending pages",
-	"author": "The WordPress Contributors",
+	"author": "tsjippy",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
