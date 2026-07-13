@@ -138,7 +138,7 @@ class IcalFeed
 
         $icalEvent    .= trim(chunk_split("URL:$url", 74, "\r\n ")) . "\r\n";
 
-        if (is_array($meta['repeat'])) {
+        if (is_array($meta['repeat'] ?? '')) {
             $this->addRepeatDetails($meta, $start, $end, $uid, $icalEvent);
         }
 
