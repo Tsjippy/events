@@ -2,6 +2,7 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
+- tsjippy-news-gallery-query
 
 ### Changed
 
