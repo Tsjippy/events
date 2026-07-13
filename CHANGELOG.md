@@ -2,13 +2,18 @@
 ## [Unreleased] - yyyy-mm-dd
 
 ### Added
-- tsjippy-news-gallery-query
 
 ### Changed
 
 ### Fixed
 
 ### Updated
+
+## [10.5.7] - 2026-07-13
+
+
+### Added
+- tsjippy-news-gallery-query
 
 ## [10.5.6] - 2026-07-12
 
