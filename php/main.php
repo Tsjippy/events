@@ -40,3 +40,20 @@ function changeArchiveTitle($title, $category)
 
     return $title;
 }
+
+add_filter('tsjippy-news-gallery-query', function($args){
+    //exclude birthdays and anniversaries
+    $args['tax_query'] = array(
+        array(
+            'taxonomy' => 'events',
+            'field'    => 'term_id',
+            'terms'    => [
+                get_term_by('slug', 'anniversary', 'events')->term_id,
+                get_term_by('slug', 'birthday', 'events')->term_id
+            ],
+            'operator' => 'NOT IN'
+        ),
+    );
+
+    return $args;
+});
