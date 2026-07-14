@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- initialization error
 
 ### Updated
 
