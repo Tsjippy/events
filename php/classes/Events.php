@@ -22,9 +22,10 @@ class Events
     public function __construct()
     {
         global $wpdb;
-        $this->tableName        = $wpdb->prefix . 'tsjippy_events';
-        $this->dayStartTime        = '00:00';
-        $this->dayEndTime        = '23:59';
+        $this->tableName    = $wpdb->prefix . 'tsjippy_events';
+        $this->dayStartTime = '00:00';
+        $this->dayEndTime   = '23:59';
+        $this->postId       = -1;
     }
 
     /**
@@ -93,9 +94,12 @@ class Events
      */
     public function removeDbRows($postId = null, $delPost = false)
     {
-        global $wpdb;
-
         if (!is_numeric($postId)) {
+
+            if( $this->postId == -1){
+                return new WP_Error('Events', 'Supply me a post id please');
+            }
+            
             $postId = $this->postId;
         }
 

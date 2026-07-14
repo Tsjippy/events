@@ -44,8 +44,6 @@ class CreateEvents extends Events
      */
     public function createEvents()
     {
-        global $wpdb;
-
         $baseStartDateStr = $this->eventData['startdate'];
         $baseStartDate    = strtotime($baseStartDateStr);
 
@@ -243,7 +241,7 @@ class CreateEvents extends Events
             }elseif($repeatParam['datetype'] == 'patterned'){
                 $baseStartDate    = strtotime($repeatParam['weeks'][0]." ".$repeatParam['weekdays'][0]." ". "of +". $repeatParam['months'][0] ." months", $baseStartDate);
             }else{
-                $test=1;
+                return;
             }
 
             //re-adjust the start_date string
