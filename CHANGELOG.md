@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- initialization error
 
 ### Updated
+
+## [10.5.9] - 2026-07-14
+
+
+### Fixed
+- initialization error
 
 ## [10.5.8] - 2026-07-13
 
