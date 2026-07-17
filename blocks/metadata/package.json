@@ -1,5 +1,5 @@
 {
-	"name": "tsjippy-pendingpages",
+	"name": "tsjippy-events-meta-data",
 	"version": "0.1.0",
 	"description": "Pending pages",
 	"author": "tsjippy",
@@ -15,6 +15,15 @@
 		"start": "wp-scripts start"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^32.3.0"
+		"@wordpress/scripts": "^33.0.0"
+	},
+	"dependencies": {
+		"@wordpress/i18n": "latest",
+		"@wordpress/element": "latest",
+		"@wordpress/data": "latest",
+		"@wordpress/core-data": "latest",
+		"@wordpress/components": "latest",
+		"@wordpress/block-editor": "latest"
 	}
 }
+
