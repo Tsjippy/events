@@ -499,7 +499,7 @@ class AdminMenu extends ADMIN\SubAdminMenu
              * Flush db cache
              */
             if(wp_cache_supports( 'flush_group' )){
-                wp_cache_flush_group('events');
+                wp_cache_flush_group('tsjippy_events');
             }else{
                 wp_cache_flush();
             }
