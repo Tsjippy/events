@@ -1,7 +1,7 @@
 import { __ } from "@wordpress/i18n";
 import "./editor.scss";
 import { useState, useEffect } from "@wordpress/element";
-import { useSelect } from "@wordpress/data";
+import { useSelect, dispatch } from "@wordpress/data";
 import { useEntityProp } from "@wordpress/core-data";
 import {
   TimePicker,
