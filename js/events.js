@@ -84,7 +84,7 @@ async function requestWeek(target, wknr, year) {
 }
 
 async function requestExpandList(offset, month = "", year = "") {
-  //remove any existing element when requesting specific date
+  //remove any existing block when requesting specific date
   if (month != "" || year != "") {
     document.querySelectorAll("#listview article").forEach((el) => el.remove());
 
