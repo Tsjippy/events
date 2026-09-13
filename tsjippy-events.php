@@ -12,9 +12,9 @@ use TSJIPPY;
  * AuthorURI:            harmseninnigeria.nl
  * Requires at least:    6.3
  * Requires PHP:         8.3
- * Plugin URI:            https://github.com/Tsjippy/events/
+ * Plugin URI:           https://github.com/Tsjippy/events/
  * Tested:               7.1
- * TextDomain:            tsjippy
+ * TextDomain:           tsjippy
  * Requires Plugins:    
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
