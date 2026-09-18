@@ -15,13 +15,13 @@
 		"start": "wp-scripts start"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^32.3.0"
+		"@wordpress/scripts": "^35.0.0"
 	},
 	"dependencies": {
-		"@wordpress/i18n": "latest",
-		"@wordpress/block-editor": "latest",
 		"@wordpress/api-fetch": "latest",
+		"@wordpress/block-editor": "latest",
+		"@wordpress/components": "latest",
 		"@wordpress/element": "latest",
-		"@wordpress/components": "latest"
+		"@wordpress/i18n": "latest"
 	}
 }

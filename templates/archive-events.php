@@ -14,7 +14,7 @@ if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 wp_enqueue_style('tsjippy_events_css');
-wp_enqueue_script('tsjippy_event_script');
+wp_enqueue_script_module('@tsjippy/event_script');
 
 global $wp_query;
 if ($wp_query->is_embed) {

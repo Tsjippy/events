@@ -1,3 +1,7 @@
+import{
+  fetchRestApi
+} from "../../tsjippy-forms/js/form_submit_functions.js";
+
 async function requestMonth(target, month, year) {
   url.searchParams.set("month", month);
   url.searchParams.set("yr", year);
@@ -20,7 +24,7 @@ async function requestMonth(target, month, year) {
     formData.append("month", month);
     formData.append("year", year);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "events/get_month_html",
       formData,
     );
@@ -64,7 +68,7 @@ async function requestWeek(target, wknr, year) {
     formData.append("wknr", wknr);
     formData.append("year", year);
 
-    let response = await FormSubmit.fetchRestApi(
+    let response = await fetchRestApi(
       "events/get_week_html",
       formData,
     );
@@ -100,7 +104,7 @@ async function requestExpandList(offset, month = "", year = "") {
   formData.append("month", month);
   formData.append("year", year);
 
-  let response = await FormSubmit.fetchRestApi(
+  let response = await fetchRestApi(
     "events/get_list_html",
     formData,
   );
