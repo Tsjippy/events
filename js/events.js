@@ -2,6 +2,19 @@ import{
   fetchRestApi
 } from "../../tsjippy-forms/js/form_submit_functions.js";
 
+import { 
+  showLoader 
+} from "../../tsjippy-shared-functionality/js/partials/show_loader.js";
+
+import { 
+  Alert 
+} from "../../tsjippy-shared-functionality/js/partials/alert.js";
+
+import { 
+  isMobileDevice 
+} from "../../tsjippy-shared-functionality/js/partials/mobile.js";
+
+
 async function requestMonth(target, month, year) {
   url.searchParams.set("month", month);
   url.searchParams.set("yr", year);
@@ -18,7 +31,7 @@ async function requestMonth(target, month, year) {
   if (calendarPage == null) {
     let wrapper = target.closest(".calendar-wrap");
 
-    Main.showLoader(wrapper.lastChild, false, 100);
+    showLoader(wrapper.lastChild, false, 100);
 
     let formData = new FormData();
     formData.append("month", month);
@@ -62,7 +75,7 @@ async function requestWeek(target, wknr, year) {
   if (calendarPage == null) {
     let wrapper = target.closest(".calendar-wrap");
 
-    Main.showLoader(wrapper.lastChild, false, 100);
+    showLoader(wrapper.lastChild, false, 100);
 
     let formData = new FormData();
     formData.append("wknr", wknr);
@@ -97,7 +110,7 @@ async function requestExpandList(offset, month = "", year = "") {
     window.history.pushState({}, "", url);
   }
 
-  Main.showLoader(document.getElementById("listview").lastChild, false, 100);
+  showLoader(document.getElementById("listview").lastChild, false, 100);
 
   let formData = new FormData();
   formData.append("offset", offset);
@@ -240,7 +253,7 @@ function hourClicked(target) {
     //make this date selected
     target.classList.add("selected");
 
-    if (Main.isMobileDevice()) {
+    if (isMobileDevice()) {
       window.scrollTo(0, eventDetail.offsetTop);
 
       console.log("scrolling");
@@ -333,7 +346,7 @@ document.addEventListener("click", function (event) {
         timer: 3000,
       };
 
-      new Main.Alert(`Copied ${target.textContent}`, "success", options);
+      new Alert(`Copied ${target.textContent}`, "success", options);
     }
   } else {
     return;
