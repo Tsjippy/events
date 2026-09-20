@@ -58,14 +58,14 @@ function loadAssets()
         return;
     }
 
-    wp_register_script_module('@tsjippy/frontend_events_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/frontend-event.min.js'), [], PLUGINVERSION);
+    wp_register_script_module('@tsjippy/frontend_events_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/frontend-event' . TSJIPPY\JSEXTENSION), [], PLUGINVERSION);
     add_filter('tsjippy-frontend-content-js', __NAMESPACE__ . '\addDependable');
 
     //css
     wp_register_style('tsjippy_events_css', TSJIPPY\pathToUrl(PLUGINPATH . 'css/events.min.css'), array(), PLUGINVERSION);
 
     //js
-    wp_register_script_module('@tsjippy/event_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/events.min.js'), array('@tsjippy/formsubmit_script'), PLUGINVERSION);
+    wp_register_script_module('@tsjippy/event_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/events' . TSJIPPY\JSEXTENSION), array('@tsjippy/formsubmit_script'), PLUGINVERSION);
 }
 
 /**
