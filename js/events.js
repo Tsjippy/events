@@ -14,7 +14,6 @@ import {
   isMobileDevice 
 } from "@tsjippy/mobile";
 
-
 async function requestMonth(target, month, year) {
   url.searchParams.set("month", month);
   url.searchParams.set("yr", year);
