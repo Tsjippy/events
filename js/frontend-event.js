@@ -225,7 +225,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
 
 document.addEventListener("change", (event) => {
@@ -241,5 +241,5 @@ document.addEventListener("change", (event) => {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });

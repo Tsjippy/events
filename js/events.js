@@ -351,7 +351,7 @@ document.addEventListener("click", function (event) {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 });
 
 document.addEventListener("change", function (event) {
@@ -424,7 +424,7 @@ document.addEventListener("change", function (event) {
     return;
   }
 
-  event.stopImmediatePropagation();
+  event.stopPropagation();
 
   window.history.pushState({}, "", url);
 });

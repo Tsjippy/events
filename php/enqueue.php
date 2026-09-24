@@ -66,6 +66,7 @@ function loadAssets()
     ] :
     [];
 
+    $deps[] = "@tsjippy/nonce_script";
     wp_register_script_module('@tsjippy/frontend_events_script', TSJIPPY\pathToUrl(PLUGINPATH . 'js/frontend-event' . TSJIPPY\JSEXTENSION), $deps, PLUGINVERSION);
     add_filter('tsjippy-frontend-content-js', __NAMESPACE__ . '\addDependable');
 
