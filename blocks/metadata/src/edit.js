@@ -375,8 +375,6 @@ const Edit = ({ setAttributes, attributes }) => {
 
     let weekDay = weekDays[startDate.getDay()];
     let weekNr = parseInt(startDate.getDate() / 7);
-
-    console.log(weekNr);
     let nrInWords = ["first", "second", "third", "fourth", "fifth"];
     let weekWord = nrInWords[weekNr];
     return (

@@ -254,8 +254,6 @@ function hourClicked(target) {
 
     if (isMobileDevice()) {
       window.scrollTo(0, eventDetail.offsetTop);
-
-      console.log("scrolling");
     } else {
       //scroll the detail into view
       eventDetail.scrollIntoView({
@@ -266,8 +264,6 @@ function hourClicked(target) {
 
       // make sure the vertical scroll is ok too
       window.scrollTo(0, eventDetail.offsetHeight);
-
-      console.log("scrolling");
     }
   }
 }
