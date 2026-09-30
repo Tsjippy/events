@@ -85,7 +85,7 @@ function loadAssets()
  */
 function addDependable($dependables)
 {
-    $dependables[]  = 'tsjippy_frontend_events_script';
+    $dependables[]  = '@tsjippy/frontend_events_script';
 
     return $dependables;
 }
