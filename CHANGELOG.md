@@ -6,6 +6,7 @@
 ### Changed
 
 ### Fixed
+- loading js
 
 ### Updated
 
