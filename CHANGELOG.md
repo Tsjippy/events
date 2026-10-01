@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- loading js
 
 ### Updated
+
+## [10.8.7] - 2026-10-01
+
+
+### Fixed
+- loading js
 
 ## [10.8.6] - 2026-09-27
 
