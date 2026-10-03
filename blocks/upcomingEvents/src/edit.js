@@ -5,88 +5,91 @@ import apiFetch from "@wordpress/api-fetch";
 import { useState, useEffect } from "@wordpress/element";
 import {
   TextControl,
-  Spinner,
   Panel,
   PanelBody,
   CheckboxControl,
   __experimentalNumberControl as NumberControl,
 } from "@wordpress/components";
 
-var eventCats = [];
-apiFetch({ path: "/wp/v2/events" }).then((res) => (eventCats = res));
-
 const Edit = ({ attributes, setAttributes }) => {
-  const { items, months, categories, title } = attributes;
+  const { items, months, categories: rawCategories, title } = attributes;
 
-  const onCatChanged = function (checked, id) {
-    categories[id] = checked;
-    setAttributes({ categories: { ...categories } });
-  };
+  // Ensure categories is always a valid object, even if Gutenberg passes a JSON string
+  const categories =
+    typeof rawCategories === "string"
+      ? (() => {
+          try {
+            return JSON.parse(rawCategories);
+          } catch (e) {
+            return {};
+          }
+        })()
+      : rawCategories || {};
 
-  const CreateEventCatsCheckboxes = () => {
-      return eventCats.map((c) => (
-        <CheckboxControl
-          key={c.id}
-          label={c.name}
-          onChange={ checked => onCatChanged(checked, c.id) }
-          checked={categories[c.id]}
-        />
-      ))
-  }
-
-  // variable, function name to set variable
   const [events, storeEvents] = useState([]);
+  const [eventCats, setEventCats] = useState([]);
+
+  useEffect(() => {
+    apiFetch({ path: "/wp/v2/events" })
+      .then((res) => {
+        if (Array.isArray(res)) {
+          setEventCats(res);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  const onCatChanged = (checked, id) => {
+    // Immutable update on a guaranteed object
+    const updatedCategories = {
+      ...categories,
+      [id]: checked,
+    };
+
+    setAttributes({ categories: updatedCategories });
+  };
 
   const fetchEvents = async () => {
     let param = "";
 
-    if (items != undefined) {
-      param += "?items" + items;
+    if (items !== undefined) {
+      param += "?items=" + items;
     }
 
-    if (months != undefined) {
-      if (param == "") {
-        param += "?";
-      } else {
-        param += "&";
-      }
-      param += "months=" + months;
+    if (months !== undefined) {
+      param += (param === "" ? "?" : "&") + "months=" + months;
     }
 
-    if (categories != undefined) {
-      if (param == "") {
-        param += "?";
-      } else {
-        param += "&";
-      }
-      param += "categories=";
-      for (const key in categories) {
-        param += key + ",";
-      }
+    if (categories && Object.keys(categories).length > 0) {
+      param += (param === "" ? "?" : "&") + "categories=";
+      const catIds = Object.keys(categories).filter((key) => categories[key]);
+      param += catIds.join(",");
     }
 
-    let fetchedEvents = await apiFetch({
-      path: `tsjippy/v2/events/upcoming_events${param}`,
-    });
-
-    if (!fetchedEvents) {
-      fetchedEvents = [];
+    try {
+      let fetchedEvents = await apiFetch({
+        path: `tsjippy/v2/events/upcoming_events${param}`,
+      });
+      storeEvents(Array.isArray(fetchedEvents) ? fetchedEvents : []);
+    } catch (e) {
+      storeEvents([]);
     }
-    storeEvents(fetchedEvents);
   };
 
   useEffect(() => {
     fetchEvents();
-  }, [items, months, categories]);
+  }, [items, months, rawCategories]);
 
   const buildHtml = () => {
-    if (events.length === 0) {
+    if (!events || events.length === 0) {
       return <p>No events found!</p>;
     }
 
-    return events.map((event) => {
+    return events.map((event, index) => {
+      const uniqueKey = event.id ?? event.slug ?? `event-${index}`;
+
       return (
-        <article className="event-article" key={event.id}>
+        <article className="event-article" key={uniqueKey}>
           <div className="event-wrapper">
             <div className="event-date">
               <span>{event.day}</span> {event.month}
@@ -113,22 +116,29 @@ const Edit = ({ attributes, setAttributes }) => {
               value={title}
               onChange={(val) => setAttributes({ title: val })}
             />
-            Select an category you want to exclude from the list
-            { CreateEventCatsCheckboxes() }
+            Select a category you want to exclude from the list:
+            {eventCats.map((c, index) => (
+              <CheckboxControl
+                key={c.id ?? `cat-${index}`}
+                label={c.name}
+                onChange={(checked) => onCatChanged(checked, c.id)}
+                checked={!!categories[c.id]}
+              />
+            ))}
             <NumberControl
               label={__("Select the maximum amount of events", "tsjippy")}
               value={items || 10}
-              onChange={(val) => setAttributes({ items: parseInt(val) })}
+              onChange={(val) => setAttributes({ items: parseInt(val, 10) || 0 })}
               min={1}
               max={20}
             />
             <NumberControl
               label={__(
                 "Select the range in months we will retrieve",
-                "tsjippy",
+                "tsjippy"
               )}
               value={months || 2}
-              onChange={(val) => setAttributes({ months: parseInt(val) })}
+              onChange={(val) => setAttributes({ months: parseInt(val, 10) || 0 })}
               min={1}
               max={12}
             />

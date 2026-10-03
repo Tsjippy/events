@@ -119,7 +119,7 @@ class DisplayEvents extends Events
         $events    = $this->upcomingEventsArray($max, $months, $include);
 
         ob_start();
-?>
+        ?>
         <h4 class="title"><?php echo esc_attr($title); ?></h4>
         <div class="upcoming-events-wrapper">
             <?php

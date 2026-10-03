@@ -19,7 +19,7 @@
     },
     "categories": {
       "type": "object",
-      "default": "{}"
+      "default": {}
     },
     "title": {
       "type": "string",
