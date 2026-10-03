@@ -6,9 +6,14 @@
 ### Changed
 
 ### Fixed
-- widget
 
 ### Updated
+
+## [10.8.9] - 2026-10-03
+
+
+### Fixed
+- widget
 
 ## [10.8.8] - 2026-10-01
 
